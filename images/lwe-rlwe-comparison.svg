@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="350" viewBox="0 0 1050 350">
+  <defs>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill:#111827; }
+      .title { font-size:25px; font-weight:700; }
+      .box { rx:12; stroke:#1e293b; stroke-width:1.5; }
+      .left { fill:#fee2e2; }
+      .right { fill:#dbeafe; }
+      .h { font-size:21px; font-weight:700; }
+      .body { font-size:16px; fill:#334155; }
+      .good { fill:#166534; font-weight:700; }
+      .bad { fill:#991b1b; font-weight:700; }
+    </style>
+  </defs>
+  <text x="525" y="38" text-anchor="middle" class="title">从 LWE 到 RLWE：为什么 CKKS 要搬到多项式环</text>
+  <rect x="70" y="78" width="410" height="220" class="box left"/>
+  <text x="275" y="115" text-anchor="middle" class="h">LWE：向量与矩阵</text>
+  <text x="120" y="155" class="body">样本： (a, &lt;a,s&gt; + e)</text>
+  <text x="120" y="190" class="body">公钥包含矩阵 A</text>
+  <text x="120" y="225" class="body bad">大小与计算约为 O(n²)</text>
+  <text x="120" y="260" class="body">安全基础：带误差学习问题</text>
+  <rect x="570" y="78" width="410" height="220" class="box right"/>
+  <text x="775" y="115" text-anchor="middle" class="h">RLWE：多项式环</text>
+  <text x="620" y="155" class="body">样本： (a, a·s + e)</text>
+  <text x="620" y="190" class="body">公钥包含多项式 a</text>
+  <text x="620" y="225" class="body good">大小约为 O(N)，乘法可用 O(N log N)</text>
+  <text x="620" y="260" class="body">CKKS 使用 R_q = Z_q[X]/(X^N+1)</text>
+</svg>

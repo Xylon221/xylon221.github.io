@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="300" viewBox="0 0 1120 300">
+  <defs>
+    <marker id="road-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill:#111827; }
+      .title { font-size:28px; font-weight:700; }
+      .step-title { font-size:18px; font-weight:700; }
+      .step-body { font-size:14px; fill:#334155; }
+      .box { rx:10; stroke:#1e293b; stroke-width:1.5; }
+      .a { fill:#fee2e2; }
+      .b { fill:#ffedd5; }
+      .c { fill:#dbeafe; }
+      .d { fill:#ede9fe; }
+      .e { fill:#dcfce7; }
+      .f { fill:#fef9c3; }
+      .line { stroke:#334155; stroke-width:1.8; marker-end:url(#road-arrow); }
+    </style>
+  </defs>
+  <text x="560" y="38" text-anchor="middle" class="title">CKKS 与隐私保护数据科学学习路线</text>
+  <rect x="35" y="82" width="160" height="120" class="box a"/>
+  <text x="115" y="112" text-anchor="middle" class="step-title">Part 1</text>
+  <text x="115" y="140" text-anchor="middle" class="step-body">基础编码</text>
+  <text x="115" y="164" text-anchor="middle" class="step-body">向量 ↔ 多项式</text>
+  <line x1="195" y1="142" x2="230" y2="142" class="line"/>
+  <rect x="230" y="82" width="160" height="120" class="box b"/>
+  <text x="310" y="112" text-anchor="middle" class="step-title">Part 2</text>
+  <text x="310" y="140" text-anchor="middle" class="step-body">完整编码</text>
+  <text x="310" y="164" text-anchor="middle" class="step-body">整数多项式环</text>
+  <line x1="390" y1="142" x2="425" y2="142" class="line"/>
+  <rect x="425" y="82" width="160" height="120" class="box c"/>
+  <text x="505" y="112" text-anchor="middle" class="step-title">Part 3</text>
+  <text x="505" y="140" text-anchor="middle" class="step-body">加密解密</text>
+  <text x="505" y="164" text-anchor="middle" class="step-body">LWE / RLWE</text>
+  <line x1="585" y1="142" x2="620" y2="142" class="line"/>
+  <rect x="620" y="82" width="160" height="120" class="box d"/>
+  <text x="700" y="112" text-anchor="middle" class="step-title">Part 4</text>
+  <text x="700" y="140" text-anchor="middle" class="step-body">密文乘法</text>
+  <text x="700" y="164" text-anchor="middle" class="step-body">重线性化</text>
+  <line x1="780" y1="142" x2="815" y2="142" class="line"/>
+  <rect x="815" y="82" width="160" height="120" class="box e"/>
+  <text x="895" y="112" text-anchor="middle" class="step-title">Part 5</text>
+  <text x="895" y="140" text-anchor="middle" class="step-body">重缩放</text>
+  <text x="895" y="164" text-anchor="middle" class="step-body">管理 scale 和噪声</text>
+  <line x1="895" y1="202" x2="895" y2="235" class="line"/>
+  <rect x="780" y="235" width="230" height="45" class="box f"/>
+  <text x="895" y="264" text-anchor="middle" class="step-title">隐私保护技术版图</text>
+</svg>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#f7f6f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xylon221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":260,"width_dual_column":220,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="隐私保护数据科学：技术概览前五篇已经从 CKKS 内部讲清楚了一条同态加密路线：如何把向量变成多项式，如何加密、解密，如何在密文上做加法、乘法、重线性化和重缩放。 这一篇把视角放大。CKKS 只是隐私保护数据科学工具箱中的一个重要组件。真实系统往往不会只靠一种技术，而是根据目标组合使用差分隐私、同态加密、私有集合求交、安全多方计算、SplitNN、零知识证明等方法。  与 CKKS 系列的关系前面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="隐私保护数据科学：技术概览">
+<meta property="og:url" content="https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/">
+<meta property="og:site_name" content="且听风吟">
+<meta property="og:description" content="隐私保护数据科学：技术概览前五篇已经从 CKKS 内部讲清楚了一条同态加密路线：如何把向量变成多项式，如何加密、解密，如何在密文上做加法、乘法、重线性化和重缩放。 这一篇把视角放大。CKKS 只是隐私保护数据科学工具箱中的一个重要组件。真实系统往往不会只靠一种技术，而是根据目标组合使用差分隐私、同态加密、私有集合求交、安全多方计算、SplitNN、零知识证明等方法。  与 CKKS 系列的关系前面">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xylon221.github.io/images/privacy-tech-map.svg">
+<meta property="article:published_time" content="2026-06-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-07T11:11:30.218Z">
+<meta property="article:author" content="且听风吟">
+<meta property="article:tag" content="同态加密">
+<meta property="article:tag" content="隐私保护">
+<meta property="article:tag" content="数据科学">
+<meta property="article:tag" content="差分隐私">
+<meta property="article:tag" content="安全多方计算">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xylon221.github.io/images/privacy-tech-map.svg">
+
+
+<link rel="canonical" href="https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/","path":"2026/06/privacy-preserving-data-science-overview/","title":"隐私保护数据科学：技术概览"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>隐私保护数据科学：技术概览 | 且听风吟</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">且听风吟</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">静けさの中で、言葉を見つける</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-posts"><a href="/posts/" rel="section"><i class="fa fa-feather fa-fw"></i>posts</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6%EF%BC%9A%E6%8A%80%E6%9C%AF%E6%A6%82%E8%A7%88"><span class="nav-text">隐私保护数据科学：技术概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E-CKKS-%E7%B3%BB%E5%88%97%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-text">与 CKKS 系列的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81%E4%B8%8E%E6%B4%97%E7%89%8C%E6%94%BE%E5%A4%A7"><span class="nav-text">差分隐私与洗牌放大</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86"><span class="nav-text">同态加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Paillier-%E5%AF%86%E7%A0%81%E7%B3%BB%E7%BB%9F"><span class="nav-text">Paillier 密码系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%81%E6%9C%89%E9%9B%86%E5%90%88%E6%B1%82%E4%BA%A4"><span class="nav-text">私有集合求交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Diffie-Hellman-%E5%AF%86%E9%92%A5%E4%BA%A4%E6%8D%A2"><span class="nav-text">Diffie-Hellman 密钥交换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E5%A4%9A%E6%96%B9%E8%AE%A1%E7%AE%97"><span class="nav-text">安全多方计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CrypTen"><span class="nav-text">CrypTen</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Split-Neural-Network"><span class="nav-text">Split Neural Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PyVertical"><span class="nav-text">PyVertical</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E7%9F%A5%E8%AF%86%E8%AF%81%E6%98%8E"><span class="nav-text">零知识证明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E6%8A%A4%E6%A8%A1%E5%9E%8B"><span class="nav-text">保护模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%8D%B3%E6%9C%8D%E5%8A%A1"><span class="nav-text">加密机器学习即服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E6%B7%B1%E5%85%A5%E5%9C%B0%E5%AD%A6%E4%B9%A0"><span class="nav-text">更深入地学习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E6%96%87%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E5%9B%9E%E9%A1%BE"><span class="nav-text">本文核心概念回顾</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">且听风吟</p>
+  <div class="site-description" itemprop="description">一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="且听风吟">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="且听风吟">
+      <meta itemprop="description" content="一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="隐私保护数据科学：技术概览 | 且听风吟">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          隐私保护数据科学：技术概览
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-06-12 00:00:00" itemprop="dateCreated datePublished" datetime="2026-06-12T00:00:00+08:00">2026-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CKKS学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="隐私保护数据科学：技术概览"><a href="#隐私保护数据科学：技术概览" class="headerlink" title="隐私保护数据科学：技术概览"></a>隐私保护数据科学：技术概览</h1><p>前五篇已经从 CKKS 内部讲清楚了一条同态加密路线：如何把向量变成多项式，如何加密、解密，如何在密文上做加法、乘法、重线性化和重缩放。</p>
+<p>这一篇把视角放大。CKKS 只是隐私保护数据科学工具箱中的一个重要组件。真实系统往往不会只靠一种技术，而是根据目标组合使用差分隐私、同态加密、私有集合求交、安全多方计算、SplitNN、零知识证明等方法。</p>
+<p><img data-src="/images/privacy-tech-map.svg" alt="隐私保护数据科学工具箱"></p>
+<h2 id="与-CKKS-系列的关系"><a href="#与-CKKS-系列的关系" class="headerlink" title="与 CKKS 系列的关系"></a>与 CKKS 系列的关系</h2><p>前面五篇 CKKS 文章讲的是同态加密内部的一条技术路线：如何把向量编码成多项式，如何加密、解密，如何在密文上做加法、乘法、重线性化和重缩放。</p>
+<p>本文讨论的是更大的背景：当我们想做隐私保护数据科学时，除了 CKKS 这类同态加密方案，还会用到差分隐私、安全多方计算、私有集合求交、SplitNN 等技术。</p>
+<p>可以这样理解：</p>
+<ul>
+<li>CKKS 是“加密计算”的一种重要方案，适合近似实数计算。</li>
+<li>同态加密只是隐私保护机器学习工具箱中的一类工具。</li>
+<li>不同隐私技术保护的对象、适用场景和代价都不同。</li>
+</ul>
+<h2 id="差分隐私与洗牌放大"><a href="#差分隐私与洗牌放大" class="headerlink" title="差分隐私与洗牌放大"></a>差分隐私与洗牌放大</h2><p>差分隐私已经被认为是衡量和保证数据隐私的黄金标准。不过，在实践中真正落地差分隐私，直到最近仍然很有挑战。</p>
+<p>实际使用者经常会面临一个困难选择：隐私和准确率之间如何取舍。</p>
+<p>“通过洗牌实现隐私放大”是一种相对较新的思想。它希望通过对相似数据批次进行洗牌，在保护隐私的同时提供更高的准确率。</p>
+<p>这种方法有潜力在保护隐私的同时，实现更丰富、更可靠的数据分析。</p>
+<p>如果需要更深入的解释，可以参考“什么是通过洗牌实现差分隐私？”这类资料。</p>
+<p><strong>补充：差分隐私在保护什么</strong></p>
+<p>差分隐私关注的是：从最终发布的统计结果中，攻击者是否能判断某一个人的数据是否参与了计算。</p>
+<p>它不是把数据加密起来，而是通过加入噪声、随机化或聚合机制，让单个个体的影响被隐藏起来。</p>
+<h2 id="同态加密"><a href="#同态加密" class="headerlink" title="同态加密"></a>同态加密</h2><p>一句话概括：同态加密可以让你的数据变得不可读，同时仍然允许别人对它做数学计算。</p>
+<p>同态加密，也就是 Homomorphic Encryption，简称 HE。与传统加密方法不同，同态加密允许直接在加密数据上执行有意义的计算。</p>
+<p>使用同态加密时，数据可以由数据拥有者加密，然后发送给模型拥有者进行计算。</p>
+<p>例如，患者可以加密自己的医疗数据，并把密文发送给模型拥有者。模型拥有者在密文上运行已经训练好的分类模型，比如疾病预测模型，然后把加密的预测结果返回给患者。</p>
+<p>这里有一点很重要：模型权重不一定需要加密。因为计算发生在模型拥有者一侧，模型拥有者本来就拥有模型。</p>
+<p>不过，目前同态加密仍然有一些限制：</p>
+<ul>
+<li>能执行的计算类型有限；</li>
+<li>计算性能仍然远远慢于传统明文计算；</li>
+<li>对神经网络这类复杂模型，通常需要做近似、替换激活函数、控制乘法深度等工程处理。</li>
+</ul>
+<p>前面五篇 CKKS 文章讲的就是同态加密中的一条重要路线：如何支持加密状态下的近似实数或复数计算。</p>
+<p>OpenMined 的 TenSEAL 库可以用于在张量上执行同态加密操作。</p>
+<p>你可能也会看到一些相关主题，例如：</p>
+<ul>
+<li>PySyft 中结合 SEAL 和 PyTorch 的同态加密；</li>
+<li>用 Python 从零构建一个同态加密方案；</li>
+<li>CKKS、BFV、Paillier 等不同同态加密方案。</li>
+</ul>
+<h2 id="Paillier-密码系统"><a href="#Paillier-密码系统" class="headerlink" title="Paillier 密码系统"></a>Paillier 密码系统</h2><p>Paillier 密码系统由 Pascal Paillier 在 1999 年提出。</p>
+<p>它是一种部分同态加密方案，也就是说，它只支持某些类型的同态计算，而不是任意计算。</p>
+<p>Paillier 主要支持两类计算：</p>
+<ol>
+<li>两个密文相加；</li>
+<li>一个密文乘以一个明文数。</li>
+</ol>
+<p>这和前面 CKKS 中“密文加法”和“明文乘密文”的思想有点相似，但 Paillier 的底层数学结构、适用场景和支持的计算类型都不同。</p>
+<p><strong>补充：部分同态与全同态</strong></p>
+<p>部分同态加密只支持某一种或少数几种运算，例如只支持加法，或者只支持乘法。</p>
+<p>全同态加密理论上可以支持任意由加法和乘法组合成的计算电路。CKKS 属于近似数场景下的同态加密方案，通常用于实数或复数近似计算。</p>
+<h2 id="私有集合求交"><a href="#私有集合求交" class="headerlink" title="私有集合求交"></a>私有集合求交</h2><p>一句话概括：如果两方想知道自己的数据集中是否有相同值，但又不想把各自的数据暴露给对方，就可以使用私有集合求交。</p>
+<p>私有集合求交，也就是 Private Set Intersection，简称 PSI，是一种非常有用的密码学技术。</p>
+<p>它允许两个拥有数据集合的参与方比较这些集合，同时不向对方暴露自己的原始数据。</p>
+<p>换句话说，PSI 可以测试双方是否拥有共同的数据点，例如相同的位置、ID、手机号哈希、用户标识等。</p>
+<p>最终结果是第三个集合：只包含双方共同拥有的元素。</p>
+<p>例如：</p>
+<ul>
+<li>医院 A 有一批患者 ID；</li>
+<li>研究机构 B 有一批样本 ID；</li>
+<li>双方想知道重合样本有哪些；</li>
+<li>但医院不想泄露全部患者列表，研究机构也不想泄露全部样本列表；</li>
+<li>这时可以使用 PSI。</li>
+</ul>
+<p>OpenMined 也提供过 PSI 相关库。</p>
+<p>PSI 协议可以用不同密码工具构建，例如：</p>
+<ul>
+<li>使用 Paillier 密码系统构建 PSI；</li>
+<li>使用 Diffie-Hellman 密钥交换构建 PSI。</li>
+</ul>
+<h2 id="Diffie-Hellman-密钥交换"><a href="#Diffie-Hellman-密钥交换" class="headerlink" title="Diffie-Hellman 密钥交换"></a>Diffie-Hellman 密钥交换</h2><p>Diffie-Hellman 密钥交换协议允许两方在公开信道上协商出同一个秘密，而窃听者无法知道这个秘密是什么。</p>
+<p>同时，双方也不需要向对方暴露各自的私钥。</p>
+<p>在隐私保护协议中，Diffie-Hellman 常被用作构建其他协议的基础组件。例如，某些 PSI 协议就可以基于 Diffie-Hellman 来实现。</p>
+<p><strong>补充：它解决的问题</strong></p>
+<p>两个人想共享一个秘密密钥，但通信信道可能被监听。Diffie-Hellman 的作用就是让他们即使在公开通信中，也能协商出只有双方知道的共享秘密。</p>
+<h2 id="安全多方计算"><a href="#安全多方计算" class="headerlink" title="安全多方计算"></a>安全多方计算</h2><p>一句话概括：安全多方计算允许多个参与方共同完成某个计算，并得到计算结果，但任何一方都不需要暴露自己的敏感输入。</p>
+<p>安全多方计算，也就是 Secure Multi-Party Computation，简称 SMPC。</p>
+<p>SMPC 允许多个独立参与方共同计算一个函数，同时保护各方的输入和函数参数。</p>
+<p>它可以用于下面这些场景：</p>
+<ul>
+<li>多方联合训练模型，但不公开各自训练数据；</li>
+<li>多方共同对数据做预测，但不暴露原始数据；</li>
+<li>模型参数和输入数据都需要一定程度保护的协作计算。</li>
+</ul>
+<p>SMPC 通常依赖“秘密分享”。</p>
+<p>秘密分享的思想是：把一个值拆成多个份额。单独看任何一个份额，都看不出原始值；只有把足够多的份额组合起来，才能恢复原始值。</p>
+<p>例如，一个数 10 可以拆成 3 和 7。单独看到 3 或 7，不知道原值一定是 10；但两者相加就能恢复 10。当然，真实秘密分享会更严谨、更安全。</p>
+<p>相比同态加密，SMPC 的计算通常没那么重，但它需要参与方之间进行大量通信。因此，带宽可能成为瓶颈。</p>
+<p><strong>和 CKKS 的区别</strong></p>
+<p>CKKS 通常是：数据先加密，然后在密文上计算，通信轮数可以较少，但计算成本高。</p>
+<p>SMPC 通常是：数据被拆成多个份额，不同参与方协作计算，计算可能更轻，但通信量较大。</p>
+<h2 id="CrypTen"><a href="#CrypTen" class="headerlink" title="CrypTen"></a>CrypTen</h2><p>一句话概括：CrypTen 是 Facebook Research 基于 PyTorch 开发的隐私保护机器学习框架。</p>
+<p>CrypTen 的目标是让机器学习实践者更容易使用安全计算技术，并提升服务器之间安全计算的效率。</p>
+<p>它目前使用安全多方计算作为安全计算后端。</p>
+<p>更多信息可以在 CrypTen 的 GitHub 项目仓库中找到。</p>
+<p>你也可能看到相关主题，例如：</p>
+<ul>
+<li>什么是 CrypTen；</li>
+<li>CrypTen 如何集成到 PySyft。</li>
+</ul>
+<h2 id="Split-Neural-Network"><a href="#Split-Neural-Network" class="headerlink" title="Split Neural Network"></a>Split Neural Network</h2><p>一句话概括：SplitNN 会把神经网络的训练过程“切分”到两个或更多主机上。</p>
+<p>Split Neural Network，简称 SplitNN，也就是切分神经网络。</p>
+<p>传统上，PySyft 常用于联邦学习。不过，也可以利用这个框架中的工具实现分布式神经网络。</p>
+<p>SplitNN 的基本思想是：把一个神经网络切成几段，不同参与方只负责其中一部分计算。</p>
+<p>这样，研究人员可以处理远程持有的数据，并以更去中心化的方式计算预测结果。</p>
+<p><strong>补充：SplitNN 和联邦学习有什么不同</strong></p>
+<p>联邦学习通常是多个数据方各自训练完整模型或模型副本，然后聚合参数更新。</p>
+<p>SplitNN 则是把一个模型切开。前半段可能在数据方，后半段可能在模型方，中间只传递中间激活值，而不是直接传递原始数据。</p>
+<h2 id="PyVertical"><a href="#PyVertical" class="headerlink" title="PyVertical"></a>PyVertical</h2><p>一句话概括：PyVertical 使用 PSI 以隐私保护方式连接数据集，并在纵向切分的数据上训练 SplitNN，确保整个过程中数据保持分离。</p>
+<p>所谓“纵向切分数据”，可以理解为不同参与方拥有同一批用户的不同特征。</p>
+<p>例如：</p>
+<ul>
+<li>银行有用户的金融特征；</li>
+<li>医院有用户的健康特征；</li>
+<li>两者可能有部分共同用户；</li>
+<li>但任何一方都不想直接暴露自己的原始数据。</li>
+</ul>
+<p>PyVertical 可以先使用 PSI 对齐双方共有样本，再用 SplitNN 在纵向切分数据上训练模型。</p>
+<p>这样可以在协同建模的同时，尽量保持各方数据分离。</p>
+<h2 id="零知识证明"><a href="#零知识证明" class="headerlink" title="零知识证明"></a>零知识证明</h2><p>一句话概括：零知识证明是一种数学方法，可以证明某一方拥有某个信息，但不实际泄露这个信息本身。</p>
+<p>零知识证明，也就是 Zero Knowledge Proof，简称 ZKP。</p>
+<p>它的目标是：证明“我知道某个秘密”或“某个陈述是真的”，但不暴露秘密内容。</p>
+<p>例如，一个人可以证明自己知道某个密码，而不把密码告诉验证者。</p>
+<p>OpenMined 也曾提供过用于零知识证明的 Python 库。</p>
+<p><strong>补充：零知识证明保护什么</strong></p>
+<p>同态加密保护的是计算过程中数据的可见性。</p>
+<p>SMPC 保护的是多方协作计算时各方输入的隐私。</p>
+<p>零知识证明更多用于“证明某件事是真的，但不泄露为什么是真的”。它经常用于身份认证、区块链、合规证明等场景。</p>
+<h2 id="保护模型"><a href="#保护模型" class="headerlink" title="保护模型"></a>保护模型</h2><p>注意：联邦学习和差分隐私可以用来保护数据拥有者，避免他们的隐私泄露。但它们不足以保护模型本身免受数据拥有者的窃取或滥用。</p>
+<p>例如，在联邦学习中，模型拥有者通常需要把模型副本发送给许多数据拥有者。这会让模型面临风险：</p>
+<ul>
+<li>模型知识产权可能被窃取；</li>
+<li>模型可能被恶意篡改；</li>
+<li>数据方可能通过数据投毒破坏模型。</li>
+</ul>
+<p>加密计算可以缓解这个风险。它允许模型在加密状态下训练或推理。</p>
+<p>最常见的加密计算方法包括：</p>
+<ul>
+<li>同态加密；</li>
+<li>安全多方计算；</li>
+<li>函数加密。</li>
+</ul>
+<p><strong>补充：保护数据和保护模型不是一回事</strong></p>
+<p>保护数据，关注的是用户或机构的原始数据不要泄露。</p>
+<p>保护模型，关注的是模型参数、模型结构、商业机密不要被窃取或滥用。</p>
+<p>实际系统往往需要同时考虑两者。</p>
+<h2 id="加密机器学习即服务"><a href="#加密机器学习即服务" class="headerlink" title="加密机器学习即服务"></a>加密机器学习即服务</h2><p>一句话概括：与其只提供可能泄露信息的机器学习即服务，服务提供商可以引入加密机器学习即服务，以增强客户对数据安全的信任。</p>
+<p>机器学习即服务，也就是 Machine Learning as a Service，简称 MLaaS。</p>
+<p>现在，一些云服务商会提供 MLaaS。客户通过 API 调用模型服务，得到预测结果。</p>
+<p>这里存在两个方向的隐私和安全顾虑：</p>
+<ul>
+<li>服务提供商不想公开自己的模型，因为模型对客户来说通常是黑盒，也是服务商的重要资产；</li>
+<li>客户的数据可能很敏感，也不希望通过 API 调用直接上传原始数据。</li>
+</ul>
+<p>加密机器学习，也就是 Encrypted Machine Learning，可以通过加密来同时保护数据和模型。</p>
+<p>加密机器学习即服务，Encrypted Machine Learning as a Service，简称 EMLaaS，就是在 MLaaS 场景中引入加密计算能力。</p>
+<p><strong>和 CKKS 的联系</strong></p>
+<p>如果客户用 CKKS 加密输入，服务商可以在密文上运行某些经过适配的模型，然后返回加密预测结果。客户用自己的私钥解密结果。</p>
+<p>这样，服务商看不到客户原始数据；客户也不一定能直接拿到服务商模型参数。</p>
+<p>不过在真实系统里，还需要处理性能、模型结构适配、近似误差、激活函数替换、参数选择等问题。</p>
+<h2 id="更深入地学习"><a href="#更深入地学习" class="headerlink" title="更深入地学习"></a>更深入地学习</h2><p>在这个博客系列中，作者会展示联邦学习如何提供训练模型所需的数据，以及同态加密、加密深度学习、安全多方计算和差分隐私如何保护客户端隐私。</p>
+<p>相关链接中会提供每种技术的示例代码，用于构建现代隐私保护数据应用。</p>
+<p>这些资料通常会包含大量代码片段，可以帮助你从自己的使用场景入手，并继续深入学习隐私保护机器学习的细节。</p>
+<p>涉及的主题包括：</p>
+<ul>
+<li>什么是联邦学习；</li>
+<li>什么是通过洗牌实现差分隐私；</li>
+<li>什么是同态加密；</li>
+<li>什么是 Paillier 密码系统；</li>
+<li>什么是私有集合求交；</li>
+<li>如何用 Paillier 密码系统实现私有集合求交；</li>
+<li>什么是 Diffie-Hellman 密钥交换协议；</li>
+<li>如何用 Diffie-Hellman 实现私有集合求交；</li>
+<li>什么是 Split Neural Network；</li>
+<li>什么是 PyVertical；</li>
+<li>什么是安全多方计算；</li>
+<li>什么是 CrypTen，以及 CrypTen 如何集成到 PySyft；</li>
+<li>什么是加密机器学习即服务。</li>
+</ul>
+<h2 id="本文核心概念回顾"><a href="#本文核心概念回顾" class="headerlink" title="本文核心概念回顾"></a>本文核心概念回顾</h2><ul>
+<li>差分隐私：通过随机化或噪声限制单个个体对结果的影响。</li>
+<li>洗牌放大：通过打乱数据批次来增强隐私保护效果。</li>
+<li>同态加密：允许在加密数据上计算，CKKS 是其中适合近似实数计算的重要方案。</li>
+<li>Paillier：支持部分同态计算，主要支持密文加法和密文乘明文。</li>
+<li>PSI：私有集合求交，用于发现数据集交集而不暴露全集。</li>
+<li>Diffie-Hellman：用于在公开信道上协商共享秘密。</li>
+<li>SMPC：多方协作计算函数，同时保护各方输入。</li>
+<li>CrypTen：基于 PyTorch 的隐私保护机器学习框架。</li>
+<li>SplitNN：把神经网络切分到不同参与方上训练或推理。</li>
+<li>PyVertical：结合 PSI 和 SplitNN 处理纵向切分数据。</li>
+<li>ZKP：证明某个陈述成立，但不泄露证明背后的秘密信息。</li>
+<li>EMLaaS：把加密计算引入机器学习即服务，保护客户数据和模型资产。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+        <hr class="series-nav-divider"><nav class="series-post-nav"><div class="series-post-nav-header"><span class="series-post-nav-label">系列：<a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/">CKKS学习</a></span><span class="series-post-nav-progress">7 / 7</span></div><div class="series-post-nav-links"><a href="/2026/06/ckks-part5-rescaling/" class="series-post-nav-prev" title="CKKS 讲解系列：第 5 部分，重缩放"><span class="series-post-nav-arrow">←</span><span class="series-post-nav-text"><span class="series-post-nav-hint">上一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 5 部分，重缩放</span></span></a><span class="series-post-nav-next series-post-nav-disabled"></span></div></nav>
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>且听风吟
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/" title="隐私保护数据科学：技术概览">https://xylon221.github.io/2026/06/privacy-preserving-data-science-overview/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/" rel="tag"><i class="fa fa-tag"></i> 同态加密</a>
+              <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/" rel="tag"><i class="fa fa-tag"></i> 隐私保护</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 数据科学</a>
+              <a href="/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/" rel="tag"><i class="fa fa-tag"></i> 差分隐私</a>
+              <a href="/tags/%E5%AE%89%E5%85%A8%E5%A4%9A%E6%96%B9%E8%AE%A1%E7%AE%97/" rel="tag"><i class="fa fa-tag"></i> 安全多方计算</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/06/ckks-part5-rescaling/" rel="prev" title="CKKS 讲解系列：第 5 部分，重缩放">
+                  <i class="fa fa-angle-left"></i> CKKS 讲解系列：第 5 部分，重缩放
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-feather"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">且听风吟</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -19,23 +19,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xylon221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":260,"width_dual_column":220,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":2,"unescape":false,"preload":false,"trigger":"manual"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"xylon221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":260,"width_dual_column":220,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化说明：本文根据你提供的 Part 4 原文整理为纯中文版，并做了学习向优化。原文中的部分数学符号因编码问题出现乱码，这里已按 CKKS、RLWE 和重线性化语境恢复为标准 LaTeX 公式。行内公式使用 $...$，行间公式使用 $$...$$，便于常见 Markdown 预览器正常渲染。 系列目录 第 1 部分：基础版编码与解码 第 2 部分：完整">
+    <meta name="description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。 本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 ，密文会从两个多项式膨胀成三个多项式。 本篇的目标是解释：密文乘法为什么会导致密文变大，以及重线性化如何把三分量密文压回普通二分量密文。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 4 部分，乘法与重线性化">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/">
 <meta property="og:site_name" content="且听风吟">
-<meta property="og:description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化说明：本文根据你提供的 Part 4 原文整理为纯中文版，并做了学习向优化。原文中的部分数学符号因编码问题出现乱码，这里已按 CKKS、RLWE 和重线性化语境恢复为标准 LaTeX 公式。行内公式使用 $...$，行间公式使用 $$...$$，便于常见 Markdown 预览器正常渲染。 系列目录 第 1 部分：基础版编码与解码 第 2 部分：完整">
+<meta property="og:description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。 本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 ，密文会从两个多项式膨胀成三个多项式。 本篇的目标是解释：密文乘法为什么会导致密文变大，以及重线性化如何把三分量密文压回普通二分量密文。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xylon221.github.io/images/relinearization-compression.svg">
 <meta property="article:published_time" content="2026-06-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-06-07T10:18:38.667Z">
+<meta property="article:modified_time" content="2026-06-07T11:11:11.361Z">
 <meta property="article:author" content="且听风吟">
 <meta property="article:tag" content="同态加密">
 <meta property="article:tag" content="CKKS">
 <meta property="article:tag" content="乘法">
 <meta property="article:tag" content="重线性化">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xylon221.github.io/images/relinearization-compression.svg">
 
 
 <link rel="canonical" href="https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/">
@@ -61,9 +63,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
 <script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
-<script src="/js/third-party/search/local-search.js" defer></script>
-
+  
 
 
 
@@ -226,7 +226,6 @@ mjx-container[display="true"] + br {
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
-        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -234,38 +233,12 @@ mjx-container[display="true"] + br {
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-posts"><a href="/posts/" rel="section"><i class="fa fa-feather fa-fw"></i>posts</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-search"><a href="/search/" rel="section"><i class="fa fa-search fa-fw"></i>搜索</a></li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-posts"><a href="/posts/" rel="section"><i class="fa fa-feather fa-fw"></i>posts</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
   </ul>
 </nav>
 
 
 
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-      <div class="search-header">
-        <span class="search-icon">
-          <i class="fa fa-search"></i>
-        </span>
-        <div class="search-input-container">
-          <input autocomplete="off" autocapitalize="off" maxlength="80"
-                placeholder="搜索..." spellcheck="false"
-                type="search" class="search-input">
-        </div>
-        <span class="popup-btn-close" role="button">
-          <i class="fa fa-times-circle"></i>
-        </span>
-      </div>
-      <div class="search-result-container">
-        <div class="search-result-icon">
-          <i class="fa fa-spinner fa-pulse fa-5x"></i>
-        </div>
-      </div>
-    </div>
-  </div>
 
 </header>
         
@@ -298,7 +271,7 @@ mjx-container[display="true"] + br {
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -307,7 +280,7 @@ mjx-container[display="true"] + br {
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -389,7 +362,10 @@ mjx-container[display="true"] + br {
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="CKKS-讲解系列：第-4-部分，乘法与重线性化"><a href="#CKKS-讲解系列：第-4-部分，乘法与重线性化" class="headerlink" title="CKKS 讲解系列：第 4 部分，乘法与重线性化"></a>CKKS 讲解系列：第 4 部分，乘法与重线性化</h1><p>说明：本文根据你提供的 Part 4 原文整理为纯中文版，并做了学习向优化。原文中的部分数学符号因编码问题出现乱码，这里已按 CKKS、RLWE 和重线性化语境恢复为标准 LaTeX 公式。行内公式使用 <code>$...$</code>，行间公式使用 <code>$$...$$</code>，便于常见 Markdown 预览器正常渲染。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="CKKS-讲解系列：第-4-部分，乘法与重线性化"><a href="#CKKS-讲解系列：第-4-部分，乘法与重线性化" class="headerlink" title="CKKS 讲解系列：第 4 部分，乘法与重线性化"></a>CKKS 讲解系列：第 4 部分，乘法与重线性化</h1><p>Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。</p>
+<p>本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.025ex;" xmlns="http://www.w3.org/2000/svg" width="2.04ex" height="1.912ex" role="img" focusable="false" viewBox="0 -833.9 901.6 844.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D467" d="M347 338Q337 338 294 349T231 360Q211 360 197 356T174 346T162 335T155 324L153 320Q150 317 138 317Q117 317 117 325Q117 330 120 339Q133 378 163 406T229 440Q241 442 246 442Q271 442 291 425T329 392T367 375Q389 375 411 408T434 441Q435 442 449 442H462Q468 436 468 434Q468 430 463 420T449 399T432 377T418 358L411 349Q368 298 275 214T160 106L148 94L163 93Q185 93 227 82T290 71Q328 71 360 90T402 140Q406 149 409 151T424 153Q443 153 443 143Q443 138 442 134Q425 72 376 31T278 -11Q252 -11 232 6T193 40T155 57Q111 57 76 -3Q70 -11 59 -11H54H41Q35 -5 35 -2Q35 13 93 84Q132 129 225 214T340 322Q352 338 347 338Z"></path></g><g data-mml-node="mn" transform="translate(498,363) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g></g></g></svg></mjx-container>。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.023ex;" xmlns="http://www.w3.org/2000/svg" width="2.049ex" height="1.909ex" role="img" focusable="false" viewBox="0 -833.9 905.6 843.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="msup"><g data-mml-node="mi"><path data-c="1D460" d="M131 289Q131 321 147 354T203 415T300 442Q362 442 390 415T419 355Q419 323 402 308T364 292Q351 292 340 300T328 326Q328 342 337 354T354 372T367 378Q368 378 368 379Q368 382 361 388T336 399T297 405Q249 405 227 379T204 326Q204 301 223 291T278 274T330 259Q396 230 396 163Q396 135 385 107T352 51T289 7T195 -10Q118 -10 86 19T53 87Q53 126 74 143T118 160Q133 160 146 151T160 120Q160 94 142 76T111 58Q109 57 108 57T107 55Q108 52 115 47T146 34T201 27Q237 27 263 38T301 66T318 97T323 122Q323 150 302 164T254 181T195 196T148 231Q131 256 131 289Z"></path></g><g data-mml-node="mn" transform="translate(502,363) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path></g></g></g></g></svg></mjx-container>，密文会从两个多项式膨胀成三个多项式。</p>
+<p>本篇的目标是解释：密文乘法为什么会导致密文变大，以及重线性化如何把三分量密文压回普通二分量密文。</p>
+<p><img data-src="/images/relinearization-compression.svg" alt="重线性化压缩示意图"></p>
 <h2 id="系列目录"><a href="#系列目录" class="headerlink" title="系列目录"></a>系列目录</h2><ul>
 <li>第 1 部分：基础版编码与解码</li>
 <li>第 2 部分：完整编码与解码</li>
@@ -572,7 +548,7 @@ mjx-container[display="true"] + br {
     <footer class="post-footer">
 
         
-        <hr class="series-nav-divider"><nav class="series-post-nav"><div class="series-post-nav-header"><span class="series-post-nav-label">系列：<a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/">CKKS学习</a></span><span class="series-post-nav-progress">4 / 5</span></div><div class="series-post-nav-links"><a href="/2026/06/ckks-part3-encryption-decryption/" class="series-post-nav-prev" title="CKKS 讲解系列：第 3 部分，加密与解密"><span class="series-post-nav-arrow">←</span><span class="series-post-nav-text"><span class="series-post-nav-hint">上一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 3 部分，加密与解密</span></span></a><a href="/2026/06/ckks-part5-rescaling/" class="series-post-nav-next" title="CKKS 讲解系列：第 5 部分，重缩放"><span class="series-post-nav-text"><span class="series-post-nav-hint">下一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 5 部分，重缩放</span></span><span class="series-post-nav-arrow">→</span></a></div></nav>
+        <hr class="series-nav-divider"><nav class="series-post-nav"><div class="series-post-nav-header"><span class="series-post-nav-label">系列：<a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/">CKKS学习</a></span><span class="series-post-nav-progress">5 / 7</span></div><div class="series-post-nav-links"><a href="/2026/06/ckks-part3-encryption-decryption/" class="series-post-nav-prev" title="CKKS 讲解系列：第 3 部分，加密与解密"><span class="series-post-nav-arrow">←</span><span class="series-post-nav-text"><span class="series-post-nav-hint">上一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 3 部分，加密与解密</span></span></a><a href="/2026/06/ckks-part5-rescaling/" class="series-post-nav-next" title="CKKS 讲解系列：第 5 部分，重缩放"><span class="series-post-nav-text"><span class="series-post-nav-hint">下一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 5 部分，重缩放</span></span><span class="series-post-nav-arrow">→</span></a></div></nav>
           
 
 <div class="post-copyright">

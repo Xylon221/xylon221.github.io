@@ -21,27 +21,33 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"xylon221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":260,"width_dual_column":220,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="欢迎来到我的个人博客！ 这是我的第一篇文章。以后我会在这里分享技术笔记、生活感悟和各种有趣的东西。 为什么要写博客？记录成长，分享知识。写博客不仅能帮助自己梳理思路，也能帮助到遇到同样问题的人。  写作就是思考。 —— 保羅·格雷厄姆  希望这个博客能一直写下去。">
+    <meta name="description" content="CKKS 与隐私保护数据科学系列总览 这一组文章围绕一个核心问题展开：如果用户不想暴露原始数据，服务方还能不能在数据上运行模型并返回结果？ 前五篇专注 CKKS 这条路线，解释如何在密文上做近似实数计算。第六篇把 CKKS 放进更大的隐私保护数据科学工具箱中，说明它和差分隐私、安全多方计算、私有集合求交等技术的关系。 推荐阅读顺序 CKKS 讲解系列：第 1 部分，基础版编码与解码 CKKS 讲解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你好，世界">
-<meta property="og:url" content="https://xylon221.github.io/2026/04/hello-world/">
+<meta property="og:title" content="CKKS 与隐私保护数据科学系列总览">
+<meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-series-overview/">
 <meta property="og:site_name" content="且听风吟">
-<meta property="og:description" content="欢迎来到我的个人博客！ 这是我的第一篇文章。以后我会在这里分享技术笔记、生活感悟和各种有趣的东西。 为什么要写博客？记录成长，分享知识。写博客不仅能帮助自己梳理思路，也能帮助到遇到同样问题的人。  写作就是思考。 —— 保羅·格雷厄姆  希望这个博客能一直写下去。">
+<meta property="og:description" content="CKKS 与隐私保护数据科学系列总览 这一组文章围绕一个核心问题展开：如果用户不想暴露原始数据，服务方还能不能在数据上运行模型并返回结果？ 前五篇专注 CKKS 这条路线，解释如何在密文上做近似实数计算。第六篇把 CKKS 放进更大的隐私保护数据科学工具箱中，说明它和差分隐私、安全多方计算、私有集合求交等技术的关系。 推荐阅读顺序 CKKS 讲解系列：第 1 部分，基础版编码与解码 CKKS 讲解">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-04-27T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-30T07:47:52.069Z">
+<meta property="og:image" content="https://xylon221.github.io/images/ckks-series-roadmap.svg">
+<meta property="og:image" content="https://xylon221.github.io/images/ckks-running-example.svg">
+<meta property="article:published_time" content="2026-06-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-07T11:11:27.515Z">
 <meta property="article:author" content="且听风吟">
-<meta property="article:tag" content="随想">
+<meta property="article:tag" content="同态加密">
+<meta property="article:tag" content="CKKS">
+<meta property="article:tag" content="隐私保护">
+<meta property="article:tag" content="数据科学">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xylon221.github.io/images/ckks-series-roadmap.svg">
 
 
-<link rel="canonical" href="https://xylon221.github.io/2026/04/hello-world/">
+<link rel="canonical" href="https://xylon221.github.io/2026/06/ckks-series-overview/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/04/hello-world/","path":"2026/04/hello-world/","title":"你好，世界"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-series-overview/","path":"2026/06/ckks-series-overview/","title":"CKKS 与隐私保护数据科学系列总览"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>你好，世界 | 且听风吟</title>
+<title>CKKS 与隐私保护数据科学系列总览 | 且听风吟</title>
   
 
 
@@ -141,7 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%86%99%E5%8D%9A%E5%AE%A2%EF%BC%9F"><span class="nav-text">为什么要写博客？</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CKKS-%E4%B8%8E%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6%E7%B3%BB%E5%88%97%E6%80%BB%E8%A7%88"><span class="nav-text">CKKS 与隐私保护数据科学系列总览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E9%98%85%E8%AF%BB%E9%A1%BA%E5%BA%8F"><span class="nav-text">推荐阅读顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%AF%E7%A9%BF%E4%BE%8B%E5%AD%90"><span class="nav-text">贯穿例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%A6%E4%B9%A0%E4%B8%BB%E7%BA%BF"><span class="nav-text">学习主线</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -195,7 +201,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xylon221.github.io/2026/04/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://xylon221.github.io/2026/06/ckks-series-overview/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -208,12 +214,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="你好，世界 | 且听风吟">
+      <meta itemprop="name" content="CKKS 与隐私保护数据科学系列总览 | 且听风吟">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          你好，世界
+          CKKS 与隐私保护数据科学系列总览
         </h1>
 
         <div class="post-meta-container">
@@ -224,7 +230,16 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2026-04-28 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-28T00:00:00+08:00">2026-04-28</time>
+      <time title="创建时间：2026-06-07 00:00:00" itemprop="dateCreated datePublished" datetime="2026-06-07T00:00:00+08:00">2026-06-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">CKKS学习</span></a>
+        </span>
     </span>
 
   
@@ -236,13 +251,38 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>欢迎来到我的个人博客！</p>
-<p>这是我的第一篇文章。以后我会在这里分享技术笔记、生活感悟和各种有趣的东西。</p>
-<h2 id="为什么要写博客？"><a href="#为什么要写博客？" class="headerlink" title="为什么要写博客？"></a>为什么要写博客？</h2><p>记录成长，分享知识。写博客不仅能帮助自己梳理思路，也能帮助到遇到同样问题的人。</p>
-<blockquote>
-<p>写作就是思考。 —— 保羅·格雷厄姆</p>
-</blockquote>
-<p>希望这个博客能一直写下去。</p>
+    <div class="post-body" itemprop="articleBody"><h1 id="CKKS-与隐私保护数据科学系列总览"><a href="#CKKS-与隐私保护数据科学系列总览" class="headerlink" title="CKKS 与隐私保护数据科学系列总览"></a>CKKS 与隐私保护数据科学系列总览</h1><p><img data-src="/images/ckks-series-roadmap.svg" alt="CKKS 与隐私保护数据科学学习路线"></p>
+<p>这一组文章围绕一个核心问题展开：如果用户不想暴露原始数据，服务方还能不能在数据上运行模型并返回结果？</p>
+<p>前五篇专注 CKKS 这条路线，解释如何在密文上做近似实数计算。第六篇把 CKKS 放进更大的隐私保护数据科学工具箱中，说明它和差分隐私、安全多方计算、私有集合求交等技术的关系。</p>
+<h2 id="推荐阅读顺序"><a href="#推荐阅读顺序" class="headerlink" title="推荐阅读顺序"></a>推荐阅读顺序</h2><ol>
+<li><a href="/2026/06/ckks-part1-encoding-decoding/">CKKS 讲解系列：第 1 部分，基础版编码与解码</a></li>
+<li><a href="/2026/06/ckks-part2-full-encoding-decoding/">CKKS 讲解系列：第 2 部分，完整编码与解码</a></li>
+<li><a href="/2026/06/ckks-part3-encryption-decryption/">CKKS 讲解系列：第 3 部分，加密与解密</a></li>
+<li><a href="/2026/06/ckks-part4-multiplication-relinearization/">CKKS 讲解系列：第 4 部分，乘法与重线性化</a></li>
+<li><a href="/2026/06/ckks-part5-rescaling/">CKKS 讲解系列：第 5 部分，重缩放</a></li>
+<li><a href="/2026/06/privacy-preserving-data-science-overview/">隐私保护数据科学：技术概览</a></li>
+</ol>
+<h2 id="贯穿例子"><a href="#贯穿例子" class="headerlink" title="贯穿例子"></a>贯穿例子</h2><p><img data-src="/images/ckks-running-example.svg" alt="贯穿例子：加密状态下计算一个二次风险分数"></p>
+<p>整组 CKKS 文章可以用一个例子串起来：用户有隐私特征向量 $z$，服务方有一个二次模型 $r(z)&#x3D;az^2+bz+c$。目标是服务方在看不到 $z$ 的情况下计算模型输出，用户最后解密得到近似结果。</p>
+<ul>
+<li>Part 1 解释为什么要把向量变成多项式。</li>
+<li>Part 2 解释如何把向量编码成真正 CKKS 可用的整数系数多项式。</li>
+<li>Part 3 解释如何把明文多项式加密成密文。</li>
+<li>Part 4 解释如何在密文上计算 $z^2$，以及为什么需要重线性化。</li>
+<li>Part 5 解释乘法后如何控制 scale 和噪声，让计算继续可用。</li>
+<li>技术概览解释 CKKS 之外还有哪些隐私保护工具，以及不同工具分别保护什么。</li>
+</ul>
+<h2 id="学习主线"><a href="#学习主线" class="headerlink" title="学习主线"></a>学习主线</h2><p>CKKS 的主线可以压缩成一句话：</p>
+<p>$$<br>\text{向量} \rightarrow \text{明文多项式} \rightarrow \text{密文} \rightarrow \text{密文计算} \rightarrow \text{解密解码结果}<br>$$</p>
+<p>这条链路里，每一步都有一个必须解决的问题：</p>
+<ul>
+<li>表示问题：真实数据是向量，CKKS 计算空间是多项式环。</li>
+<li>安全问题：如何让服务方计算但看不到原始数据。</li>
+<li>运算问题：如何让密文加法、乘法对应明文加法、乘法。</li>
+<li>大小问题：密文乘法后会变大，需要重线性化。</li>
+<li>精度问题：乘法后 scale 和噪声增长，需要重缩放。</li>
+<li>系统问题：真实隐私保护系统往往需要组合多种技术。</li>
+</ul>
 
     </div>
 
@@ -253,7 +293,7 @@
     <footer class="post-footer">
 
         
-        
+        <hr class="series-nav-divider"><nav class="series-post-nav"><div class="series-post-nav-header"><span class="series-post-nav-label">系列：<a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/">CKKS学习</a></span><span class="series-post-nav-progress">2 / 7</span></div><div class="series-post-nav-links"><a href="/2026/06/ckks-part1-encoding-decoding/" class="series-post-nav-prev" title="CKKS 讲解系列：第 1 部分，基础版编码与解码"><span class="series-post-nav-arrow">←</span><span class="series-post-nav-text"><span class="series-post-nav-hint">上一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 1 部分，基础版编码与解码</span></span></a><a href="/2026/06/ckks-part2-full-encoding-decoding/" class="series-post-nav-next" title="CKKS 讲解系列：第 2 部分，完整编码与解码"><span class="series-post-nav-text"><span class="series-post-nav-hint">下一篇</span><span class="series-post-nav-post-title">CKKS 讲解系列：第 2 部分，完整编码与解码</span></span><span class="series-post-nav-arrow">→</span></a></div></nav>
           
 
 <div class="post-copyright">
@@ -263,7 +303,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://xylon221.github.io/2026/04/hello-world/" title="你好，世界">https://xylon221.github.io/2026/04/hello-world/</a>
+      <a href="https://xylon221.github.io/2026/06/ckks-series-overview/" title="CKKS 与隐私保护数据科学系列总览">https://xylon221.github.io/2026/06/ckks-series-overview/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -272,17 +312,23 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/%E9%9A%8F%E6%83%B3/" rel="tag"><i class="fa fa-tag"></i> 随想</a>
+              <a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/" rel="tag"><i class="fa fa-tag"></i> 同态加密</a>
+              <a href="/tags/CKKS/" rel="tag"><i class="fa fa-tag"></i> CKKS</a>
+              <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/" rel="tag"><i class="fa fa-tag"></i> 隐私保护</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 数据科学</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2026/04/ntt-homomorphic-encryption/" rel="prev" title="同态加密中的 NTT——从多项式乘法到数论变换">
+                  <i class="fa fa-angle-left"></i> 同态加密中的 NTT——从多项式乘法到数论变换
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/04/build-blog/" rel="next" title="用纯 HTML + CSS 搭建个人博客">
-                  用纯 HTML + CSS 搭建个人博客 <i class="fa fa-angle-right"></i>
+                <a href="/2026/06/ckks-part1-encoding-decoding/" rel="next" title="CKKS 讲解系列：第 1 部分，基础版编码与解码">
+                  CKKS 讲解系列：第 1 部分，基础版编码与解码 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>

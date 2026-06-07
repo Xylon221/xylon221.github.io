@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="360" viewBox="0 0 1050 360">
+  <defs>
+    <marker id="enc-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#1e293b"/>
+    </marker>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill:#111827; }
+      .title { font-size:25px; font-weight:700; }
+      .box { rx:9; stroke:#1e293b; stroke-width:1.4; }
+      .a { fill:#fee2e2; }
+      .b { fill:#ffedd5; }
+      .c { fill:#dbeafe; }
+      .d { fill:#dcfce7; }
+      .h { font-size:18px; font-weight:700; }
+      .body { font-size:14px; fill:#334155; }
+      .arrow { stroke:#1e293b; stroke-width:1.7; marker-end:url(#enc-arrow); }
+    </style>
+  </defs>
+  <text x="525" y="36" text-anchor="middle" class="title">完整 CKKS 编码：从复数向量到整数多项式</text>
+  <rect x="55" y="92" width="190" height="115" class="box a"/>
+  <text x="150" y="122" text-anchor="middle" class="h">输入向量</text>
+  <text x="150" y="152" text-anchor="middle" class="body">z ∈ C^{N/2}</text>
+  <text x="150" y="176" text-anchor="middle" class="body">只存一半自由信息</text>
+  <line x1="245" y1="150" x2="290" y2="150" class="arrow"/>
+  <rect x="290" y="92" width="190" height="115" class="box b"/>
+  <text x="385" y="122" text-anchor="middle" class="h">共轭扩展</text>
+  <text x="385" y="152" text-anchor="middle" class="body">π^{-1}(z) ∈ H</text>
+  <text x="385" y="176" text-anchor="middle" class="body">补上共轭反序</text>
+  <line x1="480" y1="150" x2="525" y2="150" class="arrow"/>
+  <rect x="525" y="92" width="190" height="115" class="box c"/>
+  <text x="620" y="122" text-anchor="middle" class="h">缩放与舍入</text>
+  <text x="620" y="152" text-anchor="middle" class="body">乘 Δ 后投影到 σ(R)</text>
+  <text x="620" y="176" text-anchor="middle" class="body">坐标随机舍入为整数</text>
+  <line x1="715" y1="150" x2="760" y2="150" class="arrow"/>
+  <rect x="760" y="92" width="225" height="115" class="box d"/>
+  <text x="872" y="122" text-anchor="middle" class="h">逆规范嵌入</text>
+  <text x="872" y="152" text-anchor="middle" class="body">σ^{-1}</text>
+  <text x="872" y="176" text-anchor="middle" class="body">得到 m(X) ∈ Z[X]/(X^N+1)</text>
+  <text x="525" y="270" text-anchor="middle" class="body">Part 1 先讲 C 系数的基础版；Part 2 才补上共轭对称、格投影和整数系数。</text>
+</svg>

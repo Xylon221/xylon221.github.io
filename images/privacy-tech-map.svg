@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="470" viewBox="0 0 1120 470">
+  <defs>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill:#111827; }
+      .title { font-size:27px; font-weight:700; }
+      .box { rx:12; stroke:#1e293b; stroke-width:1.4; }
+      .h { font-size:18px; font-weight:700; }
+      .b { font-size:14px; fill:#334155; }
+      .data { fill:#fee2e2; }
+      .compute { fill:#dbeafe; }
+      .join { fill:#ffedd5; }
+      .proof { fill:#ede9fe; }
+      .model { fill:#dcfce7; }
+    </style>
+  </defs>
+  <text x="560" y="38" text-anchor="middle" class="title">隐私保护数据科学工具箱</text>
+  <rect x="60" y="85" width="300" height="130" class="box data"/>
+  <text x="210" y="118" text-anchor="middle" class="h">保护发布结果</text>
+  <text x="210" y="150" text-anchor="middle" class="b">差分隐私 / 洗牌放大</text>
+  <text x="210" y="178" text-anchor="middle" class="b">目标：降低单个个体可识别性</text>
+  <rect x="410" y="85" width="300" height="130" class="box compute"/>
+  <text x="560" y="118" text-anchor="middle" class="h">保护计算过程</text>
+  <text x="560" y="150" text-anchor="middle" class="b">同态加密 / SMPC / 函数加密</text>
+  <text x="560" y="178" text-anchor="middle" class="b">目标：不暴露输入也能计算</text>
+  <rect x="760" y="85" width="300" height="130" class="box join"/>
+  <text x="910" y="118" text-anchor="middle" class="h">保护数据连接</text>
+  <text x="910" y="150" text-anchor="middle" class="b">PSI / PyVertical</text>
+  <text x="910" y="178" text-anchor="middle" class="b">目标：找交集但不泄露全集</text>
+  <rect x="235" y="260" width="300" height="130" class="box proof"/>
+  <text x="385" y="293" text-anchor="middle" class="h">保护证明过程</text>
+  <text x="385" y="325" text-anchor="middle" class="b">零知识证明</text>
+  <text x="385" y="353" text-anchor="middle" class="b">目标：证明为真但不泄露秘密</text>
+  <rect x="585" y="260" width="300" height="130" class="box model"/>
+  <text x="735" y="293" text-anchor="middle" class="h">保护模型协作</text>
+  <text x="735" y="325" text-anchor="middle" class="b">SplitNN / CrypTen / EMLaaS</text>
+  <text x="735" y="353" text-anchor="middle" class="b">目标：数据和模型都少暴露</text>
+</svg>
