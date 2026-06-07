@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520">
+  <defs>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill: #1f2937; }
+      .axis { stroke: #6b7280; stroke-width: 2; }
+      .grid { stroke: #e5e7eb; stroke-width: 1; }
+      .secure { fill: #b8d58a; opacity: 0.9; stroke: #2563eb; stroke-width: 2; }
+      .bg { fill: #f7e6b1; }
+      .blue { stroke: #2563eb; stroke-width: 4; fill: none; }
+      .thin { stroke: #64748b; stroke-width: 2; fill: none; }
+      .brown { stroke: #a16207; stroke-width: 2; fill: none; marker-end: url(#arrow-brown); }
+      .red { stroke: #dc2626; stroke-width: 2; fill: none; marker-end: url(#arrow-red); }
+      .label-blue { fill: #2563eb; font-size: 22px; font-weight: 600; }
+      .label-red { fill: #dc2626; font-size: 21px; font-weight: 600; }
+      .label-brown { fill: #92400e; font-size: 21px; font-weight: 600; }
+      .tick { fill: #6b7280; font-size: 14px; }
+      .axis-label { fill: #374151; font-size: 18px; }
+    </style>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrow-brown" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a16207"/>
+    </marker>
+  </defs>
+
+  <rect x="70" y="30" width="980" height="430" class="bg" stroke="#94a3b8" stroke-width="2"/>
+
+  <g>
+    <line x1="70" y1="460" x2="1050" y2="460" class="axis"/>
+    <line x1="70" y1="460" x2="70" y2="30" class="axis"/>
+    <text x="560" y="505" text-anchor="middle" class="axis-label">n</text>
+    <text x="28" y="250" transform="rotate(-90 28 250)" text-anchor="middle" class="axis-label">log Q</text>
+
+    <text x="70" y="485" text-anchor="middle" class="tick">0</text>
+    <text x="310" y="485" text-anchor="middle" class="tick">10000</text>
+    <text x="550" y="485" text-anchor="middle" class="tick">20000</text>
+    <text x="790" y="485" text-anchor="middle" class="tick">30000</text>
+    <text x="1050" y="485" text-anchor="middle" class="tick">35000</text>
+    <text x="50" y="460" text-anchor="end" class="tick">0</text>
+    <text x="50" y="374" text-anchor="end" class="tick">200</text>
+    <text x="50" y="288" text-anchor="end" class="tick">400</text>
+    <text x="50" y="202" text-anchor="end" class="tick">600</text>
+    <text x="50" y="116" text-anchor="end" class="tick">800</text>
+    <text x="50" y="35" text-anchor="end" class="tick">1000</text>
+  </g>
+
+  <polygon points="480,304 700,220 1015,75 1050,245 480,304" class="secure"/>
+  <polyline points="100,450 190,415 310,360 480,304 700,220 1015,75" class="blue"/>
+  <polyline points="70,330 480,304 1050,245" class="thin"/>
+
+  <path d="M340 215 L640 145" class="brown"/>
+  <text x="420" y="175" class="label-brown">Inefficient</text>
+  <text x="830" y="68" class="label-blue">128-bit security</text>
+  <text x="675" y="210" class="label-red">Insecure</text>
+  <path d="M720 215 L760 275" class="red"/>
+  <text x="810" y="265" class="label-red">Secure</text>
+  <path d="M835 215 L865 245" class="red"/>
+  <text x="930" y="295" class="label-brown">For depth d</text>
+
+  <text x="145" y="285" class="label-red">Correct</text>
+  <path d="M180 330 L180 290" class="red"/>
+  <text x="190" y="375" class="label-red">Incorrect</text>
+  <path d="M230 322 L230 360" class="red"/>
+
+  <polygon points="565,276 575,300 600,300 580,315 588,340 565,325 542,340 550,315 530,300 555,300" fill="#facc15"/>
+</svg>

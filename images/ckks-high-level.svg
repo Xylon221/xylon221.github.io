@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="560" viewBox="0 0 1100 560">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111827"/>
+    </marker>
+    <style>
+      text { font-family: "Times New Roman", "Noto Serif SC", serif; fill: #111827; }
+      .label { font-size: 24px; }
+      .small { font-size: 21px; }
+      .formula { font-size: 22px; font-style: italic; }
+      .space { font-size: 20px; }
+      .box { stroke: #111827; stroke-width: 1.4; rx: 8; }
+      .msg { fill: #f7a6ab; }
+      .plain { fill: #f7d3a7; }
+      .cipher { fill: #aaa8f2; }
+      .arrow { stroke: #111827; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect x="70" y="70" width="250" height="62" class="box msg"/>
+  <text x="195" y="96" text-anchor="middle" class="label">Message</text>
+  <text x="195" y="121" text-anchor="middle" class="formula">m</text>
+  <text x="195" y="56" text-anchor="middle" class="space">C<tspan baseline-shift="super" font-size="15">N/2</tspan></text>
+
+  <rect x="440" y="70" width="250" height="62" class="box plain"/>
+  <text x="565" y="96" text-anchor="middle" class="label">Plaintext</text>
+  <text x="565" y="121" text-anchor="middle" class="formula">p(X)</text>
+  <text x="565" y="56" text-anchor="middle" class="space">Z[X]/(X<tspan baseline-shift="super" font-size="15">N</tspan> + 1)</text>
+
+  <rect x="815" y="70" width="250" height="62" class="box cipher"/>
+  <text x="940" y="96" text-anchor="middle" class="label">Ciphertext</text>
+  <text x="940" y="121" text-anchor="middle" class="formula">c = (c<tspan baseline-shift="sub" font-size="15">0</tspan>(X), c<tspan baseline-shift="sub" font-size="15">1</tspan>(X))</text>
+  <text x="940" y="56" text-anchor="middle" class="space">(Z<tspan baseline-shift="sub" font-size="15">q</tspan>[X]/(X<tspan baseline-shift="super" font-size="15">N</tspan> + 1))<tspan baseline-shift="super" font-size="15">2</tspan></text>
+
+  <path d="M 320 101 L 440 101" class="arrow"/>
+  <text x="380" y="93" text-anchor="middle" class="small">encode</text>
+  <path d="M 690 101 L 815 101" class="arrow"/>
+  <text x="752" y="93" text-anchor="middle" class="small">encrypt</text>
+
+  <rect x="815" y="392" width="250" height="62" class="box cipher"/>
+  <text x="940" y="418" text-anchor="middle" class="label">Ciphertext</text>
+  <text x="940" y="443" text-anchor="middle" class="formula">c' = f(c)</text>
+  <text x="940" y="484" text-anchor="middle" class="space">(Z<tspan baseline-shift="sub" font-size="15">q</tspan>[X]/(X<tspan baseline-shift="super" font-size="15">N</tspan> + 1))<tspan baseline-shift="super" font-size="15">2</tspan></text>
+
+  <rect x="440" y="392" width="250" height="62" class="box plain"/>
+  <text x="565" y="418" text-anchor="middle" class="label">Plaintext</text>
+  <text x="565" y="443" text-anchor="middle" class="formula">p' = f(p)</text>
+  <text x="565" y="484" text-anchor="middle" class="space">Z[X]/(X<tspan baseline-shift="super" font-size="15">N</tspan> + 1)</text>
+
+  <rect x="70" y="392" width="250" height="62" class="box msg"/>
+  <text x="195" y="418" text-anchor="middle" class="label">Message</text>
+  <text x="195" y="443" text-anchor="middle" class="formula">m' = f(m)</text>
+  <text x="195" y="484" text-anchor="middle" class="space">C<tspan baseline-shift="super" font-size="15">N/2</tspan></text>
+
+  <path d="M 940 132 L 940 392" class="arrow"/>
+  <text x="895" y="267" text-anchor="middle" class="small">compute</text>
+  <text x="958" y="267" text-anchor="middle" class="formula">f</text>
+
+  <path d="M 815 423 L 690 423" class="arrow"/>
+  <text x="752" y="414" text-anchor="middle" class="small">decrypt</text>
+  <path d="M 440 423 L 320 423" class="arrow"/>
+  <text x="380" y="414" text-anchor="middle" class="small">decode</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="560" viewBox="0 0 1050 560">
+  <defs>
+    <marker id="arrow-blue-level" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b6fd8"/>
+    </marker>
+    <style>
+      text { font-family: Arial, "Noto Sans SC", sans-serif; fill: #111827; }
+      .title { font-size: 30px; }
+      .level-line { stroke: #3b82f6; stroke-width: 1.6; }
+      .box { fill: #bcd6ee; stroke: #1d4e89; stroke-width: 2; }
+      .tick { stroke: #6ea0e8; stroke-width: 1.3; }
+      .qlabel { font-size: 27px; font-family: "Times New Roman", serif; font-style: italic; }
+      .arrow { stroke: #3b6fd8; stroke-width: 1.6; marker-end: url(#arrow-blue-level); }
+    </style>
+  </defs>
+
+  <text x="525" y="62" text-anchor="middle" class="title">Multiplication and</text>
+  <text x="525" y="98" text-anchor="middle" class="title">rescaling</text>
+  <line x1="420" y1="120" x2="670" y2="120" class="arrow"/>
+
+  <line x1="120" y1="180" x2="120" y2="495" class="level-line"/>
+  <line x1="390" y1="180" x2="390" y2="495" class="level-line"/>
+  <rect x="120" y="310" width="270" height="185" class="box"/>
+  <line x1="390" y1="310" x2="410" y2="310" class="tick"/>
+  <line x1="368" y1="354" x2="390" y2="354" class="tick"/>
+  <line x1="368" y1="398" x2="390" y2="398" class="tick"/>
+  <line x1="368" y1="442" x2="390" y2="442" class="tick"/>
+  <text x="420" y="315" class="qlabel">q<tspan baseline-shift="sub" font-size="18">L</tspan></text>
+  <text x="405" y="360" class="qlabel">q<tspan baseline-shift="sub" font-size="18">L−1</tspan></text>
+  <text x="405" y="402" class="qlabel">...</text>
+  <text x="405" y="446" class="qlabel">q<tspan baseline-shift="sub" font-size="18">2</tspan></text>
+  <text x="405" y="490" class="qlabel">q<tspan baseline-shift="sub" font-size="18">1</tspan></text>
+
+  <line x1="700" y1="180" x2="700" y2="495" class="level-line"/>
+  <line x1="970" y1="180" x2="970" y2="495" class="level-line"/>
+  <rect x="700" y="354" width="270" height="141" class="box"/>
+  <line x1="948" y1="310" x2="970" y2="310" class="tick"/>
+  <line x1="970" y1="354" x2="990" y2="354" class="tick"/>
+  <line x1="948" y1="398" x2="970" y2="398" class="tick"/>
+  <line x1="948" y1="442" x2="970" y2="442" class="tick"/>
+  <text x="995" y="315" class="qlabel">q<tspan baseline-shift="sub" font-size="18">L</tspan></text>
+  <text x="985" y="360" class="qlabel">q<tspan baseline-shift="sub" font-size="18">L−1</tspan></text>
+  <text x="985" y="402" class="qlabel">...</text>
+  <text x="985" y="446" class="qlabel">q<tspan baseline-shift="sub" font-size="18">2</tspan></text>
+  <text x="985" y="490" class="qlabel">q<tspan baseline-shift="sub" font-size="18">1</tspan></text>
+</svg>
