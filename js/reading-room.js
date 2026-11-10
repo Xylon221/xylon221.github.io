@@ -89,9 +89,10 @@ async function loadArticles() {
   const life = [];
   for (const post of articles) {
     const labels = Array.isArray(post.tags) ? post.tags : [];
-    if (labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label))) {
+    const category = post.category;
+    if (category === 'privacy' || (!category && labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label)))) {
       privacy.push(post);
-    } else if (labels.some(label => /随想|随笔|生活|读书/.test(label))) {
+    } else if (category === 'life' || (!category && labels.some(label => /随想|随笔|生活|读书/.test(label)))) {
       life.push(post);
     } else {
       technical.push(post);

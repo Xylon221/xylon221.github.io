@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src https://api.github.com; form-action 'none'; base-uri 'none'">
+  <meta name="robots" content="noindex">
+  <title>写文章 · 只想睡大觉</title>
+  <link rel="icon" href="/images/favicon-32x32-next.png">
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
+  <link rel="stylesheet" href="/css/write.css?v=1">
+  <script type="module" src="/js/write.js?v=1"></script>
+</head>
+<body>
+  <header class="room-header"><div class="room-shell header-content">
+    <a class="brand" href="/">只想睡大觉</a>
+    <nav aria-label="页面导航"><a href="/reading-room/">返回书房</a></nav>
+  </div></header>
+  <main class="room-shell write-shell">
+    <div class="write-heading"><p class="eyebrow">写作</p><h1>写文章</h1><p>写下想记录的内容，预览后发布到书房。</p></div>
+    <form id="write-form">
+      <fieldset id="write-fields">
+        <label class="write-label">标题<input id="post-title" required maxlength="120" placeholder="给这篇文章起个名字"></label>
+        <div class="write-meta">
+          <label class="write-label">分类<select id="post-category" required>
+            <option value="technical">技术笔记</option>
+            <option value="privacy">技术笔记 / 隐私计算</option>
+            <option value="life">生活随笔</option>
+          </select></label>
+          <label class="write-label">日期<input id="post-date" type="date" required></label>
+          <label class="write-label">标签<input id="post-tags" maxlength="250" placeholder="读书、生活（用逗号隔开）"></label>
+        </div>
+
+        <section class="write-content" aria-labelledby="content-title">
+          <div class="write-bar"><h2 id="content-title">正文</h2><div>
+            <button type="button" id="add-text">＋ 文字</button>
+            <button type="button" id="add-image">＋ 图片</button>
+          </div></div>
+          <input id="image-files" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" multiple hidden>
+          <div id="content-blocks"></div>
+          <p id="image-error" class="write-error" role="alert"></p>
+        </section>
+
+        <section class="write-actions" aria-label="预览和发布">
+          <button type="button" id="show-preview">预览文章</button>
+          <div class="write-auth">
+            <label class="write-label" for="github-token">GitHub 发布令牌</label>
+            <input type="password" id="github-token" autocomplete="off" spellcheck="false" placeholder="发布时填写">
+            <details><summary>如何获取令牌</summary><p>在 GitHub 创建细粒度令牌，选择仓库 <strong>xylon221.github.io</strong>，将 <strong>Contents</strong> 设为 <strong>Read and write</strong>。把生成的令牌粘贴到上方。令牌只用于本次发布请求。</p><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">去 GitHub 创建令牌 ↗</a></details>
+          </div>
+          <button class="write-primary" type="submit">发布文章</button>
+        </section>
+      </fieldset>
+    </form>
+    <div id="write-status" role="status" aria-live="polite"></div>
+    <article id="write-preview" class="write-preview" aria-label="文章预览" hidden>
+      <p class="eyebrow">文章预览</p><h2></h2><p class="preview-meta"></p><div class="write-prose"></div>
+    </article>
+  </main>
+
+  <template id="text-block"><div class="write-block" data-kind="text">
+    <label class="write-label">文字<textarea rows="8" placeholder="在这里写正文。空一行开始新段落。"></textarea></label>
+    <button type="button" class="remove-block">移除这段</button>
+  </div></template>
+  <template id="image-block"><div class="write-block write-image" data-kind="image">
+    <img alt="待发布的图片"><div><p class="image-name"></p>
+    <label class="write-label">图片说明（选填）<input maxlength="120" placeholder="描述这张图片"></label>
+    <button type="button" class="remove-block">移除图片</button></div>
+  </div></template>
+</body>
+</html>
