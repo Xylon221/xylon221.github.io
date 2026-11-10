@@ -1,448 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#fff">
-<meta name="generator" content="Hexo 7.3.0">
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
-
-<link rel="stylesheet" href="/css/main.css?v=20261110-cool-white">
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.css" integrity="sha256-gkQVf8UKZgQ0HyuxL/VnacadJ+D2Kox2TCEBuNQg5+w=" crossorigin="anonymous">
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"xylon221.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"right","width_expanded":260,"width_dual_column":220,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
-
-    <meta name="description" content="一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想">
-<meta property="og:type" content="website">
-<meta property="og:title" content="且听风吟">
-<meta property="og:url" content="https://xylon221.github.io/archives/">
-<meta property="og:site_name" content="且听风吟">
-<meta property="og:description" content="一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="且听风吟">
-<meta property="article:tag" content="博客,技术,生活,随想">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="canonical" href="https://xylon221.github.io/archives/">
-
-
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"archives/index.html","title":""}</script>
-
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>归档 | 且听风吟</title>
-  
-
-
-
-
-
-
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.31/fancybox/fancybox.umd.js" integrity="sha256-a+H7FYzJv6oU2hfsfDGM2Ohw/cR9v+hPfxHCLdmCrE8=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
-
-  
-
-
-
-  <script src="/js/third-party/fancybox.js" defer></script>
-
-
-
-  
-
-
-
-
-  
-
-  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
-<script src="/js/third-party/math/mathjax.js" defer></script>
-
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff">
+  <title>归档 · 只想睡大觉</title>
+  <link rel="icon" href="/images/favicon-32x32-next.png">
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-grid">
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
-
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">且听风吟</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">静けさの中で、言葉を見つける</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-    </div>
-  </div>
-</div>
-
-
-
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-reading-room"><a href="/reading-room/" rel="section">书房</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section" aria-current="page">归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section">标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section">关于</a></li>
-  </ul>
+<body>
+  <header class="room-header">
+<div class="room-shell header-content">
+<a aria-label="只想睡大觉，返回封面" class="brand" href="/">只想睡大觉</a>
+<nav aria-label="书房导航">
+<a href="/reading-room/">书房</a>
+<a aria-current="page" href="/archives/">归档</a>
+<a href="/tags/">标签</a>
+<a href="/about/">关于</a>
 </nav>
-
-
-
-
+</div>
 </header>
-        
-  
-  <aside class="sidebar">
-
-    <div class="sidebar-inner sidebar-overview-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-        </div>
-        <!--/noindex-->
-
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">且听风吟</p>
-  <div class="site-description" itemprop="description">一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想</div>
-</div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">11</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">16</span>
-        <span class="site-state-item-name">标签</span>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author animated">
-      <span class="links-of-author-item">
-        <a href="https://github.com/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-  </div>
-
-        </div>
-      </div>
+  <main class="room-shell">
+    <div class="room-intro"><div><p class="eyebrow">按年月浏览</p><h1>归档</h1></div><p>共 11 篇文章</p></div>
+    <div class="archive-layout">
+      <nav class="archive-jump" aria-label="年月索引"><div><a href="#year-2026">2026</a><ul><li><a href="#month-2026-06">06月</a></li><li><a href="#month-2026-04">04月</a></li></ul></div></nav>
+      <div class="archive-timeline"><section class="archive-year" id="year-2026"><h2>2026</h2><div class="archive-months"><section class="archive-month" id="month-2026-06"><h3>06月</h3><article class="archive-entry">
+  <img class="archive-thumb" src="/images/privacy-tech-map.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/privacy-preserving-data-science-overview/">隐私保护数据科学：技术概览</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-12">2026-06-12</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/">隐私保护</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/">数据科学</a> <a href="/tags/%E5%B7%AE%E5%88%86%E9%9A%90%E7%A7%81/">差分隐私</a> <a href="/tags/%E5%AE%89%E5%85%A8%E5%A4%9A%E6%96%B9%E8%AE%A1%E7%AE%97/">安全多方计算</a></p>
+  <p class="archive-excerpt">前五篇已经从 CKKS 内部讲清楚了一条同态加密路线：如何把向量变成多项式，如何加密、解密，如何在密文上做加法、乘法、重线性化和重缩放。 这一篇把视角放大。CKKS 只是隐私保护数据科学工具箱中的一个重要组件。真实系统往往不会只靠一种技术，而是根据目标组合使用差分隐私、同态加密、私有集合求…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/ckks-rescaling-levels.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-part5-rescaling/">CKKS 讲解系列：第 5 部分，重缩放</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-11">2026-06-11</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E9%87%8D%E7%BC%A9%E6%94%BE/">重缩放</a></p>
+  <p class="archive-excerpt">Part 4 已经解决了密文乘法之后“密文大小膨胀”的问题：通过重线性化，可以把三分量密文压回二分量密文。 但 CKKS 还剩最后一个必须处理的问题：乘法会让缩放因子从 变成 ，也会让噪声继续增长。如果不控制，几次乘法之后就会溢出或解密失败。 本篇讲重缩放，也就是 CKKS 中用于管理 s…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/relinearization-compression.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-part4-multiplication-relinearization/">CKKS 讲解系列：第 4 部分，乘法与重线性化</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-10">2026-06-10</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E4%B9%98%E6%B3%95/">乘法</a> <a href="/tags/%E9%87%8D%E7%BA%BF%E6%80%A7%E5%8C%96/">重线性化</a></p>
+  <p class="archive-excerpt">Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。 本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 ，密文会从两个多项式膨胀成三个多项式。 本篇的目标是解释：密文乘法为什么会导致…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/lwe-rlwe-comparison.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-part3-encryption-decryption/">CKKS 讲解系列：第 3 部分，加密与解密</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-09">2026-06-09</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E5%8A%A0%E5%AF%86/">加密</a> <a href="/tags/%E8%A7%A3%E5%AF%86/">解密</a></p>
+  <p class="archive-excerpt">前两篇解决了“表示问题”：如何把真实数据向量 编码成 CKKS 可以处理的整数多项式 。 本篇开始解决“安全问题”：如何把明文多项式加密成密文，使服务方可以在看不懂数据的情况下继续计算。 在贯穿例子中，用户已经把特征向量编码成 。现在要做的是生成密文 ，把它交给服务方。服务方只能看到密文，…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/ckks-encoding-map.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-part2-full-encoding-decoding/">CKKS 讲解系列：第 2 部分，完整编码与解码</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-08">2026-06-08</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E7%BC%96%E7%A0%81/">编码</a> <a href="/tags/%E8%A7%A3%E7%A0%81/">解码</a></p>
+  <p class="archive-excerpt">Part 1 中的基础版编码已经说明了：规范嵌入 可以在复数向量和复数系数多项式之间建立一一对应，并且保持加法和乘法结构。 但 CKKS 真正需要的不是复数系数多项式，而是整数系数多项式 。本篇就在 Part 1 的基础上补齐真正 CKKS 编码需要的三个关键环节：共轭扩展、格投影和缩放舍…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/ckks-series-roadmap.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-part1-encoding-decoding/">CKKS 讲解系列：第 1 部分，基础版编码与解码</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-07">2026-06-07</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E7%BC%96%E7%A0%81/">编码</a> <a href="/tags/%E8%A7%A3%E7%A0%81/">解码</a></p>
+  <p class="archive-excerpt">本篇是整个 CKKS 学习路线的起点。CKKS 的计算对象最终是多项式，而真实数据通常是向量，所以第一步必须先搞清楚：如何把向量和多项式互相转换。 这一篇先讲一个“基础版”编码器。它还不是真正可用于 CKKS 加密的最终编码器，因为它会得到复数系数多项式；但它能把最核心的数学结构讲清楚：规…</p>
+</article><article class="archive-entry">
+  <img class="archive-thumb" src="/images/ckks-series-roadmap.svg" alt="" loading="lazy" decoding="async"><h4><a class="post-title-link" href="/2026/06/ckks-series-overview/">CKKS 与隐私保护数据科学系列总览</a></h4>
+  <p class="archive-meta"><time datetime="2026-06-07">2026-06-07</time><a href="/tags/%E5%90%8C%E6%80%81%E5%8A%A0%E5%AF%86/">同态加密</a> <a href="/tags/CKKS/">CKKS</a> <a href="/tags/%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4/">隐私保护</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/">数据科学</a></p>
+  <p class="archive-excerpt">这一组文章围绕一个核心问题展开：如果用户不想暴露原始数据，服务方还能不能在数据上运行模型并返回结果？ 前五篇专注 CKKS 这条路线，解释如何在密文上做近似实数计算。第六篇把 CKKS 放进更大的隐私保护数据科学工具箱中，说明它和差分隐私、安全多方计算、私有集合求交等技术的关系。 推荐阅读…</p>
+</article></section><section class="archive-month" id="month-2026-04"><h3>04月</h3><article class="archive-entry">
+  <h4><a class="post-title-link" href="/2026/04/ntt-homomorphic-encryption/">同态加密中的 NTT——从多项式乘法到数论变换</a></h4>
+  <p class="archive-meta"><time datetime="2026-04-30">2026-04-30</time><a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a></p>
+  <p class="archive-excerpt">如果你看过全同态加密的实现（BFV、BGV、CKKS），一定会反复遇到一个词：NTT（Number Theoretic Transform，数论变换）。它是 FHE 性能的核心，没有它，同态加密的多项式运算会慢到不可用。 这篇文章从零讲清楚 NTT 是什么、为什么用它、以及它在同态加密里到…</p>
+</article><article class="archive-entry">
+  <h4><a class="post-title-link" href="/2026/04/keep-learning/">保持学习的习惯</a></h4>
+  <p class="archive-meta"><time datetime="2026-04-29">2026-04-29</time><a href="/tags/%E7%94%9F%E6%B4%BB/">生活</a></p>
+  <p class="archive-excerpt">技术圈变化很快，新框架、新工具层出不穷。但真正拉开差距的，不是追了多少新技术，而是有没有一个可持续的学习节奏。 每天一小时与其周末突击一整天，不如每天固定一小时。一小时看起来不多，但一年就是三百六十五个小时，足以掌握一两门新技能。 我会把早上头脑最清醒的一小时留给学习——看书、读源码、或者…</p>
+</article><article class="archive-entry">
+  <h4><a class="post-title-link" href="/2026/04/build-blog/">用纯 HTML + CSS 搭建个人博客</a></h4>
+  <p class="archive-meta"><time datetime="2026-04-28">2026-04-28</time><a href="/tags/%E6%8A%80%E6%9C%AF/">技术</a></p>
+  <p class="archive-excerpt">这篇博客就是用纯 HTML + CSS 搭建的。没有框架，没有构建工具，没有任何依赖。 项目结构my-blog/├── index.html # 首页├── posts/ # 文章目录│ ├── hello-world.html│ └── build-blog.html├── css/│ …</p>
+</article><article class="archive-entry">
+  <h4><a class="post-title-link" href="/2026/04/hello-world/">你好，世界</a></h4>
+  <p class="archive-meta"><time datetime="2026-04-28">2026-04-28</time><a href="/tags/%E9%9A%8F%E6%83%B3/">随想</a></p>
+  <p class="archive-excerpt">欢迎来到我的个人博客！ 这是我的第一篇文章。以后我会在这里分享技术笔记、生活感悟和各种有趣的东西。 为什么要写博客？记录成长，分享知识。写博客不仅能帮助自己梳理思路，也能帮助到遇到同样问题的人。 写作就是思考。 —— 保羅·格雷厄姆 希望这个博客能一直写下去。</p>
+</article></section></div></section></div>
     </div>
-
-    
-  </aside>
-
-
-    </div>
-
-    <div class="main-inner archive posts-collapse">
-
-
-  
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 11 篇日志。 继续努力。</span>
-      </div>
-
-      
-    <div class="collection-year">
-      <span class="collection-header">2026<span class="collection-year-count">11</span></span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-12T00:00:00+08:00"
-              content="2026-06-12">
-          06-12
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/privacy-preserving-data-science-overview/" itemprop="url">
-            <span itemprop="name">隐私保护数据科学：技术概览</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-11T00:00:00+08:00"
-              content="2026-06-11">
-          06-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-part5-rescaling/" itemprop="url">
-            <span itemprop="name">CKKS 讲解系列：第 5 部分，重缩放</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-10T00:00:00+08:00"
-              content="2026-06-10">
-          06-10
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-part4-multiplication-relinearization/" itemprop="url">
-            <span itemprop="name">CKKS 讲解系列：第 4 部分，乘法与重线性化</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-09T00:00:00+08:00"
-              content="2026-06-09">
-          06-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-part3-encryption-decryption/" itemprop="url">
-            <span itemprop="name">CKKS 讲解系列：第 3 部分，加密与解密</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-08T00:00:00+08:00"
-              content="2026-06-08">
-          06-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-part2-full-encoding-decoding/" itemprop="url">
-            <span itemprop="name">CKKS 讲解系列：第 2 部分，完整编码与解码</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-07T00:00:00+08:00"
-              content="2026-06-07">
-          06-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-part1-encoding-decoding/" itemprop="url">
-            <span itemprop="name">CKKS 讲解系列：第 1 部分，基础版编码与解码</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-06-07T00:00:00+08:00"
-              content="2026-06-07">
-          06-07
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/06/ckks-series-overview/" itemprop="url">
-            <span itemprop="name">CKKS 与隐私保护数据科学系列总览</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-04-30T00:00:00+08:00"
-              content="2026-04-30">
-          04-30
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/04/ntt-homomorphic-encryption/" itemprop="url">
-            <span itemprop="name">同态加密中的 NTT——从多项式乘法到数论变换</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-04-29T00:00:00+08:00"
-              content="2026-04-29">
-          04-29
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/04/keep-learning/" itemprop="url">
-            <span itemprop="name">保持学习的习惯</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2026-04-28T00:00:00+08:00"
-              content="2026-04-28">
-          04-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2026/04/build-blog/" itemprop="url">
-            <span itemprop="name">用纯 HTML + CSS 搭建个人博客</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-
-    </div>
-  </div>
-  
-  
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-</div>
   </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-
-  <div class="copyright">
-    &copy; 
-    <span itemprop="copyrightYear">2026</span>
-    <span class="with-love">
-      <i class="fa fa-feather"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">且听风吟</span>
-  </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
-
-    </div>
-  </footer>
-
-  
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-  <div class="sidebar-dimmer"></div>
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
+  <footer class="room-shell room-footer"><span>只想睡大觉</span><a href="/reading-room/">返回书房 ↑</a></footer>
 </body>
 </html>

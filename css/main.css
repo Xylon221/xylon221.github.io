@@ -1,4 +1,4 @@
-@import url("./journal.css?v=20261110-cool-white");
+@import url("./journal.css?v=20261110-grid");
 
 :root {
   --body-bg-color: #eee;
@@ -3344,7 +3344,7 @@ body {
   --table-row-hover-bg-color: var(--journal-tint);
 }
 
-body { background: var(--journal-paper); color: var(--journal-ink); font-family: var(--journal-body); font-size: 18px; }
+body { background: var(--journal-grid); color: var(--journal-ink); font-family: var(--journal-body); font-size: 18px; }
 body .headband { display: none; }
 .use-motion :is(.column, .site-title, .footer) { opacity: 1; }
 .use-motion :is(.menu-item, .post-block, .pagination, .comments, .post-header, .post-body, .collection-header) { visibility: visible; animation: none; }
@@ -3383,6 +3383,7 @@ a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px;
   box-shadow: none;
 }
 .main .sidebar-inner { color: var(--journal-ink); }
+.main-inner .post-block, .main-inner .post-block:not(:first-child):not(:first-child) { background: transparent; }
 .main .sidebar-nav li, .main .site-description { color: var(--journal-muted); }
 .main .post-toc a { color: var(--journal-ink); font-family: var(--journal-title); }
 .main .sidebar-nav .sidebar-nav-active, .main .post-toc .active-current > a { color: var(--journal-accent); border-color: var(--journal-accent); }

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="且听风吟的书房，收录技术笔记、读书心得与生活片段。">
+  <meta name="description" content="只想睡大觉的书房，收录技术笔记、读书心得与生活片段。">
   <meta name="theme-color" content="#fff">
-  <title>书房 · 且听风吟</title>
+  <title>书房 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-cool-white">
-  <script src="/js/reading-room.js" defer></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-grid">
+  <script src="/js/reading-room.js?v=20261110-grid" defer></script>
 </head>
 <body class="room-page">
   <a class="skip-link" href="#articles">跳到文章列表</a>
   <header class="room-header">
     <div class="room-shell header-content">
-      <a class="brand" href="/" aria-label="且听风吟，返回封面">且听风吟</a>
+      <a class="brand" href="/" aria-label="只想睡大觉，返回封面">只想睡大觉</a>
       <nav aria-label="书房导航">
         <a href="/reading-room/" aria-current="page">书房</a>
         <a href="/archives/">归档</a>
@@ -25,37 +25,28 @@
   </header>
 
   <main class="room-shell">
-    <div class="room-intro">
-      <div><p class="eyebrow">XYLON’S JOURNAL / INDEX</p><h1>书房</h1></div>
+    <header class="room-hero">
+      <p class="eyebrow">只想睡大觉的个人博客</p>
+      <h1>书房</h1>
       <p>记录技术笔记、读书心得与生活片段。</p>
-    </div>
-
-    <div class="room-grid">
-      <aside class="profile" aria-labelledby="profile-title">
-        <p class="eyebrow">01 / 作者</p>
-        <h2 id="profile-title">Xylon</h2>
-        <p>一个喜欢安静写字的人。白天写代码，晚上读书。</p>
-        <nav class="profile-links" aria-label="个人链接">
-          <a href="/about/">关于我 <span aria-hidden="true">↗</span></a>
-          <a href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
-        </nav>
-      </aside>
+    </header>
 
       <section class="articles" id="articles" aria-labelledby="articles-title" tabindex="-1">
         <div class="section-heading">
-          <h2 id="articles-title"><span class="eyebrow" aria-hidden="true">02</span> 文章</h2>
+          <h2 id="articles-title">文章板块</h2>
           <a href="/archives/">全部归档 <span aria-hidden="true">↗</span></a>
         </div>
         <p id="article-status" class="status" role="status" hidden></p>
+        <nav id="topic-nav" class="topic-nav" aria-label="文章板块"></nav>
         <div id="article-list" class="article-list"></div>
         <noscript><p>可以在<a href="/archives/">文章归档</a>浏览所有文章。</p></noscript>
         <template id="article-template">
           <article class="article-card">
             <a class="article-link">
-              <div class="article-art" aria-hidden="true"></div>
+              <img class="article-art" alt="" loading="lazy" decoding="async" hidden>
               <div class="article-text">
                 <p class="article-meta"></p>
-                <h3></h3>
+                <h4></h4>
                 <p class="article-summary"></p>
                 <ul class="article-tags" aria-label="文章标签"></ul>
               </div>
@@ -64,8 +55,18 @@
         </template>
       </section>
 
+    <div class="room-notes">
+      <aside class="profile" aria-labelledby="profile-title">
+        <p class="eyebrow">作者</p>
+        <h2 id="profile-title">只想睡大觉</h2>
+        <p>一个喜欢安静写字的人。白天写代码，晚上读书。</p>
+        <nav class="profile-links" aria-label="个人链接">
+          <a href="/about/">关于我 <span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </aside>
       <aside class="updates" aria-labelledby="updates-title">
-        <div class="section-heading"><h2 id="updates-title"><span class="eyebrow" aria-hidden="true">03</span> 动态</h2></div>
+        <div class="section-heading"><h2 id="updates-title">动态</h2></div>
         <p id="update-status" class="status" role="status" hidden></p>
         <div id="update-list" class="update-list"></div>
         <noscript><p>启用 JavaScript 后可查看动态。</p></noscript>
@@ -80,6 +81,6 @@
     </div>
   </main>
 
-  <footer class="room-shell room-footer"><a href="https://unsplash.com/photos/aerial-view-of-pine-trees-in-mist-OYFHT4X5isg">林雾摄影 · Dan Otis</a><a href="/">返回封面 ↑</a></footer>
+  <footer class="room-shell room-footer"><a href="https://unsplash.com/photos/aerial-view-of-pine-trees-in-mist-OYFHT4X5isg">雾林摄影 · Dan Otis</a><a href="/">返回封面 ↑</a></footer>
 </body>
 </html>

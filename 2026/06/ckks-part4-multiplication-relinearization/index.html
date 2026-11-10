@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
 
-<link rel="stylesheet" href="/css/main.css?v=20261110-cool-white">
+<link rel="stylesheet" href="/css/main.css?v=20261110-grid">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
 
@@ -25,13 +25,13 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 4 部分，乘法与重线性化">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/">
-<meta property="og:site_name" content="且听风吟">
+<meta property="og:site_name" content="只想睡大觉">
 <meta property="og:description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。 本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 ，密文会从两个多项式膨胀成三个多项式。 本篇的目标是解释：密文乘法为什么会导致密文变大，以及重线性化如何把三分量密文压回普通二分量密文。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xylon221.github.io/images/relinearization-compression.svg">
 <meta property="article:published_time" content="2026-06-09T16:00:00.000Z">
 <meta property="article:modified_time" content="2026-06-07T11:11:11.361Z">
-<meta property="article:author" content="且听风吟">
+<meta property="article:author" content="只想睡大觉">
 <meta property="article:tag" content="同态加密">
 <meta property="article:tag" content="CKKS">
 <meta property="article:tag" content="乘法">
@@ -46,7 +46,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/","path":"2026/06/ckks-part4-multiplication-relinearization/","title":"CKKS 讲解系列：第 4 部分，乘法与重线性化"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CKKS 讲解系列：第 4 部分，乘法与重线性化 | 且听风吟</title>
+<title>CKKS 讲解系列：第 4 部分，乘法与重线性化 | 只想睡大觉</title>
   
 
 
@@ -218,10 +218,9 @@ mjx-container[display="true"] + br {
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">且听风吟</p>
+      <p class="site-title">只想睡大觉</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">静けさの中で、言葉を見つける</p>
   </div>
 
   <div class="site-nav-right">
@@ -264,7 +263,7 @@ mjx-container[display="true"] + br {
 
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">且听风吟</p>
+  <p class="site-author-name" itemprop="name">只想睡大觉</p>
   <div class="site-description" itemprop="description">一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想</div>
 </div>
 <div class="site-state-wrap animated">
@@ -316,16 +315,16 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="且听风吟">
+      <meta itemprop="name" content="只想睡大觉">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="且听风吟">
+      <meta itemprop="name" content="只想睡大觉">
       <meta itemprop="description" content="一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="CKKS 讲解系列：第 4 部分，乘法与重线性化 | 且听风吟">
+      <meta itemprop="name" content="CKKS 讲解系列：第 4 部分，乘法与重线性化 | 只想睡大觉">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
@@ -554,7 +553,7 @@ mjx-container[display="true"] + br {
 <div class="post-copyright">
 <ul>
   <li class="post-copyright-author">
-      <strong>本文作者： </strong>且听风吟
+      <strong>本文作者： </strong>只想睡大觉
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
@@ -608,7 +607,7 @@ mjx-container[display="true"] + br {
     <span class="with-love">
       <i class="fa fa-feather"></i>
     </span>
-    <span class="author" itemprop="copyrightHolder">且听风吟</span>
+    <span class="author" itemprop="copyrightHolder">只想睡大觉</span>
   </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>

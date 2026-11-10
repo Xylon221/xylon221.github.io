@@ -1,5 +1,5 @@
 async function fetchPage(path) {
-  const response = await fetch(path);
+  const response = await fetch(path, { cache: 'no-cache' });
   if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
   return response;
 }
@@ -35,7 +35,16 @@ async function loadArchiveDates() {
 function renderArticle(post, template) {
   const card = template.content.cloneNode(true);
   card.querySelector('a').href = post.url;
-  card.querySelector('h3').textContent = post.title;
+  const thumbnail = card.querySelector('.article-art');
+  if (post.image) {
+    const image = new URL(post.image, new URL(post.url, location.origin));
+    if (image.protocol === 'https:' || image.protocol === 'http:') {
+      thumbnail.addEventListener('error', () => { thumbnail.hidden = true; }, { once: true });
+      thumbnail.src = image.href;
+      thumbnail.hidden = false;
+    }
+  }
+  card.querySelector('h4').textContent = post.title;
   card.querySelector('.article-meta').textContent = post.date;
 
   const summary = card.querySelector('.article-summary');
@@ -58,7 +67,7 @@ function renderArticle(post, template) {
 
 async function loadArticles() {
   const [index, dates] = await Promise.all([
-    fetchPage('/search.json').then(response => response.json()),
+    fetchPage('/search.json?v=20261110-grid').then(response => response.json()),
     loadArchiveDates().catch(() => new Map()),
   ]);
   const articles = index.flatMap(post => {
@@ -66,15 +75,53 @@ async function loadArticles() {
     const url = new URL(post.url, location.origin);
     if (url.origin !== location.origin || !['http:', 'https:'].includes(url.protocol)) return [];
     const month = url.pathname.match(/^\/(\d{4})\/(\d{2})\//);
-    const date = dates.get(url.pathname) || (month ? `${month[1]}-${month[2]}` : '');
+    const date = post.date || dates.get(url.pathname) || (month ? `${month[1]}-${month[2]}` : '');
     return [{ ...post, url: url.pathname, date }];
   });
   articles.sort((first, second) => second.date.localeCompare(first.date));
 
   if (!articles.length) showStatus('article-status', '暂时还没有文章。');
   const list = document.getElementById('article-list');
+  const navigation = document.getElementById('topic-nav');
   const template = document.getElementById('article-template');
-  list.append(...articles.map(post => renderArticle(post, template)));
+  const topics = [
+    { id: 'privacy', title: '隐私计算', summary: '同态加密、CKKS 与隐私保护数据科学', posts: [] },
+    { id: 'technical', title: '技术笔记', summary: '编程、工具和学习记录', posts: [] },
+    { id: 'life', title: '生活随笔', summary: '读书、日常和写下来的片段', posts: [] },
+  ];
+  for (const post of articles) {
+    const labels = Array.isArray(post.tags) ? post.tags : [];
+    const topic = labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label))
+      ? topics[0]
+      : labels.some(label => /随想|随笔|生活|读书/.test(label)) ? topics[2] : topics[1];
+    topic.posts.push(post);
+  }
+
+  for (const [index, topic] of topics.entries()) {
+    if (!topic.posts.length) continue;
+    const shortcut = document.createElement('a');
+    shortcut.href = `#${topic.id}`;
+    const label = document.createElement('span');
+    label.className = 'eyebrow';
+    label.textContent = `0${index + 1} · ${topic.posts.length} 篇`;
+    const name = document.createElement('strong');
+    name.textContent = topic.title;
+    const summary = document.createElement('span');
+    summary.textContent = topic.summary;
+    shortcut.append(label, name, summary);
+    navigation.append(shortcut);
+
+    const section = document.createElement('section');
+    section.className = 'topic-section';
+    section.id = topic.id;
+    const heading = document.createElement('h3');
+    heading.textContent = topic.title;
+    const cards = document.createElement('div');
+    cards.className = 'topic-cards';
+    cards.append(...topic.posts.map(post => renderArticle(post, template)));
+    section.append(heading, cards);
+    list.append(section);
+  }
 }
 
 async function loadUpdates() {

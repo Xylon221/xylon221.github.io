@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
 
-<link rel="stylesheet" href="/css/main.css?v=20261110-cool-white">
+<link rel="stylesheet" href="/css/main.css?v=20261110-grid">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
 
@@ -25,14 +25,14 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 5 部分，重缩放">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part5-rescaling/">
-<meta property="og:site_name" content="且听风吟">
+<meta property="og:site_name" content="只想睡大觉">
 <meta property="og:description" content="CKKS 讲解系列：第 5 部分，重缩放Part 4 已经解决了密文乘法之后“密文大小膨胀”的问题：通过重线性化，可以把三分量密文压回二分量密文。 但 CKKS 还剩最后一个必须处理的问题：乘法会让缩放因子从  变成 ，也会让噪声继续增长。如果不控制，几次乘法之后就会溢出或解密失败。 本篇讲重缩放，也就是 CKKS 中用于管理 scale、噪声和模数层级的关键操作。到这一篇结束，贯穿例子中的二次风">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xylon221.github.io/images/ckks-rescaling-levels.svg">
 <meta property="og:image" content="https://xylon221.github.io/images/ckks-security-tradeoff.svg">
 <meta property="article:published_time" content="2026-06-10T16:00:00.000Z">
 <meta property="article:modified_time" content="2026-06-07T11:11:11.363Z">
-<meta property="article:author" content="且听风吟">
+<meta property="article:author" content="只想睡大觉">
 <meta property="article:tag" content="同态加密">
 <meta property="article:tag" content="CKKS">
 <meta property="article:tag" content="重缩放">
@@ -46,7 +46,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-part5-rescaling/","path":"2026/06/ckks-part5-rescaling/","title":"CKKS 讲解系列：第 5 部分，重缩放"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CKKS 讲解系列：第 5 部分，重缩放 | 且听风吟</title>
+<title>CKKS 讲解系列：第 5 部分，重缩放 | 只想睡大觉</title>
   
 
 
@@ -218,10 +218,9 @@ mjx-container[display="true"] + br {
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">且听风吟</p>
+      <p class="site-title">只想睡大觉</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">静けさの中で、言葉を見つける</p>
   </div>
 
   <div class="site-nav-right">
@@ -264,7 +263,7 @@ mjx-container[display="true"] + br {
 
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">且听风吟</p>
+  <p class="site-author-name" itemprop="name">只想睡大觉</p>
   <div class="site-description" itemprop="description">一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想</div>
 </div>
 <div class="site-state-wrap animated">
@@ -316,16 +315,16 @@ mjx-container[display="true"] + br {
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="且听风吟">
+      <meta itemprop="name" content="只想睡大觉">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="且听风吟">
+      <meta itemprop="name" content="只想睡大觉">
       <meta itemprop="description" content="一个安静写字的地方——记录技术笔记、生活片段，以及偶尔的胡思乱想">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="CKKS 讲解系列：第 5 部分，重缩放 | 且听风吟">
+      <meta itemprop="name" content="CKKS 讲解系列：第 5 部分，重缩放 | 只想睡大觉">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
@@ -576,7 +575,7 @@ mjx-container[display="true"] + br {
 <div class="post-copyright">
 <ul>
   <li class="post-copyright-author">
-      <strong>本文作者： </strong>且听风吟
+      <strong>本文作者： </strong>只想睡大觉
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
@@ -629,7 +628,7 @@ mjx-container[display="true"] + br {
     <span class="with-love">
       <i class="fa fa-feather"></i>
     </span>
-    <span class="author" itemprop="copyrightHolder">且听风吟</span>
+    <span class="author" itemprop="copyrightHolder">只想睡大觉</span>
   </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
