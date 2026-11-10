@@ -1,35 +1,29 @@
 :root {
   color-scheme: light dark;
-  --journal-paper: #f4f8ee;
-  --journal-panel: #fffdf6;
-  --journal-ink: #263e36;
-  --journal-muted: #51675c;
-  --journal-line: #d8e5d6;
-  --journal-leaf: #e5f2e3;
-  --journal-water: #dcefeb;
-  --journal-peach: #f9ebdc;
-  --journal-accent: #2d6856;
-  --journal-accent-text: #fffdf3;
-  --journal-warm: #9b523e;
-  --journal-shadow: 0 12px 32px #31574712, 0 2px 4px #31574708;
-  --journal-wallpaper: radial-gradient(ellipse at 90% 0%, var(--journal-water), transparent 40rem), radial-gradient(ellipse at 0% 10%, var(--journal-peach), transparent 27rem), var(--journal-paper);
-  --journal-serif: "Noto Serif SC", "Songti SC", "Noto Serif CJK SC", SimSun, Georgia, serif;
+  --journal-paper: #f5f3ed;
+  --journal-panel: #fbfaf6;
+  --journal-ink: #202b24;
+  --journal-muted: #555f56;
+  --journal-line: #d3d5ca;
+  --journal-tint: #e7ebe2;
+  --journal-accent: #365448;
+  --journal-accent-text: #fbfaf6;
+  --journal-signal: #835840;
+  --journal-shell: min(92%, 82rem);
+  --journal-serif: Georgia, "Songti SC", "Noto Serif CJK SC", SimSun, serif;
   --journal-sans: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --journal-paper: #172822;
-    --journal-panel: #21342c;
-    --journal-ink: #e5eee3;
-    --journal-muted: #bed1c1;
-    --journal-line: #3d594b;
-    --journal-leaf: #284238;
-    --journal-water: #294746;
-    --journal-peach: #43362f;
-    --journal-accent: #a2d2b3;
-    --journal-accent-text: #182a22;
-    --journal-warm: #edb29a;
-    --journal-shadow: 0 12px 32px #0c1c1755;
+    --journal-paper: #1c2420;
+    --journal-panel: #232d27;
+    --journal-ink: #edf0e7;
+    --journal-muted: #bdc9bc;
+    --journal-line: #44554a;
+    --journal-tint: #303f35;
+    --journal-accent: #bed6c3;
+    --journal-accent-text: #1c2420;
+    --journal-signal: #e6bc9e;
   }
 }
