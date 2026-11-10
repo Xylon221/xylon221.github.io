@@ -1,0 +1,35 @@
+:root {
+  color-scheme: light dark;
+  --journal-paper: #f4f8ee;
+  --journal-panel: #fffdf6;
+  --journal-ink: #263e36;
+  --journal-muted: #51675c;
+  --journal-line: #d8e5d6;
+  --journal-leaf: #e5f2e3;
+  --journal-water: #dcefeb;
+  --journal-peach: #f9ebdc;
+  --journal-accent: #2d6856;
+  --journal-accent-text: #fffdf3;
+  --journal-warm: #9b523e;
+  --journal-shadow: 0 12px 32px #31574712, 0 2px 4px #31574708;
+  --journal-wallpaper: radial-gradient(ellipse at 90% 0%, var(--journal-water), transparent 40rem), radial-gradient(ellipse at 0% 10%, var(--journal-peach), transparent 27rem), var(--journal-paper);
+  --journal-serif: "Noto Serif SC", "Songti SC", "Noto Serif CJK SC", SimSun, Georgia, serif;
+  --journal-sans: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --journal-paper: #172822;
+    --journal-panel: #21342c;
+    --journal-ink: #e5eee3;
+    --journal-muted: #bed1c1;
+    --journal-line: #3d594b;
+    --journal-leaf: #284238;
+    --journal-water: #294746;
+    --journal-peach: #43362f;
+    --journal-accent: #a2d2b3;
+    --journal-accent-text: #182a22;
+    --journal-warm: #edb29a;
+    --journal-shadow: 0 12px 32px #0c1c1755;
+  }
+}

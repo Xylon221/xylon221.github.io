@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 540" fill="none">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#bce2e4"/><stop offset="1" stop-color="#f5f1d3"/>
+    </linearGradient>
+    <linearGradient id="lake" x1=".5" x2=".5" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#80bcb6"/><stop offset="1" stop-color="#cce4cb"/>
+    </linearGradient>
+    <pattern id="paper" width="7" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r=".6" fill="#365a45" opacity=".12"/>
+      <circle cx="6" cy="7" r=".4" fill="#fff" opacity=".45"/>
+    </pattern>
+    <g id="flower">
+      <path d="M0 0q-2 27 11 53" stroke="#557d58" stroke-width="2"/>
+      <path d="M4 26q10-13 18-9q-2 10-17 12M6 36q-13-8-22-4q6 10 23 9" fill="#689363"/>
+      <path d="M0-2q-9 6-11-1q-2-6 7-7q-4-10 3-11q8-1 7 9q9-4 12 3q2 7-9 9q6 7-1 10q-7 2-8-12" fill="#e79a78"/>
+      <circle cx="2" cy="-3" r="3" fill="#fbe3a0"/>
+    </g>
+    <g id="grass" stroke="#4b805e" stroke-linecap="round" stroke-width="2">
+      <path d="M0 0Q-3-16-12-24M0 0q4-19 15-28M0 0q1-23-2-33"/>
+    </g>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h840v540H0z"/>
+  <circle cx="597" cy="145" r="73" fill="#f9de9f"/>
+  <circle cx="597" cy="145" r="86" stroke="#fff8df" stroke-dasharray="2 9" opacity=".9"/>
+  <path d="M63 128h128m-87-12h115m497 81h70m-94 13h51M28 213h95" stroke="#fffdf0" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+  <path d="M175 96q12-8 22 2q10-10 22-6m19 23q8-5 14 1q7-6 16-5m441-30q7-4 13 1q6-6 14-3" stroke="#4f7c78" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M0 328q79-77 165-96q52-10 105-43q37-25 66-6q75 48 131 61q51 12 105-16q59-30 103-7l165 87v232H0Z" fill="#a6c9a9"/>
+  <path d="M0 337q95-20 169-65q62-38 143 6q66 35 150 15q73-17 136-36q116-34 242 33v250H0Z" fill="#82ad89"/>
+  <path d="M0 357q81-42 165-25q88 19 146 2q84-24 188-8q133 19 341-21v235H0Z" fill="url(#lake)"/>
+  <path d="M255 360q100-9 210 1t273-4m-438 21q116 7 251 1m-329 20h110m123 2h116m-259 18q108 5 231-3m-338 21h106m106 16q110-8 170-5" stroke="#e7f4e7" stroke-width="2.4" stroke-linecap="round" opacity=".8"/>
+  <path d="M0 356q106-29 165-5q80 35 63 58q-16 23-64 29q-30 4-41 28q-9 19-54 38H0Z" fill="#b7cb8b"/>
+  <path d="M0 388q52-18 98-14q77 7 99 24q18 17-69 35q-29 6-39 35L0 518Z" fill="#e4dfa2"/>
+  <path d="M0 428q94-39 166 4q58 35 198 49q88 9 163 59H0Z" fill="#699971"/>
+  <path d="M0 470q87-30 164 5q73 34 176 65H0Z" fill="#91b17a"/>
+  <path d="M840 375q-108-21-157 23q-27 23 0 35q29 14-7 42q-54 40-145 65h309Z" fill="#8ab187"/>
+  <path d="M840 421q-67-22-124 17q-39 28-25 37q18 11-12 34q-28 21-61 31h222Z" fill="#5e906b"/>
+  <path d="M0 0h840v540H0z" fill="url(#paper)"/>
+  <g opacity=".9">
+    <use href="#grass" x="51" y="478"/><use href="#grass" x="221" y="504"/><use href="#grass" x="120" y="523"/>
+    <use href="#grass" x="769" y="481"/><use href="#grass" x="802" y="447"/><use href="#grass" x="717" y="519"/>
+    <use href="#flower" transform="translate(57 428) rotate(-15) scale(1.15)"/>
+    <use href="#flower" transform="translate(90 457) rotate(8) scale(.68)"/>
+    <use href="#flower" transform="translate(153 478) rotate(-14) scale(.7)"/>
+    <use href="#flower" transform="translate(790 462) rotate(12) scale(1.2)"/>
+    <use href="#flower" transform="translate(760 489) rotate(-12) scale(.75)"/>
+    <use href="#flower" transform="translate(824 414) rotate(-8) scale(.7)"/>
+  </g>
+  <path d="M382 416q19 4 39 0l-7 6h-25Z" fill="#ba6d58"/>
+  <path d="M402 415v-24l-13 20h13Z" fill="#fff5d9"/>
+</svg>

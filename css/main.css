@@ -1,3 +1,5 @@
+@import url("./journal.css");
+
 :root {
   --body-bg-color: #eee;
   --content-bg-color: #fff;
@@ -3531,4 +3533,139 @@ body {
     text-align: left;
     justify-content: flex-start;
   }
+}
+
+/* Journal palette for existing NexT article and index pages. */
+:root {
+  color-scheme: light dark;
+  --body-bg-color: var(--journal-paper);
+  --content-bg-color: var(--journal-panel);
+  --card-bg-color: var(--journal-leaf);
+  --text-color: var(--journal-ink);
+  --theme-color: var(--journal-panel);
+  --brand-color: var(--journal-ink);
+  --brand-hover-color: var(--journal-accent);
+  --link-color: var(--journal-accent);
+  --link-hover-color: var(--journal-ink);
+  --selection-bg: var(--journal-accent);
+  --selection-color: var(--journal-accent-text);
+  --menu-item-bg-color: var(--journal-leaf);
+  --table-row-odd-bg-color: var(--journal-panel);
+  --table-row-hover-bg-color: var(--journal-leaf);
+}
+
+body { background: var(--journal-wallpaper) fixed; color: var(--journal-ink); }
+body .headband { height: 3px; background: linear-gradient(90deg, #9dc59c, #90c7c7 55%, #eeb894); }
+.use-motion :is(.column, .site-title, .footer), .use-motion .site-brand-container .toggle { opacity: 1; }
+.use-motion :is(.menu-item, .post-block, .pagination, .comments, .post-header, .post-body, .collection-header) {
+  visibility: visible;
+  animation: none;
+}
+a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px; }
+.main { width: min(92%, 82rem); }
+.main-inner { min-width: 0; background: transparent; }
+.main .header, .main .sidebar-inner,
+.main-inner .post-block,
+.main-inner .post-block:not(:first-child):not(:first-child),
+.main-inner .pagination, .main-inner > .comments {
+  border: 1px solid var(--journal-line);
+  border-radius: 1rem;
+  background: var(--journal-panel);
+  box-shadow: var(--journal-shadow);
+}
+.main .header { margin-top: 1rem; }
+.site-brand-container { border-radius: 1rem; background: transparent; }
+.site-meta { padding: .65rem .25rem; }
+.site-meta .brand { display: inline-flex; align-items: center; gap: .55rem; color: var(--journal-ink); }
+.site-meta .brand::before {
+  content: "";
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--journal-leaf) url("/images/journal-sprig.svg") center / 88% no-repeat;
+}
+.site-meta .logo-line, .site-meta .site-subtitle { display: none; }
+.site-meta .site-title { font-family: var(--journal-serif); font-size: 1.1rem; font-weight: 750; letter-spacing: .12em; white-space: nowrap; }
+.main .menu .menu-item a { gap: .25rem; border-radius: 2rem; color: var(--journal-muted); font-family: var(--journal-sans); font-size: .85rem; letter-spacing: normal; }
+.main .menu .menu-item a:hover, .main .menu .menu-item-active a { background: var(--journal-leaf); color: var(--journal-accent); }
+.main-menu .menu-item-active::after { display: none; }
+.site-nav-toggle .toggle .toggle-line, .site-nav-right .toggle .toggle-line { background: var(--journal-accent); }
+.site-nav-toggle .toggle, .site-nav-right .toggle { color: var(--journal-accent); }
+
+.main .sidebar-inner { background: linear-gradient(150deg, var(--journal-leaf), var(--journal-panel) 70%); color: var(--journal-ink); }
+.main .sidebar-nav li, .main .site-description, .main .post-toc a { color: var(--journal-muted); }
+.main .sidebar-nav .sidebar-nav-active, .main .post-toc .active-current > a { color: var(--journal-accent); border-color: var(--journal-accent); }
+.main-inner .post-block { padding: clamp(1rem, 3.4vw, 2.9rem); }
+.main-inner.posts-expand .post-header {
+  margin-bottom: 1.65rem;
+  padding: clamp(1.2rem, 3vw, 2rem);
+  border: 1px solid var(--journal-line);
+  border-radius: .95rem;
+  background: url("/images/journal-sprig.svg") right .55rem center / auto 82% no-repeat, linear-gradient(115deg, var(--journal-leaf), var(--journal-water));
+  text-align: left;
+}
+.main-inner.posts-expand .post-header .post-title { max-width: 85%; margin: 0; color: var(--journal-ink); font-family: var(--journal-serif); font-size: clamp(1.5rem, 3.2vw, 2.7rem); font-weight: 700; line-height: 1.38; }
+.main-inner.posts-expand .post-meta { justify-content: flex-start; color: var(--journal-muted); }
+.main-inner.posts-expand .post-title-link { color: inherit; }
+.main-inner .post-body { color: var(--journal-ink); font-family: var(--journal-serif); }
+.main-inner .post-body :is(h1, h2, h3, h4) { color: var(--journal-ink); border-color: var(--journal-line); }
+.main-inner .post-body h2 { border-left-color: var(--journal-accent); }
+.main-inner .post-body blockquote { padding: .75rem 1.2rem; border-color: var(--journal-warm); border-radius: 0 .6rem .6rem 0; background: var(--journal-peach); color: var(--journal-ink); }
+.main-inner .post-body :is(pre, code) { border-color: var(--journal-line); background: var(--journal-leaf); color: var(--journal-ink); }
+.main-inner .post-body pre code { padding: 0; background: transparent; }
+.main-inner .post-body a { color: var(--journal-accent); border-color: var(--journal-line); }
+.main-inner .post-body a:hover { border-color: var(--journal-accent); }
+
+.posts-collapse .collection-title:first-child { padding: .8rem 1.2rem; border: 1px solid var(--journal-line); border-radius: .75rem; background: url("/images/journal-sprig.svg") right center / auto 95% no-repeat, var(--journal-leaf); }
+.posts-collapse .collection-header, .main .post-title-link { color: var(--journal-ink); }
+.posts-collapse .collection-header small, .main .post-meta-container { color: var(--journal-muted); }
+.posts-collapse .post-header { border-color: var(--journal-line); }
+.posts-collapse .post-header::before { background: var(--journal-accent); }
+.main .post-tags a, .main .tag-cloud a {
+  padding: .2rem .7rem;
+  border: 1px solid var(--journal-line);
+  border-radius: 2rem;
+  background: var(--journal-leaf);
+  color: var(--journal-accent);
+}
+.main .post-tags a:hover, .main .tag-cloud a:hover { background: var(--journal-water); }
+.main .pagination .page-number.current { border-radius: 2rem; background: var(--journal-accent); color: var(--journal-accent-text); }
+.main .post-button .btn { border-color: var(--journal-accent); border-radius: 2rem; background: var(--journal-leaf); color: var(--journal-accent); }
+.main .post-button .btn:hover { background: var(--journal-accent); color: var(--journal-accent-text); }
+.main .series-nav-sidebar, .main .series-post-nav a:is(.series-post-nav-prev, .series-post-nav-next) {
+  border-color: var(--journal-line);
+  border-radius: .8rem;
+  background: var(--journal-leaf);
+}
+.main :is(.series-nav-title, .series-nav-post-title, .series-post-nav-post-title) { color: var(--journal-ink); }
+.main :is(.series-nav-count, .series-nav-date, .series-post-nav-progress, .series-post-nav-hint, .series-nav-breadcrumb, .series-nav-all),
+.main .series-nav-breadcrumb a { color: var(--journal-muted); }
+.main .series-nav-item:hover, .main .series-post-nav a:is(.series-post-nav-prev, .series-post-nav-next):hover { background: var(--journal-water); color: var(--journal-accent); }
+.footer .footer-inner { padding-inline: 0; color: var(--journal-muted); }
+body > .back-to-top { background: var(--journal-accent); color: var(--journal-accent-text); }
+
+@media (min-width: 992px) {
+  .main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 16rem);
+    align-items: start;
+    gap: 1.35rem;
+  }
+  .main > .column { display: contents; }
+  .main > .column > .header { grid-area: 1 / 1 / 2 / -1; display: flex; justify-content: space-between; align-items: center; min-height: 4rem; gap: .75rem; padding-inline: 1.25rem; }
+  .main > .column > .sidebar { grid-area: 2 / 2; top: 1rem; min-width: 0; }
+  .main > .main-inner { grid-area: 2 / 1; width: 100%; }
+  .main-menu { display: flex; align-items: center; padding: 0; }
+  .main .menu .menu-item a { padding: .3rem .8rem; }
+  .main .sidebar-inner { margin-top: 0; visibility: visible; }
+}
+
+@media (max-width: 991px) {
+  .main .header { margin-bottom: 1.2rem; }
+  .main .main-inner { padding: 0; }
+  .main .site-nav { margin-inline: .75rem; }
+}
+@media (max-width: 640px) {
+  .main-inner.posts-expand .post-header { background-size: auto 62%, auto; background-position: right center, center; }
+  .main-inner.posts-expand .post-header .post-title { max-width: 92%; }
 }
