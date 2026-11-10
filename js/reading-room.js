@@ -84,26 +84,36 @@ async function loadArticles() {
   const list = document.getElementById('article-list');
   const navigation = document.getElementById('topic-nav');
   const template = document.getElementById('article-template');
-  const topics = [
-    { id: 'privacy', title: '隐私计算', summary: '同态加密、CKKS 与隐私保护数据科学', posts: [] },
-    { id: 'technical', title: '技术笔记', summary: '编程、工具和学习记录', posts: [] },
-    { id: 'life', title: '生活随笔', summary: '读书、日常和写下来的片段', posts: [] },
-  ];
+  const privacy = [];
+  const technical = [];
+  const life = [];
   for (const post of articles) {
     const labels = Array.isArray(post.tags) ? post.tags : [];
-    const topic = labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label))
-      ? topics[0]
-      : labels.some(label => /随想|随笔|生活|读书/.test(label)) ? topics[2] : topics[1];
-    topic.posts.push(post);
+    if (labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label))) {
+      privacy.push(post);
+    } else if (labels.some(label => /随想|随笔|生活|读书/.test(label))) {
+      life.push(post);
+    } else {
+      technical.push(post);
+    }
   }
 
+  const topics = [
+    { id: 'technical', title: '技术笔记', summary: '隐私计算、编程和学习记录', groups: [
+      { id: 'privacy', title: '隐私计算', posts: privacy },
+      { title: privacy.length ? '其他技术笔记' : '', posts: technical },
+    ] },
+    { id: 'life', title: '生活随笔', summary: '读书、日常和写下来的片段', groups: [{ posts: life }] },
+  ];
+
   for (const [index, topic] of topics.entries()) {
-    if (!topic.posts.length) continue;
+    const count = topic.groups.reduce((total, group) => total + group.posts.length, 0);
+    if (!count) continue;
     const shortcut = document.createElement('a');
     shortcut.href = `#${topic.id}`;
     const label = document.createElement('span');
     label.className = 'eyebrow';
-    label.textContent = `0${index + 1} · ${topic.posts.length} 篇`;
+    label.textContent = `0${index + 1} · ${count} 篇`;
     const name = document.createElement('strong');
     name.textContent = topic.title;
     const summary = document.createElement('span');
@@ -116,10 +126,24 @@ async function loadArticles() {
     section.id = topic.id;
     const heading = document.createElement('h3');
     heading.textContent = topic.title;
-    const cards = document.createElement('div');
-    cards.className = 'topic-cards';
-    cards.append(...topic.posts.map(post => renderArticle(post, template)));
-    section.append(heading, cards);
+    section.append(heading);
+    for (const group of topic.groups) {
+      if (!group.posts.length) continue;
+      const block = document.createElement('div');
+      block.className = 'topic-group';
+      if (group.id) block.id = group.id;
+      if (group.title) {
+        const subtitle = document.createElement('p');
+        subtitle.className = 'topic-group-title';
+        subtitle.textContent = group.title;
+        block.append(subtitle);
+      }
+      const cards = document.createElement('div');
+      cards.className = 'topic-cards';
+      cards.append(...group.posts.map(post => renderArticle(post, template)));
+      block.append(cards);
+      section.append(block);
+    }
     list.append(section);
   }
 }

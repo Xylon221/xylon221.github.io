@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#fff">
   <title>书房 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-grid">
-  <script src="/js/reading-room.js?v=20261110-grid" defer></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
+  <script src="/js/reading-room.js?v=20261110-columns" defer></script>
 </head>
 <body class="room-page">
   <a class="skip-link" href="#articles">跳到文章列表</a>
@@ -30,6 +30,17 @@
       <h1>书房</h1>
       <p>记录技术笔记、读书心得与生活片段。</p>
     </header>
+
+    <div class="room-grid">
+      <aside class="profile" aria-labelledby="profile-title">
+        <p class="eyebrow">作者</p>
+        <h2 id="profile-title">只想睡大觉</h2>
+        <p>一个喜欢安静写字的人。白天写代码，晚上读书。</p>
+        <nav class="profile-links" aria-label="个人链接">
+          <a href="/about/">关于我 <span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </aside>
 
       <section class="articles" id="articles" aria-labelledby="articles-title" tabindex="-1">
         <div class="section-heading">
@@ -55,16 +66,6 @@
         </template>
       </section>
 
-    <div class="room-notes">
-      <aside class="profile" aria-labelledby="profile-title">
-        <p class="eyebrow">作者</p>
-        <h2 id="profile-title">只想睡大觉</h2>
-        <p>一个喜欢安静写字的人。白天写代码，晚上读书。</p>
-        <nav class="profile-links" aria-label="个人链接">
-          <a href="/about/">关于我 <span aria-hidden="true">↗</span></a>
-          <a href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
-        </nav>
-      </aside>
       <aside class="updates" aria-labelledby="updates-title">
         <div class="section-heading"><h2 id="updates-title">动态</h2></div>
         <p id="update-status" class="status" role="status" hidden></p>
