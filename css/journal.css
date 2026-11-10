@@ -1,29 +1,15 @@
 :root {
-  color-scheme: light dark;
-  --journal-paper: #f5f3ed;
-  --journal-panel: #fbfaf6;
-  --journal-ink: #202b24;
-  --journal-muted: #555f56;
-  --journal-line: #d3d5ca;
-  --journal-tint: #e7ebe2;
-  --journal-accent: #365448;
-  --journal-accent-text: #fbfaf6;
-  --journal-signal: #835840;
+  color-scheme: light;
+  --journal-paper: #fff;
+  --journal-panel: #fff;
+  --journal-ink: #2e405b;
+  --journal-heading: #111;
+  --journal-muted: #666;
+  --journal-line: #e5e8ed;
+  --journal-tint: #f5f7fa;
+  --journal-accent: #2e405b;
+  --journal-accent-text: #fff;
   --journal-shell: min(92%, 82rem);
-  --journal-serif: Georgia, "Songti SC", "Noto Serif CJK SC", SimSun, serif;
-  --journal-sans: system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --journal-paper: #1c2420;
-    --journal-panel: #232d27;
-    --journal-ink: #edf0e7;
-    --journal-muted: #bdc9bc;
-    --journal-line: #44554a;
-    --journal-tint: #303f35;
-    --journal-accent: #bed6c3;
-    --journal-accent-text: #1c2420;
-    --journal-signal: #e6bc9e;
-  }
+  --journal-body: "Times New Roman", "楷体", KaiTi, STKaiti, "华文中宋", STZhongsong, serif;
+  --journal-title: "Times New Roman", "华文中宋", STZhongsong, "宋体", SimSun, serif;
 }

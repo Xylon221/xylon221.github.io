@@ -1,4 +1,4 @@
-@import url("./journal.css?v=20261110-photo");
+@import url("./journal.css?v=20261110-cool-white");
 
 :root {
   --body-bg-color: #eee;
@@ -27,45 +27,6 @@
   --highlight-gutter-background: #e9e9ea;
   --highlight-gutter-foreground: #393e42;
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --body-bg-color: #282828;
-    --content-bg-color: #333;
-    --card-bg-color: #555;
-    --text-color: #ccc;
-    --selection-bg: #bbb;
-    --selection-color: #333;
-    --blockquote-color: #bbb;
-    --link-color: #ccc;
-    --link-hover-color: #eee;
-    --brand-color: #ddd;
-    --brand-hover-color: #ddd;
-    --table-row-odd-bg-color: #282828;
-    --table-row-hover-bg-color: #363636;
-    --menu-item-bg-color: #555;
-    --theme-color: #222;
-    --btn-default-bg: #222;
-    --btn-default-color: #ccc;
-    --btn-default-border-color: #555;
-    --btn-default-hover-bg: #666;
-    --btn-default-hover-color: #ccc;
-    --btn-default-hover-border-color: #666;
-    --highlight-background: #0d1117;
-    --highlight-foreground: #c9d1d9;
-    --highlight-gutter-background: #1f242a;
-    --highlight-gutter-foreground: #b6bdc5;
-    color-scheme: dark;
-  }
-  img {
-    opacity: 0.75;
-  }
-  img:hover {
-    opacity: 0.9;
-  }
-  iframe {
-    color-scheme: light;
-  }
 }
 html {
   line-height: 1.15; /* 1 */
@@ -522,126 +483,6 @@ code.hljs {
   /* purposely ignored */
   
 }
-@media (prefers-color-scheme: dark) {
-pre code.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 1em
-}
-code.hljs {
-  padding: 3px 5px
-}
-/*!
-  Theme: GitHub Dark
-  Description: Dark theme as seen on github.com
-  Author: github.com
-  Maintainer: @Hirse
-  Updated: 2021-05-15
-
-  Outdated base version: https://github.com/primer/github-syntax-dark
-  Current colors taken from GitHub's CSS
-*/
-.hljs {
-  color: #c9d1d9;
-  background: #0d1117
-}
-.hljs-doctag,
-.hljs-keyword,
-.hljs-meta .hljs-keyword,
-.hljs-template-tag,
-.hljs-template-variable,
-.hljs-type,
-.hljs-variable.language_ {
-  /* prettylights-syntax-keyword */
-  color: #ff7b72
-}
-.hljs-title,
-.hljs-title.class_,
-.hljs-title.class_.inherited__,
-.hljs-title.function_ {
-  /* prettylights-syntax-entity */
-  color: #d2a8ff
-}
-.hljs-attr,
-.hljs-attribute,
-.hljs-literal,
-.hljs-meta,
-.hljs-number,
-.hljs-operator,
-.hljs-variable,
-.hljs-selector-attr,
-.hljs-selector-class,
-.hljs-selector-id {
-  /* prettylights-syntax-constant */
-  color: #79c0ff
-}
-.hljs-regexp,
-.hljs-string,
-.hljs-meta .hljs-string {
-  /* prettylights-syntax-string */
-  color: #a5d6ff
-}
-.hljs-built_in,
-.hljs-symbol {
-  /* prettylights-syntax-variable */
-  color: #ffa657
-}
-.hljs-comment,
-.hljs-code,
-.hljs-formula {
-  /* prettylights-syntax-comment */
-  color: #8b949e
-}
-.hljs-name,
-.hljs-quote,
-.hljs-selector-tag,
-.hljs-selector-pseudo {
-  /* prettylights-syntax-entity-tag */
-  color: #7ee787
-}
-.hljs-subst {
-  /* prettylights-syntax-storage-modifier-import */
-  color: #c9d1d9
-}
-.hljs-section {
-  /* prettylights-syntax-markup-heading */
-  color: #1f6feb;
-  font-weight: bold
-}
-.hljs-bullet {
-  /* prettylights-syntax-markup-list */
-  color: #f2cc60
-}
-.hljs-emphasis {
-  /* prettylights-syntax-markup-italic */
-  color: #c9d1d9;
-  font-style: italic
-}
-.hljs-strong {
-  /* prettylights-syntax-markup-bold */
-  color: #c9d1d9;
-  font-weight: bold
-}
-.hljs-addition {
-  /* prettylights-syntax-markup-inserted */
-  color: #aff5b4;
-  background-color: #033a16
-}
-.hljs-deletion {
-  /* prettylights-syntax-markup-deleted */
-  color: #ffdcd7;
-  background-color: #67060c
-}
-.hljs-char.escape_,
-.hljs-link,
-.hljs-params,
-.hljs-property,
-.hljs-punctuation,
-.hljs-tag {
-  /* purposely ignored */
-  
-}
-}
 .highlight:hover .copy-btn,
 .code-container:hover .copy-btn {
   opacity: 1;
@@ -723,11 +564,6 @@ figure.highlight {
   overflow: auto;
   position: relative;
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  figure.highlight {
-    color-scheme: dark;
-  }
 }
 figure.highlight pre {
   border: 0;
@@ -2568,52 +2404,6 @@ ul.breadcrumb li:last-child {
   border-bottom-color: #111;
   color: #111;
 }
-@media (prefers-color-scheme: dark) {
-  .tag-cloud-0 {
-    border-bottom-color: #555;
-    color: #555;
-  }
-  .tag-cloud-1 {
-    border-bottom-color: #646464;
-    color: #646464;
-  }
-  .tag-cloud-2 {
-    border-bottom-color: #737373;
-    color: #737373;
-  }
-  .tag-cloud-3 {
-    border-bottom-color: #828282;
-    color: #828282;
-  }
-  .tag-cloud-4 {
-    border-bottom-color: #929292;
-    color: #929292;
-  }
-  .tag-cloud-5 {
-    border-bottom-color: #a1a1a1;
-    color: #a1a1a1;
-  }
-  .tag-cloud-6 {
-    border-bottom-color: #b0b0b0;
-    color: #b0b0b0;
-  }
-  .tag-cloud-7 {
-    border-bottom-color: #c0c0c0;
-    color: #c0c0c0;
-  }
-  .tag-cloud-8 {
-    border-bottom-color: #cfcfcf;
-    color: #cfcfcf;
-  }
-  .tag-cloud-9 {
-    border-bottom-color: #dedede;
-    color: #dedede;
-  }
-  .tag-cloud-10 {
-    border-bottom-color: #eee;
-    color: #eee;
-  }
-}
 mark.search-keyword {
   background: transparent;
   border-bottom: 1px dashed #ff2a2a;
@@ -3537,7 +3327,7 @@ body {
 
 /* Shared journal styling for generated NexT pages. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --body-bg-color: var(--journal-paper);
   --content-bg-color: var(--journal-panel);
   --card-bg-color: var(--journal-tint);
@@ -3554,7 +3344,7 @@ body {
   --table-row-hover-bg-color: var(--journal-tint);
 }
 
-body { background: var(--journal-paper); color: var(--journal-ink); font-family: var(--journal-sans); }
+body { background: var(--journal-paper); color: var(--journal-ink); font-family: var(--journal-body); font-size: 18px; }
 body .headband { display: none; }
 .use-motion :is(.column, .site-title, .footer) { opacity: 1; }
 .use-motion :is(.menu-item, .post-block, .pagination, .comments, .post-header, .post-body, .collection-header) { visibility: visible; animation: none; }
@@ -3576,10 +3366,11 @@ a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px;
 .site-meta { padding: 0; text-align: left; }
 .site-meta .brand { padding: 0; color: var(--journal-ink); text-decoration: none; }
 .site-meta .logo-line, .site-meta .site-subtitle, .main .site-nav-toggle, .main .site-nav-right { display: none; }
-.site-meta .site-title { font-family: var(--journal-serif); font-size: 1.12rem; font-weight: 700; letter-spacing: .09em; white-space: nowrap; }
+.site-meta .site-title { font-family: var(--journal-title); font-size: 1.12rem; font-weight: 700; letter-spacing: .09em; white-space: nowrap; }
 .main .main-menu { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: clamp(.45rem, 2.1vw, 1.75rem); margin: 0; padding: 0; }
-.main .menu .menu-item a { padding: .42rem 0; border-bottom: 1px solid transparent; background: transparent; color: var(--journal-muted); font-family: var(--journal-sans); font-size: .86rem; letter-spacing: normal; line-height: 1.5; white-space: nowrap; }
-.main .menu .menu-item a:hover, .main .menu .menu-item-active a, .main .menu a[aria-current="page"] { border-color: var(--journal-accent); background: transparent; color: var(--journal-accent); }
+.main .menu .menu-item a { padding: .42rem 0; border-bottom: 1px solid transparent; background: transparent; color: var(--journal-accent); font-family: var(--journal-title); font-size: .95rem; letter-spacing: normal; line-height: 1.5; white-space: nowrap; }
+.main .menu .menu-item-active a, .main .menu a[aria-current="page"] { border-color: var(--journal-accent); }
+.main .menu .menu-item a:hover { background: var(--journal-accent); color: var(--journal-accent-text); }
 .main-menu .menu-item-active::after { display: none; }
 
 .main .sidebar-inner,
@@ -3592,24 +3383,27 @@ a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px;
   box-shadow: none;
 }
 .main .sidebar-inner { color: var(--journal-ink); }
-.main .sidebar-nav li, .main .site-description, .main .post-toc a { color: var(--journal-muted); }
+.main .sidebar-nav li, .main .site-description { color: var(--journal-muted); }
+.main .post-toc a { color: var(--journal-ink); font-family: var(--journal-title); }
 .main .sidebar-nav .sidebar-nav-active, .main .post-toc .active-current > a { color: var(--journal-accent); border-color: var(--journal-accent); }
 .main-inner .post-block { padding: clamp(1.05rem, 3.4vw, 2.85rem); }
 .main-inner.posts-expand .post-header { margin-bottom: 1.55rem; padding: 0 0 1.15rem; border-bottom: 1px solid var(--journal-ink); text-align: left; }
-.main-inner.posts-expand .post-header .post-title { margin: 0; color: var(--journal-ink); font-family: var(--journal-serif); font-size: clamp(1.65rem, 3.4vw, 3rem); font-weight: 650; line-height: 1.3; }
+.main-inner.posts-expand .post-header .post-title { margin: 0; color: var(--journal-ink); font-family: var(--journal-title); font-size: clamp(1.65rem, 3.4vw, 3rem); font-weight: 700; line-height: 1.3; }
 .main-inner.posts-expand .post-meta { justify-content: flex-start; color: var(--journal-muted); }
 .main-inner.posts-expand .post-title-link { color: inherit; }
-.main-inner .post-body { color: var(--journal-ink); font-family: var(--journal-serif); }
-.main-inner .post-body :is(h1, h2, h3, h4) { color: var(--journal-ink); border-color: var(--journal-line); }
-.main-inner .post-body h2 { border-left-color: var(--journal-accent); }
-.main-inner .post-body blockquote { padding: .65rem 1.05rem; border-color: var(--journal-signal); background: var(--journal-tint); color: var(--journal-ink); }
+.main-inner .post-body { color: var(--journal-ink); font-family: var(--journal-body); font-size: 18px; line-height: 1.8; }
+.main-inner .post-body :is(h1, h2, h3, h4, h5, h6) { color: var(--journal-ink); border-color: var(--journal-line); font-family: var(--journal-title); }
+.main-inner .post-body h2 { border-left-color: var(--journal-accent); color: var(--journal-heading); font-family: var(--journal-body); }
+.main-inner .post-body h4 { color: #333; }
+.main-inner .post-body h6 { color: #444; }
+.main-inner .post-body blockquote { padding: .65rem 1.05rem; border-color: var(--journal-accent); background: var(--journal-tint); color: var(--journal-ink); }
 .main-inner .post-body :is(pre, code) { border-color: var(--journal-line); background: var(--journal-tint); color: var(--journal-ink); }
 .main-inner .post-body pre code { padding: 0; background: transparent; }
-.main-inner .post-body a { color: var(--journal-accent); border-color: var(--journal-line); }
-.main-inner .post-body a:hover { border-color: var(--journal-accent); }
+.main-inner .post-body a { color: var(--journal-accent); border-color: var(--journal-accent); font-family: var(--journal-title); }
+.main-inner .post-body a:hover { background: var(--journal-accent); color: var(--journal-accent-text); }
 
 .posts-collapse .collection-title:first-child { padding-bottom: .8rem; border-bottom: 1px solid var(--journal-ink); }
-.posts-collapse .collection-header, .main .post-title-link { color: var(--journal-ink); }
+.posts-collapse .collection-header, .main .post-title-link { color: var(--journal-ink); font-family: var(--journal-title); }
 .posts-collapse .collection-header small, .main .post-meta-container { color: var(--journal-muted); }
 .posts-collapse .post-header { border-color: var(--journal-line); }
 .posts-collapse .post-header::before { background: var(--journal-accent); }
@@ -3625,6 +3419,7 @@ a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px;
 .main .post-button .btn { border-color: var(--journal-accent); border-radius: 0; background: var(--journal-panel); color: var(--journal-accent); }
 .main .post-button .btn:hover { background: var(--journal-accent); color: var(--journal-accent-text); }
 .main .series-nav-sidebar, .main .series-post-nav a:is(.series-post-nav-prev, .series-post-nav-next) { border-color: var(--journal-line); border-radius: 0; background: var(--journal-panel); }
+.main :is(.series-nav-sidebar, .series-post-nav) { font-family: var(--journal-body); }
 .main :is(.series-nav-title, .series-nav-post-title, .series-post-nav-post-title) { color: var(--journal-ink); }
 .main :is(.series-nav-count, .series-nav-date, .series-post-nav-progress, .series-post-nav-hint, .series-nav-breadcrumb, .series-nav-all),
 .main .series-nav-breadcrumb a { color: var(--journal-muted); }
