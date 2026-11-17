@@ -9,8 +9,11 @@
   <title>写作 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
-  <link rel="stylesheet" href="/css/write.css?v=2">
-  <script type="module" src="/js/write.js?v=2"></script>
+  <link rel="stylesheet" href="/vendor/quill-2.0.3/quill.core.css">
+  <link rel="stylesheet" href="/css/article-text.css?v=1">
+  <link rel="stylesheet" href="/css/write.css?v=3">
+  <script defer src="/vendor/quill-2.0.3/quill.js"></script>
+  <script type="module" src="/js/write.js?v=3"></script>
 </head>
 <body>
   <header class="room-header"><div class="room-shell header-content">
@@ -68,13 +71,30 @@
     </form>
     <div id="write-status" role="status" aria-live="polite"></div>
     <article id="write-preview" class="write-preview" aria-label="发布预览" tabindex="-1" hidden>
-      <p class="eyebrow">发布预览</p><h2></h2><p class="preview-meta"></p><div class="write-prose"></div>
+      <p class="eyebrow">发布预览</p><h2></h2><p class="preview-meta"></p><div class="write-prose article-text"></div>
       <button type="button" id="resume-writing">继续编辑</button>
     </article>
   </main>
 
   <template id="text-block"><div class="write-block" data-kind="text">
-    <label class="write-label">文字<textarea rows="8" placeholder="在这里写正文。空一行开始新段落。"></textarea></label>
+    <div class="write-rich">
+      <div class="write-format" role="group" aria-label="文字格式">
+        <button type="button" class="ql-bold" title="加粗（Ctrl 或 ⌘ + B）" aria-label="加粗"><strong>B</strong></button>
+        <button type="button" class="ql-italic" title="斜体（Ctrl 或 ⌘ + I）" aria-label="斜体"><em>I</em></button>
+        <button type="button" class="ql-underline" title="下划线（Ctrl 或 ⌘ + U）" aria-label="下划线"><u>U</u></button>
+        <select class="ql-color" aria-label="文字颜色">
+          <option value="" selected disabled>文字颜色</option><option value="default">恢复默认</option>
+          <option value="ink">黑色</option><option value="red">红色</option><option value="blue">蓝色</option>
+          <option value="green">绿色</option><option value="purple">紫色</option>
+        </select>
+        <select class="ql-background" aria-label="高亮颜色">
+          <option value="" selected disabled>高亮颜色</option><option value="default">无高亮</option>
+          <option value="yellow">浅黄</option><option value="mint">浅绿</option><option value="sky">浅蓝</option><option value="pink">浅粉</option>
+        </select>
+        <button type="button" class="ql-clean" title="清除所选文字的格式">清除格式</button>
+      </div>
+      <div class="write-editor"></div>
+    </div>
     <button type="button" class="remove-block">移除这段</button>
   </div></template>
   <template id="image-block"><div class="write-block write-image" data-kind="image">

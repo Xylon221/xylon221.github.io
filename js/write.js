@@ -1,5 +1,7 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=2';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=3';
+import { plainText } from './article-text.js?v=1';
+import { createEditor } from './write-editor.js?v=1';
 
 const form = document.getElementById('write-form');
 const fields = document.getElementById('write-fields');
@@ -20,6 +22,7 @@ const properties = document.getElementById('write-properties');
 const publishOptions = document.getElementById('publish-options');
 const drafts = new Map();
 const images = new Map();
+const editors = new Map();
 const formats = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif' };
 const categories = { technical: '技术笔记', privacy: '技术笔记 / 隐私计算', life: '生活随笔' };
 let db;
@@ -53,6 +56,7 @@ function addBlock(kind) {
     const image = images.get(block);
     if (image) URL.revokeObjectURL(image.preview);
     images.delete(block);
+    editors.delete(block);
     block.remove();
     preview.hidden = true;
     imageError.textContent = '';
@@ -63,11 +67,14 @@ function addBlock(kind) {
   return block;
 }
 
-function addText(focus = false, text = '') {
-  const input = addBlock('text').querySelector('textarea');
-  input.value = text;
-  if (mode === 'note') input.placeholder = '想记下什么？空一行可以另起一段。';
-  if (focus) input.focus();
+function addText(focus = false, draft) {
+  const block = addBlock('text');
+  const editor = createEditor(block, { note: mode === 'note', draft, onChange: () => {
+    preview.hidden = true;
+    queueSave();
+  } });
+  editors.set(block, editor);
+  if (focus) editor.focus();
 }
 
 function addImage(file, caption = '') {
@@ -82,6 +89,7 @@ function addImage(file, caption = '') {
 function resetBlocks() {
   for (const image of images.values()) URL.revokeObjectURL(image.preview);
   images.clear();
+  editors.clear();
   blocks.replaceChildren();
 }
 
@@ -89,7 +97,7 @@ function snapshot() {
   return {
     id: draftId, mode, title: title.value, date: date.value, category: category.value, tags: tags.value,
     blocks: [...blocks.children].map(block => block.dataset.kind === 'text'
-      ? { kind: 'text', text: block.querySelector('textarea').value }
+      ? { kind: 'text', ops: editors.get(block).getContents().ops }
       : { kind: 'image', file: images.get(block).file, caption: block.querySelector('input').value }),
   };
 }
@@ -142,7 +150,7 @@ function showMode(nextMode) {
   publishOptions.open = false;
   resetBlocks();
   for (const block of draft?.blocks ?? []) {
-    if (block.kind === 'text') addText(false, block.text);
+    if (block.kind === 'text') addText(false, block);
     else addImage(block.file, block.caption);
   }
   if (!blocks.firstElementChild) addText();
@@ -167,7 +175,7 @@ for (const button of modeButtons) {
 }
 
 form.addEventListener('input', event => {
-  if (event.target === tokenInput || event.target === files) return;
+  if (event.target === tokenInput || event.target === files || event.target.closest('.write-rich')) return;
   preview.hidden = true;
   queueSave();
 });
@@ -214,8 +222,9 @@ function readDraft() {
   let number = 0;
   for (const block of blocks.children) {
     if (block.dataset.kind === 'text') {
-      const text = block.querySelector('textarea').value.trim();
-      if (text) content.push({ kind: 'text', text });
+      const ops = editors.get(block).getContents().ops;
+      const text = plainText(ops);
+      if (text) content.push({ kind: 'text', text, ops });
     } else {
       const image = images.get(block);
       const caption = block.querySelector('input').value.trim();
@@ -245,7 +254,9 @@ document.getElementById('show-preview').addEventListener('click', () => {
 
 document.getElementById('resume-writing').addEventListener('click', () => {
   preview.hidden = true;
-  (blocks.querySelector('textarea') || document.getElementById('add-text')).focus();
+  const editor = editors.values().next().value;
+  if (editor) editor.focus();
+  else document.getElementById('add-text').focus();
 });
 
 form.addEventListener('submit', async event => {
@@ -262,6 +273,7 @@ form.addEventListener('submit', async event => {
   tokenInput.value = '';
   busy = true;
   fields.disabled = true;
+  for (const editor of editors.values()) editor.disable();
   for (const button of modeButtons) button.disabled = true;
   saveDraft();
   try {
@@ -289,6 +301,7 @@ form.addEventListener('submit', async event => {
     }
   } finally {
     fields.disabled = false;
+    for (const editor of editors.values()) editor.enable();
     for (const button of modeButtons) button.disabled = false;
     busy = false;
   }

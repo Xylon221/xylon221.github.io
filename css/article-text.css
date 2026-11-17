@@ -1,0 +1,19 @@
+:is(.article-text, .published-body) {
+  font-family: var(--journal-body);
+  font-size: clamp(16px, 1.35vw, 18px);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+:is(.article-text, .published-body) > p { margin: 0; }
+:is(.article-text, .published-body) > p + p { margin-block-start: .85em; }
+:is(.article-text, .published-body) u { text-underline-offset: .16em; }
+:is(.article-text, .published-body) mark { color: inherit; }
+:is(.article-text, .published-body) .ql-color-ink { color: #15191f; }
+:is(.article-text, .published-body) .ql-color-red { color: #a22436; }
+:is(.article-text, .published-body) .ql-color-blue { color: #1758a6; }
+:is(.article-text, .published-body) .ql-color-green { color: #23623f; }
+:is(.article-text, .published-body) .ql-color-purple { color: #693490; }
+:is(.article-text, .published-body) .ql-bg-yellow { background-color: #fff0ab; }
+:is(.article-text, .published-body) .ql-bg-mint { background-color: #d5f2df; }
+:is(.article-text, .published-body) .ql-bg-sky { background-color: #dcecff; }
+:is(.article-text, .published-body) .ql-bg-pink { background-color: #f9deea; }

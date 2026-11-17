@@ -1,4 +1,5 @@
 import { articleCategory, articleText, loadCatalog } from './article-catalog.js?v=1';
+import { legacyTextOps, textHtml } from './article-text.js?v=1';
 
 const template = document.getElementById('note-template');
 const list = document.getElementById('notes-list');
@@ -21,7 +22,9 @@ function renderNote(post) {
   const characters = Array.from(articleText(post));
   const long = characters.length > excerptLimit;
   const body = card.querySelector('.note-text');
-  body.textContent = long ? `${characters.slice(0, excerptLimit).join('').trimEnd()}…` : characters.join('');
+  const excerpt = characters.slice(0, excerptLimit).join('').trimEnd();
+  const ops = long ? legacyTextOps(`${excerpt}…`) : post.note_rich_text ?? legacyTextOps(characters.join(''));
+  if (characters.length) body.innerHTML = textHtml(ops);
   body.hidden = !characters.length;
 
   const gallery = card.querySelector('.note-images');

@@ -3392,7 +3392,8 @@ a:focus-visible { outline: 2px solid var(--journal-accent); outline-offset: 4px;
 .main-inner.posts-expand .post-header .post-title { margin: 0; color: var(--journal-ink); font-family: var(--journal-title); font-size: clamp(1.65rem, 3.4vw, 3rem); font-weight: 700; line-height: 1.3; }
 .main-inner.posts-expand .post-meta { justify-content: flex-start; color: var(--journal-muted); }
 .main-inner.posts-expand .post-title-link { color: inherit; }
-.main-inner .post-body { color: var(--journal-ink); font-family: var(--journal-body); font-size: 18px; line-height: 1.8; }
+.main-inner .post-body { color: var(--journal-ink); font-family: var(--journal-body); font-size: clamp(16px, 1.35vw, 18px); line-height: 1.75; }
+.main-inner .post-body > p { margin-block: 0 .85em; text-indent: 0; }
 .main-inner .post-body :is(h1, h2, h3, h4, h5, h6) { color: var(--journal-ink); border-color: var(--journal-line); font-family: var(--journal-title); }
 .main-inner .post-body h2 { border-left-color: var(--journal-accent); color: var(--journal-heading); font-family: var(--journal-body); }
 .main-inner .post-body h4 { color: #333; }

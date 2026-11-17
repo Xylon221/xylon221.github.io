@@ -1,10 +1,8 @@
+import { escapeHtml, hasInlineFormatting, legacyTextOps, textHtml } from './article-text.js?v=1';
+
 const repository = 'https://api.github.com/repos/Xylon221/xylon221.github.io';
 const site = 'https://xylon221.github.io';
 const branch = 'main';
-
-export const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({
-  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-})[char]);
 
 const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
 const tagUrl = tag => `/tags/${encodeURIComponent(tag)}/`;
@@ -14,7 +12,7 @@ const serialize = doc => `<!doctype html>\n${doc.documentElement.outerHTML}\n`;
 export function articleBody(blocks, imageUrl) {
   return blocks.map(block => {
     if (block.kind === 'text') {
-      return block.text.split(/\n\s*\n/).map(p => `<p>${escapeHtml(p).replaceAll('\n', '<br>')}</p>`).join('\n');
+      return textHtml(block.ops ?? legacyTextOps(block.text));
     }
     const caption = escapeHtml(block.caption);
     return `<figure><img src="${escapeHtml(imageUrl(block))}" alt="${caption}" loading="lazy" decoding="async">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
@@ -41,7 +39,7 @@ function articlePage(room, post, body) {
   <link rel="canonical" href="${site}${post.url}">
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
-  <link rel="stylesheet" href="/css/published-article.css">
+  <link rel="stylesheet" href="/css/published-article.css?v=2">
 </head>
 <body>
   ${header.outerHTML}
@@ -135,7 +133,7 @@ async function digest(data) {
 async function draftFingerprint(draft) {
   const blocks = [];
   for (const block of draft.blocks) {
-    if (block.kind === 'text') blocks.push(block.text);
+    if (block.kind === 'text') blocks.push(block.ops && hasInlineFormatting(block.ops) ? block.ops : block.text);
     else blocks.push([block.path, block.caption, await digest(await block.file.arrayBuffer())]);
   }
   const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks]);
@@ -190,7 +188,9 @@ export async function publishArticle(draft, token, progress, request = fetch) {
   const knownTags = new Map(catalog.flatMap(post => (post.tags || []).map(tag => [tag.toLowerCase(), tag])));
   const tags = [...new Set(draft.tags.map(tag => knownTags.get(tag.toLowerCase()) || tag))];
   const note = draft.category === 'life';
-  const content = draft.blocks.filter(block => block.kind === 'text').map(block => block.text).join('\n\n');
+  const textBlocks = draft.blocks.filter(block => block.kind === 'text');
+  const content = textBlocks.map(block => block.text).join('\n\n');
+  const noteText = note ? textBlocks.flatMap(block => block.ops ?? legacyTextOps(block.text)) : [];
   const previewTitle = Array.from(content.replace(/\s+/g, ' '));
   const title = draft.title || (previewTitle.length ? previewTitle.slice(0, 30).join('') + (previewTitle.length > 30 ? '…' : '') : '照片随笔');
   const slug = Array.from(draft.title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')).slice(0, 24).join('') || (note ? 'note' : 'post');
@@ -201,6 +201,7 @@ export async function publishArticle(draft, token, progress, request = fetch) {
     title, url, date: draft.date, tags, category: draft.category, content,
     web_draft_id: draft.id, web_draft_hash: fingerprint,
     ...(note && !draft.title ? { untitled: true } : {}),
+    ...(hasInlineFormatting(noteText) ? { note_rich_text: noteText } : {}),
     ...(images.length ? { image: `${url}${images[0].path}` } : {}),
     ...(note && images.length ? { note_images: images.map(image => ({ src: url + image.path, caption: image.caption })) } : {}),
   };
