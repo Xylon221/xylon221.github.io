@@ -1,0 +1,11 @@
+name = "xylon-blog-comments"
+main = "worker.mjs"
+compatibility_date = "2026-11-17"
+
+[vars]
+SITE_ORIGIN = "https://xylon221.github.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "xylon-blog-comments"
+database_id = "替换为你账号里的 D1 数据库 ID"

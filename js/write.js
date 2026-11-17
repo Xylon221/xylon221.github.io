@@ -1,9 +1,10 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=4';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=5';
 import { plainText } from './article-text.js?v=1';
 import { createEditor } from './write-editor.js?v=1';
-import { articleCategory, fetchPage, loadCatalog } from './article-catalog.js?v=2';
-import { articleDirectory, sourceBlocks, sourcePage, sourceRevision } from './write-source.js?v=1';
+import { fetchPage, loadCatalog } from './article-catalog.js?v=3';
+import { articleDirectory, sourceBlocks, sourcePage, sourceRevision } from './write-source.js?v=2';
+import { articleTopic, groups, topics } from './taxonomy.js?v=1';
 
 const form = document.getElementById('write-form');
 const fields = document.getElementById('write-fields');
@@ -32,7 +33,6 @@ const images = new Map();
 const editors = new Map();
 const originals = new Map();
 const formats = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif' };
-const categories = { technical: '技术笔记', privacy: '技术笔记 / 隐私计算', life: '生活随笔' };
 let db;
 let mode;
 let edit;
@@ -133,8 +133,9 @@ function snapshotBlocks(includePreview = false) {
 }
 
 function snapshot() {
+  const topic = topics.get(category.value);
   return {
-    id: draftId, mode: currentKey(), edit, title: title.value, date: date.value, category: category.value, tags: tags.value,
+    id: draftId, mode: currentKey(), edit, title: title.value, date: date.value, category: topic?.category, topic: topic?.id, tags: tags.value,
     blocks: snapshotBlocks(),
   };
 }
@@ -168,6 +169,20 @@ function setBusy(value) {
   pickerLoad.disabled = value || !pickerSelect.value;
 }
 
+function showCategories(draft) {
+  const available = groups.filter(group => mode === 'edit' || (group.id === 'life') === (mode === 'note'));
+  category.replaceChildren(...available.map(group => {
+    const options = document.createElement('optgroup');
+    options.label = group.title;
+    options.append(...group.topics.map(topic => new Option(topic.title, topic.id)));
+    return options;
+  }));
+  const fallback = mode === 'note' ? 'daily' : 'development';
+  const inferred = draft ? articleTopic(mode === 'note' ? { ...draft, category: 'life' } : draft).id : fallback;
+  const possible = [...category.options].some(option => option.value === inferred);
+  category.value = possible ? inferred : fallback;
+}
+
 function showMode(nextMode, draft = drafts.get(nextMode)) {
   mode = nextMode;
   edit = draft?.edit;
@@ -183,10 +198,7 @@ function showMode(nextMode, draft = drafts.get(nextMode)) {
   noteOptions.hidden = !note;
   if (note) noteOptions.append(properties);
   else fields.insertBefore(properties, document.getElementById('write-content'));
-  document.getElementById('category-label').hidden = note;
-  const lifeOption = document.getElementById('edit-life-category');
-  lifeOption.hidden = lifeOption.disabled = !editing;
-  category.disabled = note;
+  showCategories(draft);
   title.required = !note && !editing;
   date.required = !note;
   document.getElementById('title-label').textContent = note || editing ? '标题（随笔可选填）' : '标题';
@@ -195,7 +207,6 @@ function showMode(nextMode, draft = drafts.get(nextMode)) {
   document.getElementById('publish-target').textContent = editing ? '保存后更新原文章及相关列表。' : note ? '随笔发布后会出现在「生活随笔」和归档。' : '文章发布后会出现在书房和归档。';
   draftId = draft?.id ?? crypto.randomUUID().slice(0, 12);
   title.value = draft?.title ?? '';
-  category.value = draft?.category || 'technical';
   date.value = draft?.date ?? today();
   tags.value = draft?.tags ?? '';
   tokenInput.value = '';
@@ -249,7 +260,7 @@ async function loadArticle(url, fresh = false) {
       id: crypto.randomUUID().slice(0, 12), mode: key,
       edit: { url, revision: await sourceRevision(source, post) },
       title: post.untitled ? '' : post.title, date: post.date, tags: (post.tags || []).join('，'),
-      category: articleCategory(post), blocks: sourceBlocks(source, url),
+      category: post.category, topic: articleTopic(post).id, blocks: sourceBlocks(source, url),
     };
     if (fresh) await forgetDraft(key);
   }
@@ -329,7 +340,9 @@ files.addEventListener('change', () => {
 
 function readDraft() {
   const heading = title.value.trim();
-  const note = mode === 'note' || (edit && category.value === 'life');
+  const topic = topics.get(category.value);
+  if (!topic) throw new Error('请选择文章分类。');
+  const note = topic.category === 'life';
   const day = date.value || (note ? today() : '');
   if (!heading && !note) throw new Error('请填写文章标题。');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error('请选择有效的发布日期。');
@@ -353,7 +366,7 @@ function readDraft() {
     }
   }
   if (!content.length) throw new Error('请写一段文字或添加一张图片。');
-  return { id: draftId, edit, title: heading, date: day, category: note ? 'life' : category.value, tags: labels, blocks: content };
+  return { id: draftId, edit, title: heading, date: day, category: topic.category, topic: topic.id, tags: labels, blocks: content };
 }
 
 document.getElementById('show-preview').addEventListener('click', () => {
@@ -362,7 +375,7 @@ document.getElementById('show-preview').addEventListener('click', () => {
     const heading = preview.querySelector('h2');
     heading.textContent = draft.title;
     heading.hidden = !draft.title;
-    preview.querySelector('.preview-meta').textContent = [draft.date, categories[draft.category], ...draft.tags.map(tag => `#${tag}`)].join(' · ');
+    preview.querySelector('.preview-meta').textContent = [draft.date, topics.get(draft.topic).title, ...draft.tags.map(tag => `#${tag}`)].join(' · ');
     preview.querySelector('.write-prose').innerHTML = articleBody(draft.blocks, image => image.preview);
     preview.hidden = false;
     message('');

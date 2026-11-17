@@ -18,7 +18,7 @@
 .write-meta { display: grid; grid-template-columns: 1fr .8fr 1.35fr; gap: .75rem; margin-top: .8rem; }
 .write-options { margin-top: .75rem; padding: .6rem .85rem; background: #fffffff5; border: 1px solid var(--journal-line); }
 .write-options > div { margin-block: .65rem .15rem; }
-.write-options .write-meta { grid-template-columns: minmax(8rem, .65fr) minmax(0, 1fr); }
+.write-options .write-meta { grid-template-columns: minmax(9rem, 1fr) minmax(8rem, .65fr) minmax(0, 1fr); }
 .write-shell summary { cursor: pointer; }
 .write-content, .write-actions, .write-preview { margin-top: 1.3rem; padding: 1rem; background: #fffffff5; border: 1px solid var(--journal-line); }
 [data-mode="note"] .write-content { margin-top: 0; }

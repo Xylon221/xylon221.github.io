@@ -22,7 +22,7 @@ export async function digest(data) {
 }
 
 export function sourceRevision(source, post) {
-  const data = JSON.stringify([source.body.innerHTML, post.title, post.date, post.category || null, post.tags || [], Boolean(post.untitled)]);
+  const data = JSON.stringify([source.body.innerHTML, post.title, post.date, post.category || null, post.tags || [], Boolean(post.untitled), ...(post.topic ? [post.topic] : [])]);
   return digest(new TextEncoder().encode(data));
 }
 

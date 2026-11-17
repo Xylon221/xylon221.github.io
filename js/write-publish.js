@@ -1,5 +1,6 @@
 import { escapeHtml, hasInlineFormatting, legacyTextOps, textHtml } from './article-text.js?v=1';
-import { articleDirectory, digest, publicImagePath, restoreOriginal, sourcePage, sourceRevision } from './write-source.js?v=1';
+import { articleDirectory, digest, publicImagePath, restoreOriginal, sourcePage, sourceRevision } from './write-source.js?v=2';
+import { articleTopic } from './taxonomy.js?v=1';
 
 const repository = 'https://api.github.com/repos/Xylon221/xylon221.github.io';
 const site = 'https://xylon221.github.io';
@@ -32,6 +33,9 @@ function articlePage(room, post, body) {
   const style = doc.querySelector('link[href^="/css/reading-room.css"]');
   const title = escapeHtml(post.title);
   const tags = post.tags.map(tag => `<a href="${tagUrl(tag)}">#${escapeHtml(tag)}</a>`).join(' ');
+  const topic = articleTopic(post);
+  const chapter = topic.category === 'life' ? '/life/' : '/learning/';
+  const section = `<a class="published-topic" href="${chapter}?topic=${encodeURIComponent(topic.id)}">${escapeHtml(topic.title)}</a>`;
   const date = `<time datetime="${post.date}">${post.date}</time>`;
   const heading = post.untitled ? `<h1>${date}</h1>` : `<h1>${title}</h1>${date}`;
   const back = post.category === 'life' ? '<a href="/notes/">返回生活随笔</a>' : '<a href="/reading-room/">返回书房</a>';
@@ -46,12 +50,14 @@ function articlePage(room, post, body) {
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
+  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=1"></script>
 </head>
 <body>
   ${header.outerHTML}
   <main class="room-shell published-article">
     <article>
-      <header class="published-heading">${heading}</header>
+      <header class="published-heading">${section}${heading}</header>
       <div class="published-body">${body}</div>
       ${tags ? `<footer class="published-tags">${tags}</footer>` : ''}
     </article>
@@ -184,7 +190,7 @@ async function draftFingerprint(draft) {
     else if (block.kind === 'original') blocks.push([block.index, block.text]);
     else blocks.push([block.src || block.path, block.caption, block.file ? await digest(await block.file.arrayBuffer()) : null]);
   }
-  const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks]);
+  const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks, ...(draft.topic ? [draft.topic] : [])]);
   return digest(new TextEncoder().encode(data));
 }
 
@@ -272,7 +278,7 @@ export async function publishArticle(draft, token, progress, request = fetch) {
   const uploads = draft.blocks.filter(block => block.kind === 'image' && block.file);
   const post = {
     ...(previous || {}),
-    title, url, date: draft.date, tags, category: draft.category, content,
+    title, url, date: draft.date, tags, category: draft.category, topic: draft.topic, content,
     ...(edit ? { web_edit_id: draft.id, web_edit_hash: fingerprint } : { web_draft_id: draft.id, web_draft_hash: fingerprint }),
     untitled: note && !draft.title ? true : undefined,
     note_rich_text: hasInlineFormatting(noteText) ? noteText : undefined,

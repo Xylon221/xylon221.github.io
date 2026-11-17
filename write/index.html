@@ -11,9 +11,11 @@
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
   <link rel="stylesheet" href="/vendor/quill-2.0.3/quill.core.css">
   <link rel="stylesheet" href="/css/article-text.css?v=1">
-  <link rel="stylesheet" href="/css/write.css?v=4">
+  <link rel="stylesheet" href="/css/write.css?v=5">
+  <link rel="stylesheet" href="/css/site-shell.css?v=1">
   <script defer src="/vendor/quill-2.0.3/quill.js"></script>
-  <script type="module" src="/js/write.js?v=4"></script>
+  <script type="module" src="/js/site-shell.js?v=1"></script>
+  <script type="module" src="/js/write.js?v=5"></script>
 </head>
 <body>
   <header class="room-header"><div class="room-shell header-content">
@@ -42,11 +44,7 @@
         <div id="write-properties">
           <label class="write-label"><span id="title-label">标题</span><input id="post-title" required maxlength="120" placeholder="给这篇文章起个名字"></label>
           <div class="write-meta">
-            <label class="write-label" id="category-label">分类<select id="post-category" required>
-              <option value="technical">技术笔记</option>
-              <option value="privacy">技术笔记 / 隐私计算</option>
-              <option value="life" id="edit-life-category" hidden disabled>生活随笔</option>
-            </select></label>
+            <label class="write-label">分类<select id="post-category" required></select></label>
             <label class="write-label">日期<input id="post-date" type="date" required></label>
             <label class="write-label">标签（选填）<input id="post-tags" maxlength="250" placeholder="读书、生活（用逗号隔开）"></label>
           </div>
@@ -62,7 +60,7 @@
           <p id="image-error" class="write-error" role="alert"></p>
         </section>
 
-        <details class="write-options" id="note-options" hidden><summary>标题、日期和标签</summary></details>
+        <details class="write-options" id="note-options" hidden><summary>标题、分类、日期和标签</summary></details>
         <section class="write-actions" aria-label="预览和发布">
           <button type="button" id="show-preview">预览</button>
           <details class="write-auth" id="publish-options">

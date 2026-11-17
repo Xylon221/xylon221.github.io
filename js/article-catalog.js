@@ -1,3 +1,5 @@
+import { articleTopic } from './taxonomy.js?v=1';
+
 export async function fetchPage(path) {
   const response = await fetch(path, { cache: 'no-cache' });
   if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
@@ -27,11 +29,7 @@ async function loadArchiveDates() {
 }
 
 export function articleCategory(post) {
-  if (post.category) return post.category;
-  const tags = Array.isArray(post.tags) ? post.tags : [];
-  if (tags.some(tag => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(tag))) return 'privacy';
-  if (tags.some(tag => /随想|随笔|生活|读书/.test(tag))) return 'life';
-  return 'technical';
+  return articleTopic(post).category;
 }
 
 export function articleText(post) {

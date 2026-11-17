@@ -8,7 +8,10 @@
   <title>书房 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
-  <script type="module" src="/js/reading-room.js?v=20261117-edit"></script>
+  <link rel="stylesheet" href="/css/chapters.css?v=1">
+  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=1"></script>
+  <script type="module" src="/js/reading-room.js?v=20261117-chapters"></script>
 </head>
 <body class="room-page">
   <a class="skip-link" href="#articles">跳到文章列表</a>
@@ -26,50 +29,22 @@
     </div>
   </header>
 
-  <main class="room-shell">
-    <header class="room-hero">
-      <p class="eyebrow">只想睡大觉的个人博客</p>
-      <h1>书房</h1>
-      <p>记录技术笔记、读书心得与生活片段。</p>
+  <main class="room-shell chapter-shell">
+    <header class="chapter-hero">
+      <div class="chapter-hero-copy"><h1>书房</h1><p>记录学习所得，也留住日常可回看的片段。</p></div>
+      <img src="/images/journal-forest.webp" alt="雾中的松林" decoding="async" fetchpriority="high">
     </header>
 
-    <div class="room-grid">
-      <aside class="profile" aria-labelledby="profile-title">
-        <p class="eyebrow">作者</p>
-        <h2 id="profile-title">只想睡大觉</h2>
-        <p>一个喜欢安静写字的人。白天写代码，晚上读书。</p>
-        <nav class="profile-links" aria-label="个人链接">
-          <a href="/about/">关于我 <span aria-hidden="true">↗</span></a>
-          <a href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
-        </nav>
-      </aside>
+    <nav class="chapter-overview" id="articles" aria-label="文章板块" tabindex="-1">
+      <a class="chapter-cover" href="/learning/"><strong>学习篇</strong><span class="chapter-arrow" aria-hidden="true">↗</span><span>科研学习 · 计算机技术</span></a>
+      <a class="chapter-cover" href="/life/"><strong>生活篇</strong><span class="chapter-arrow" aria-hidden="true">↗</span><span>行旅、光影与日常札记</span></a>
+    </nav>
+    <p id="article-status" class="chapter-status" role="status" hidden></p>
+    <div id="article-list" class="chapter-groups"></div>
+    <noscript><p>可以在<a href="/archives/">文章归档</a>浏览所有文章。</p></noscript>
 
-      <section class="articles" id="articles" aria-labelledby="articles-title" tabindex="-1">
-        <div class="section-heading">
-          <h2 id="articles-title">文章板块</h2>
-          <a href="/archives/">全部归档 <span aria-hidden="true">↗</span></a>
-        </div>
-        <p id="article-status" class="status" role="status" hidden></p>
-        <nav id="topic-nav" class="topic-nav" aria-label="文章板块"></nav>
-        <div id="article-list" class="article-list"></div>
-        <noscript><p>可以在<a href="/archives/">文章归档</a>浏览所有文章。</p></noscript>
-        <template id="article-template">
-          <article class="article-card">
-            <a class="article-link">
-              <img class="article-art" alt="" loading="lazy" decoding="async" hidden>
-              <div class="article-text">
-                <p class="article-meta"></p>
-                <h4></h4>
-                <p class="article-summary"></p>
-                <ul class="article-tags" aria-label="文章标签"></ul>
-              </div>
-            </a>
-          </article>
-        </template>
-      </section>
-
-      <aside class="updates" aria-labelledby="updates-title">
-        <div class="section-heading"><h2 id="updates-title">动态</h2></div>
+      <section class="chapter-updates" aria-labelledby="updates-title">
+        <div class="chapter-section-head"><h2 id="updates-title">书房动态</h2></div>
         <p id="update-status" class="status" role="status" hidden></p>
         <div id="update-list" class="update-list"></div>
         <noscript><p>启用 JavaScript 后可查看动态。</p></noscript>
@@ -80,8 +55,7 @@
             <p></p>
           </article>
         </template>
-      </aside>
-    </div>
+      </section>
   </main>
 
   <footer class="room-shell room-footer"><a href="https://unsplash.com/photos/aerial-view-of-pine-trees-in-mist-OYFHT4X5isg">雾林摄影 · Dan Otis</a><a href="/">返回封面 ↑</a></footer>
