@@ -1,4 +1,4 @@
-import { articleCategory, articleText, fetchPage, loadCatalog } from './article-catalog.js?v=1';
+import { articleCategory, articleText, fetchPage, loadCatalog } from './article-catalog.js?v=2';
 
 function showStatus(id, message) {
   const status = document.getElementById(id);

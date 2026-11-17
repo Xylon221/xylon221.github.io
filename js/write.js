@@ -1,7 +1,9 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=3';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=4';
 import { plainText } from './article-text.js?v=1';
 import { createEditor } from './write-editor.js?v=1';
+import { articleCategory, fetchPage, loadCatalog } from './article-catalog.js?v=2';
+import { articleDirectory, sourceBlocks, sourcePage, sourceRevision } from './write-source.js?v=1';
 
 const form = document.getElementById('write-form');
 const fields = document.getElementById('write-fields');
@@ -20,13 +22,21 @@ const modeButtons = [...document.querySelectorAll('button[data-mode]')];
 const noteOptions = document.getElementById('note-options');
 const properties = document.getElementById('write-properties');
 const publishOptions = document.getElementById('publish-options');
+const picker = document.getElementById('edit-picker');
+const pickerSelect = document.getElementById('edit-article');
+const pickerLoad = document.getElementById('edit-load');
+const pickerRefresh = document.getElementById('edit-refresh');
+const pickerView = document.getElementById('edit-view');
 const drafts = new Map();
 const images = new Map();
 const editors = new Map();
+const originals = new Map();
 const formats = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif' };
 const categories = { technical: '技术笔记', privacy: '技术笔记 / 隐私计算', life: '生活随笔' };
 let db;
 let mode;
+let edit;
+let articles = new Map();
 let draftId;
 let saveTimer;
 let saveRevision = 0;
@@ -54,9 +64,10 @@ function addBlock(kind) {
   const block = document.getElementById(`${kind}-block`).content.firstElementChild.cloneNode(true);
   block.querySelector('.remove-block').addEventListener('click', () => {
     const image = images.get(block);
-    if (image) URL.revokeObjectURL(image.preview);
+    if (image?.file) URL.revokeObjectURL(image.preview);
     images.delete(block);
     editors.delete(block);
+    originals.delete(block);
     block.remove();
     preview.hidden = true;
     imageError.textContent = '';
@@ -77,28 +88,54 @@ function addText(focus = false, draft) {
   if (focus) editor.focus();
 }
 
-function addImage(file, caption = '') {
+function addImage({ file, src, alt, caption = '' }) {
   const block = addBlock('image');
-  const previewUrl = URL.createObjectURL(file);
-  images.set(block, { file, preview: previewUrl });
+  const previewUrl = file ? URL.createObjectURL(file) : src;
+  images.set(block, { file, src, alt, preview: previewUrl });
   block.querySelector('img').src = previewUrl;
-  block.querySelector('.image-name').textContent = file.name;
+  block.querySelector('.image-name').textContent = file ? file.name : '已发布的图片';
   block.querySelector('input').value = caption;
 }
 
+function addOriginal(original) {
+  const block = addBlock('original');
+  const editable = typeof original.text === 'string';
+  originals.set(block, original);
+  const input = block.querySelector('textarea');
+  input.closest('label').hidden = !editable;
+  input.value = original.text ?? '';
+  const summary = block.querySelector('.original-preview');
+  summary.hidden = editable;
+  summary.textContent = original.summary ? `保留原有排版 · ${original.summary}` : '保留原有图片或排版';
+}
+
 function resetBlocks() {
-  for (const image of images.values()) URL.revokeObjectURL(image.preview);
+  for (const image of images.values()) if (image.file) URL.revokeObjectURL(image.preview);
   images.clear();
   editors.clear();
+  originals.clear();
   blocks.replaceChildren();
+}
+
+const editKey = url => `edit:${url}`;
+const currentKey = () => edit ? editKey(edit.url) : mode;
+
+function snapshotBlocks(includePreview = false) {
+  return [...blocks.children].map(block => {
+    if (editors.has(block)) return { kind: 'text', ops: editors.get(block).getContents().ops };
+    if (originals.has(block)) {
+      const original = originals.get(block);
+      return { ...original, ...(typeof original.text === 'string' ? { text: block.querySelector('textarea').value } : {}) };
+    }
+    const { file, src, alt, preview } = images.get(block);
+    return { kind: 'image', file, src, alt, caption: block.querySelector('input').value, ...(includePreview ? { preview } : {}) };
+  });
 }
 
 function snapshot() {
   return {
-    id: draftId, mode, title: title.value, date: date.value, category: category.value, tags: tags.value,
-    blocks: [...blocks.children].map(block => block.dataset.kind === 'text'
-      ? { kind: 'text', ops: editors.get(block).getContents().ops }
-      : { kind: 'image', file: images.get(block).file, caption: block.querySelector('input').value }),
+    id: draftId, mode: currentKey(), edit, title: title.value, date: date.value, category: category.value, tags: tags.value,
+    blocks: snapshotBlocks(),
   };
 }
 
@@ -114,32 +151,48 @@ function saveDraft() {
   saveTimer = undefined;
   const revision = saveRevision;
   const draft = snapshot();
-  drafts.set(mode, draft);
+  drafts.set(draft.mode, draft);
   if (!db) return;
   draftTransaction(db, 'readwrite', store => store.put(draft)).then(() => {
-    if (mode === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿已保存到当前浏览器';
+    if (currentKey() === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿已保存到当前浏览器';
   }).catch(() => {
-    if (mode === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿保存失败，请保留此页面';
+    if (currentKey() === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿保存失败，请保留此页面';
   });
 }
 
-function showMode(nextMode) {
+function setBusy(value) {
+  busy = value;
+  fields.disabled = value;
+  for (const editor of editors.values()) editor.enable(!value);
+  for (const control of [...modeButtons, pickerSelect, pickerLoad, pickerRefresh]) control.disabled = value;
+  pickerLoad.disabled = value || !pickerSelect.value;
+}
+
+function showMode(nextMode, draft = drafts.get(nextMode)) {
   mode = nextMode;
+  edit = draft?.edit;
   saveRevision++;
   const note = mode === 'note';
-  const draft = drafts.get(mode);
+  const editing = mode === 'edit';
+  picker.hidden = !editing;
+  pickerView.hidden = pickerRefresh.hidden = !edit;
+  if (edit) pickerView.href = edit.url;
+  form.hidden = editing && !edit;
   form.dataset.mode = mode;
   for (const button of modeButtons) button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
   noteOptions.hidden = !note;
   if (note) noteOptions.append(properties);
   else fields.insertBefore(properties, document.getElementById('write-content'));
   document.getElementById('category-label').hidden = note;
+  const lifeOption = document.getElementById('edit-life-category');
+  lifeOption.hidden = lifeOption.disabled = !editing;
   category.disabled = note;
-  title.required = !note;
+  title.required = !note && !editing;
   date.required = !note;
-  document.getElementById('title-label').textContent = note ? '标题（选填）' : '标题';
-  document.getElementById('publish-button').textContent = note ? '发布随笔' : '发布文章';
-  document.getElementById('publish-target').textContent = note ? '随笔发布后会出现在「生活随笔」和归档。' : '文章发布后会出现在书房和归档。';
+  document.getElementById('title-label').textContent = note || editing ? '标题（随笔可选填）' : '标题';
+  document.getElementById('publish-summary').textContent = editing ? '准备保存' : '准备发布';
+  document.getElementById('publish-button').textContent = editing ? '保存修改' : note ? '发布随笔' : '发布文章';
+  document.getElementById('publish-target').textContent = editing ? '保存后更新原文章及相关列表。' : note ? '随笔发布后会出现在「生活随笔」和归档。' : '文章发布后会出现在书房和归档。';
   draftId = draft?.id ?? crypto.randomUUID().slice(0, 12);
   title.value = draft?.title ?? '';
   category.value = draft?.category || 'technical';
@@ -151,25 +204,92 @@ function showMode(nextMode) {
   resetBlocks();
   for (const block of draft?.blocks ?? []) {
     if (block.kind === 'text') addText(false, block);
-    else addImage(block.file, block.caption);
+    else if (block.kind === 'original') addOriginal(block);
+    else addImage(block);
   }
-  if (!blocks.firstElementChild) addText();
+  if (!form.hidden && !blocks.firstElementChild) addText();
   preview.hidden = true;
   imageError.textContent = '';
   draftStatus.textContent = db
-    ? (draft ? '已恢复草稿' : '草稿保存在当前浏览器')
+    ? (draft && drafts.has(currentKey()) ? '已恢复草稿' : '草稿保存在当前浏览器')
     : '浏览器暂时无法保存草稿，请保留此页面';
 }
 
+function updateAddress() {
+  const url = new URL(location.href);
+  url.searchParams.delete('edit');
+  if (mode === 'article') url.searchParams.delete('mode');
+  else url.searchParams.set('mode', mode);
+  if (edit) url.searchParams.set('edit', edit.url);
+  history.replaceState(history.state, '', url);
+}
+
+async function loadArticles(selected = '') {
+  articles = new Map((await loadCatalog()).map(post => [post.url, post]));
+  pickerSelect.length = 1;
+  for (const post of articles.values()) pickerSelect.add(new Option(`${post.date} · ${post.title}`, post.url));
+  pickerSelect.value = articles.has(selected) ? selected : '';
+}
+
+async function forgetDraft(key) {
+  if (db) await draftTransaction(db, 'readwrite', store => store.delete(key));
+  drafts.delete(key);
+}
+
+async function loadArticle(url, fresh = false) {
+  articleDirectory(url);
+  if (fresh) await loadArticles(url);
+  const post = articles.get(url);
+  if (!post) throw new Error('找不到这篇已发布文章。');
+  const key = editKey(url);
+  let draft = fresh ? undefined : drafts.get(key);
+  if (!draft) {
+    const source = sourcePage(await (await fetchPage(url)).text());
+    draft = {
+      id: crypto.randomUUID().slice(0, 12), mode: key,
+      edit: { url, revision: await sourceRevision(source, post) },
+      title: post.untitled ? '' : post.title, date: post.date, tags: (post.tags || []).join('，'),
+      category: articleCategory(post), blocks: sourceBlocks(source, url),
+    };
+    if (fresh) await forgetDraft(key);
+  }
+  showMode('edit', draft);
+  updateAddress();
+  message(drafts.has(key) ? '' : '已载入原文。');
+}
+
+async function openEditor(url = '', { refresh = false, catalog = false } = {}) {
+  if (busy) return;
+  saveDraft();
+  if (catalog) { showMode('edit'); updateAddress(); }
+  setBusy(true);
+  message(url ? '正在载入文章…' : '正在读取已发布的文章…');
+  try {
+    if (catalog) await loadArticles(url);
+    if (url) await loadArticle(url, refresh);
+    else message(articles.size ? '' : '还没有可编辑的文章。');
+  } catch (error) {
+    message(error instanceof TypeError ? '暂时无法读取线上文章，请稍后重试。' : error.message, true);
+  } finally {
+    setBusy(false);
+  }
+}
+
+pickerSelect.addEventListener('change', () => { pickerLoad.disabled = !pickerSelect.value; });
+pickerLoad.addEventListener('click', () => openEditor(pickerSelect.value));
+pickerRefresh.addEventListener('click', () => {
+  if (!edit) return;
+  if ((saveTimer || drafts.has(currentKey())) && !window.confirm('重新载入会放弃这篇文章在当前浏览器里的修改草稿。继续吗？')) return;
+  openEditor(edit.url, { refresh: true });
+});
+
 for (const button of modeButtons) {
   button.addEventListener('click', () => {
-    if (busy || mode === button.dataset.mode) return;
+    if (busy || (mode === button.dataset.mode && (mode !== 'edit' || articles.size))) return;
+    if (button.dataset.mode === 'edit') { openEditor('', { catalog: true }); return; }
     saveDraft();
     showMode(button.dataset.mode);
-    const url = new URL(location.href);
-    if (mode === 'note') url.searchParams.set('mode', 'note');
-    else url.searchParams.delete('mode');
-    history.replaceState(history.state, '', url);
+    updateAddress();
     message('');
   });
 }
@@ -199,7 +319,7 @@ files.addEventListener('change', () => {
       imageError.textContent = '请选用不超过 8 MB 的 JPG、PNG、WebP、GIF 或 AVIF 图片。';
       continue;
     }
-    addImage(file);
+    addImage({ file });
     added = true;
   }
   preview.hidden = true;
@@ -209,7 +329,7 @@ files.addEventListener('change', () => {
 
 function readDraft() {
   const heading = title.value.trim();
-  const note = mode === 'note';
+  const note = mode === 'note' || (edit && category.value === 'life');
   const day = date.value || (note ? today() : '');
   if (!heading && !note) throw new Error('请填写文章标题。');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error('请选择有效的发布日期。');
@@ -220,19 +340,20 @@ function readDraft() {
   }
   const content = [];
   let number = 0;
-  for (const block of blocks.children) {
-    if (block.dataset.kind === 'text') {
-      const ops = editors.get(block).getContents().ops;
-      const text = plainText(ops);
-      if (text) content.push({ kind: 'text', text, ops });
+  for (const block of snapshotBlocks(true)) {
+    if (block.kind === 'text') {
+      const text = plainText(block.ops);
+      if (text) content.push({ ...block, text });
+    } else if (block.kind === 'original') {
+      content.push(block);
     } else {
-      const image = images.get(block);
-      const caption = block.querySelector('input').value.trim();
-      content.push({ kind: 'image', ...image, caption, path: `assets/image-${++number}.${formats[image.file.type]}` });
+      const name = edit ? `edit-${draftId}` : 'image';
+      const path = block.file ? `assets/${name}-${++number}.${formats[block.file.type]}` : undefined;
+      content.push({ ...block, caption: block.caption.trim(), path });
     }
   }
   if (!content.length) throw new Error('请写一段文字或添加一张图片。');
-  return { id: draftId, title: heading, date: day, category: note ? 'life' : category.value, tags: labels, blocks: content };
+  return { id: draftId, edit, title: heading, date: day, category: note ? 'life' : category.value, tags: labels, blocks: content };
 }
 
 document.getElementById('show-preview').addEventListener('click', () => {
@@ -271,23 +392,20 @@ form.addEventListener('submit', async event => {
     return;
   }
   tokenInput.value = '';
-  busy = true;
-  fields.disabled = true;
-  for (const editor of editors.values()) editor.disable();
-  for (const button of modeButtons) button.disabled = true;
+  setBusy(true);
   saveDraft();
   try {
     const url = await publishArticle(draft, token, message);
-    drafts.delete(mode);
     let cleared = true;
-    if (db) {
-      try { await draftTransaction(db, 'readwrite', store => store.delete(mode)); }
-      catch { cleared = false; }
-    }
+    const key = currentKey();
+    try { await forgetDraft(key); }
+    catch { cleared = false; drafts.delete(key); }
+    const editing = Boolean(edit);
     const item = mode === 'note' ? '随笔' : '文章';
     showMode(mode);
+    if (editing) updateAddress();
     if (!cleared) draftStatus.textContent = '已发布，浏览器中的旧草稿清除失败';
-    message('已提交到 GitHub。等 Pages 部署完成即可打开。');
+    message(editing ? '修改已提交。GitHub Pages 部署完成后，同一个链接会显示新版。' : '已提交到 GitHub。等 Pages 部署完成即可打开。');
     appendStatusLink(url, `打开${item} ↗`);
   } catch (error) {
     if (error instanceof PublishedDraftChanged) {
@@ -300,10 +418,7 @@ form.addEventListener('submit', async event => {
       message(error instanceof TypeError ? '无法连接 GitHub。草稿仍可编辑，请稍后重新发布。' : error.message, true);
     }
   } finally {
-    fields.disabled = false;
-    for (const editor of editors.values()) editor.enable();
-    for (const button of modeButtons) button.disabled = false;
-    busy = false;
+    setBusy(false);
   }
 });
 
@@ -314,6 +429,7 @@ try {
   db?.close();
   db = undefined;
 }
-showMode(new URLSearchParams(location.search).get('mode') === 'note' ? 'note' : 'article');
-fields.disabled = false;
-for (const button of modeButtons) button.disabled = false;
+const query = new URLSearchParams(location.search);
+const requestedEdit = query.get('edit');
+if (requestedEdit || query.get('mode') === 'edit') await openEditor(requestedEdit || '', { catalog: true });
+else { showMode(query.get('mode') === 'note' ? 'note' : 'article'); setBusy(false); }

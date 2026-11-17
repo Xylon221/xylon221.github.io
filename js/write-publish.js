@@ -1,4 +1,5 @@
 import { escapeHtml, hasInlineFormatting, legacyTextOps, textHtml } from './article-text.js?v=1';
+import { articleDirectory, digest, publicImagePath, restoreOriginal, sourcePage, sourceRevision } from './write-source.js?v=1';
 
 const repository = 'https://api.github.com/repos/Xylon221/xylon221.github.io';
 const site = 'https://xylon221.github.io';
@@ -8,14 +9,19 @@ const encodePath = path => path.split('/').map(encodeURIComponent).join('/');
 const tagUrl = tag => `/tags/${encodeURIComponent(tag)}/`;
 const parse = html => new DOMParser().parseFromString(html, 'text/html');
 const serialize = doc => `<!doctype html>\n${doc.documentElement.outerHTML}\n`;
+const pathname = url => new URL(url, site).pathname;
 
-export function articleBody(blocks, imageUrl) {
+export function articleBody(blocks, imageUrl, original) {
   return blocks.map(block => {
     if (block.kind === 'text') {
       return textHtml(block.ops ?? legacyTextOps(block.text));
     }
+    if (block.kind === 'original') {
+      if (original) return original(block).html;
+      return `<p class="original-preview">${escapeHtml(block.text ?? (block.summary || '原文结构保留'))}</p>`;
+    }
     const caption = escapeHtml(block.caption);
-    return `<figure><img src="${escapeHtml(imageUrl(block))}" alt="${caption}" loading="lazy" decoding="async">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+    return `<figure><img src="${escapeHtml(imageUrl(block))}" alt="${escapeHtml(block.alt ?? block.caption)}" loading="lazy" decoding="async">${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
   }).join('\n');
 }
 
@@ -55,10 +61,47 @@ function articlePage(room, post, body) {
 </html>`;
 }
 
+function updateLegacyPage(source, post, body) {
+  source.body.innerHTML = body;
+  const { doc } = source;
+  const article = source.body.closest('article');
+  const heading = article.querySelector('h1.post-title, .published-heading h1');
+  if (heading) heading.textContent = post.untitled ? post.date : post.title;
+  const time = article.querySelector('time[itemprop~="datePublished"], .published-heading time');
+  if (time && time.dateTime.slice(0, 10) !== post.date) {
+    time.dateTime = post.date;
+    time.textContent = post.date;
+    time.removeAttribute('title');
+  }
+  const brand = doc.title.split(' | ').at(-1).trim();
+  doc.title = brand ? `${post.title} | ${brand}` : post.title;
+  const meta = { 'meta[property="og:title"]': post.title, 'meta[property="og:description"]': post.content.slice(0, 200),
+    'meta[name="description"]': post.content.slice(0, 200), 'meta[property="article:modified_time"]': new Date().toISOString() };
+  for (const [selector, value] of Object.entries(meta)) doc.querySelector(selector)?.setAttribute('content', value);
+  const published = doc.querySelector('meta[property="article:published_time"]');
+  if (published && time && time.dateTime === post.date) published.content = `${post.date}T00:00:00+08:00`;
+  for (const oldTag of doc.querySelectorAll('meta[property="article:tag"]')) oldTag.remove();
+  for (const tag of post.tags) {
+    const entry = doc.createElement('meta');
+    entry.setAttribute('property', 'article:tag');
+    entry.content = tag;
+    doc.head.append(entry);
+  }
+  const footer = article.querySelector('.post-footer, .published-tags');
+  let tags = article.querySelector('.post-tags, .published-tags');
+  if (footer && !tags && post.tags.length) {
+    tags = doc.createElement('div');
+    tags.className = 'post-tags';
+    footer.prepend(tags);
+  }
+  if (tags) tags.innerHTML = post.tags.map(tag => `<a href="${tagUrl(tag)}" rel="tag">#${escapeHtml(tag)}</a>`).join(' ');
+  return serialize(doc);
+}
+
 function archiveEntry(post) {
   const { title, url, date } = post;
   const content = (post.content || '').replace(/\s+/g, ' ').trim();
-  const excerpt = !post.web_draft_id && content.startsWith(title) ? content.slice(title.length).trim() : content;
+  const excerpt = !post.web_draft_id && !post.web_edit_id && content.startsWith(title) ? content.slice(title.length).trim() : content;
   const tags = (post.tags || []).map(tag => `<a href="${tagUrl(tag)}">${escapeHtml(tag)}</a>`).join(' ');
   const image = post.image ? `<img class="archive-thumb" src="${escapeHtml(post.image)}" alt="" loading="lazy" decoding="async">` : '';
   return `<article class="archive-entry">${image}<h4><a class="post-title-link" href="${escapeHtml(url)}">${escapeHtml(title)}</a></h4>
@@ -97,13 +140,22 @@ function tagPage(previous, archive, tag, posts, post) {
   const doc = parse(previous || archive);
   const legacy = doc.querySelector('.posts-collapse .post-block .post-content');
   if (legacy) {
-    const title = escapeHtml(post.title), href = escapeHtml(post.url);
-    const older = [...legacy.querySelectorAll('article')].find(entry => entry.querySelector('time').dateTime.slice(0, 10) < post.date);
-    const entry = `<article><header class="post-header"><div class="post-meta-container"><time datetime="${post.date}">${post.date}</time></div><div class="post-title"><a class="post-title-link" href="${href}">${title}</a></div></header></article>`;
-    if (older) older.insertAdjacentHTML('beforebegin', entry);
-    else legacy.insertAdjacentHTML('beforeend', entry);
+    const header = legacy.querySelector('.collection-title');
+    const entries = header ? [header.outerHTML] : [];
+    let year;
+    for (const record of posts) {
+      const day = record.date;
+      if (year !== day.slice(0, 4)) {
+        year = day.slice(0, 4);
+        entries.push(`<div class="collection-year"><span class="collection-header">${year}</span></div>`);
+      }
+      entries.push(`<article><header class="post-header"><div class="post-meta-container"><time datetime="${day}">${day.slice(5)}</time></div><div class="post-title"><a class="post-title-link" href="${escapeHtml(record.url)}">${escapeHtml(record.title)}</a></div></header></article>`);
+    }
+    legacy.innerHTML = entries.join('\n');
+    const countLabel = legacy.querySelector('.collection-header small');
+    if (countLabel) countLabel.textContent = `${posts.length} 篇文章`;
     const series = doc.querySelector('.series-nav-list');
-    if (series) series.insertAdjacentHTML('beforeend', `<a class="series-nav-item" href="${href}"><span class="series-nav-dot"></span><span class="series-nav-post-title">${title}</span><span class="series-nav-date">${post.date.slice(5)}</span></a>`);
+    if (series) series.innerHTML = [...posts].reverse().map(record => `<a class="series-nav-item" href="${escapeHtml(record.url)}"><span class="series-nav-dot"></span><span class="series-nav-post-title">${escapeHtml(record.title)}</span><span class="series-nav-date">${record.date.slice(5)}</span></a>`).join('');
     const count = doc.querySelector('.series-nav-count');
     if (count) count.textContent = `${posts.length} 篇文章`;
   } else {
@@ -125,16 +177,12 @@ function base64(file) {
   });
 }
 
-async function digest(data) {
-  const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', data));
-  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
-}
-
 async function draftFingerprint(draft) {
   const blocks = [];
   for (const block of draft.blocks) {
     if (block.kind === 'text') blocks.push(block.ops && hasInlineFormatting(block.ops) ? block.ops : block.text);
-    else blocks.push([block.path, block.caption, await digest(await block.file.arrayBuffer())]);
+    else if (block.kind === 'original') blocks.push([block.index, block.text]);
+    else blocks.push([block.src || block.path, block.caption, block.file ? await digest(await block.file.arrayBuffer()) : null]);
   }
   const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks]);
   return digest(new TextEncoder().encode(data));
@@ -178,69 +226,99 @@ export async function publishArticle(draft, token, progress, request = fetch) {
   ]);
   const catalog = JSON.parse(catalogText);
   const fingerprint = await draftFingerprint(draft);
-  const retry = catalog.find(post => post.web_draft_id === draft.id);
+  const edit = draft.edit;
+  const retry = catalog.find(post => (edit ? post.web_edit_id : post.web_draft_id) === draft.id);
   if (retry) {
     const previousUrl = site + retry.url;
-    if (retry.web_draft_hash && retry.web_draft_hash !== fingerprint) throw new PublishedDraftChanged(previousUrl);
+    const hash = edit ? retry.web_edit_hash : retry.web_draft_hash;
+    if (hash && hash !== fingerprint) {
+      if (edit) throw new Error('这次修改的上一版已上线。当前草稿已保留，请先核对线上版本。');
+      throw new PublishedDraftChanged(previousUrl);
+    }
     return previousUrl;
   }
 
+  const archiveDoc = parse(archive);
+  const dates = new Map([...archiveDoc.querySelectorAll('.archive-entry')].map(entry => [
+    pathname(entry.querySelector('.post-title-link').getAttribute('href')), entry.querySelector('time').dateTime,
+  ]));
+  const previous = edit && catalog.find(post => pathname(post.url) === edit.url);
+  let original;
+  if (edit) {
+    if (!previous) throw new Error('这篇文章已不在发布列表里。');
+    original = sourcePage(await file(`${articleDirectory(edit.url)}/index.html`));
+    if (await sourceRevision(original, { ...previous, date: previous.date || dates.get(edit.url) }) !== edit.revision) {
+      throw new Error('线上文章在载入后有更新。当前草稿已保留，请核对线上版本后重新载入。');
+    }
+  }
   const knownTags = new Map(catalog.flatMap(post => (post.tags || []).map(tag => [tag.toLowerCase(), tag])));
   const tags = [...new Set(draft.tags.map(tag => knownTags.get(tag.toLowerCase()) || tag))];
   const note = draft.category === 'life';
   const textBlocks = draft.blocks.filter(block => block.kind === 'text');
-  const content = textBlocks.map(block => block.text).join('\n\n');
-  const noteText = note ? textBlocks.flatMap(block => block.ops ?? legacyTextOps(block.text)) : [];
+  const preserved = new Map(draft.blocks.filter(block => block.kind === 'original').map(block => [block, restoreOriginal(original, block)]));
+  const content = draft.blocks.map(block => block.kind === 'text' ? block.text : preserved.get(block)?.text).filter(Boolean).join('\n\n');
+  const noteText = note && !preserved.size ? textBlocks.flatMap(block => block.ops ?? legacyTextOps(block.text)) : [];
   const previewTitle = Array.from(content.replace(/\s+/g, ' '));
   const title = draft.title || (previewTitle.length ? previewTitle.slice(0, 30).join('') + (previewTitle.length > 30 ? '…' : '') : '照片随笔');
   const slug = Array.from(draft.title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')).slice(0, 24).join('') || (note ? 'note' : 'post');
-  const directory = `${draft.date.slice(0, 4)}/${draft.date.slice(5, 7)}/${slug}-${draft.id}`;
-  const url = `/${encodePath(directory)}/`;
-  const images = draft.blocks.filter(block => block.kind === 'image');
+  const directory = edit ? articleDirectory(edit.url) : `${draft.date.slice(0, 4)}/${draft.date.slice(5, 7)}/${slug}-${draft.id}`;
+  const url = edit ? edit.url : `/${encodePath(directory)}/`;
+  const body = articleBody(draft.blocks, image => image.src || image.path, block => preserved.get(block));
+  const bodyDoc = parse(body);
+  const images = [...bodyDoc.querySelectorAll('img[src], img[data-src]')].map(image => ({
+    src: publicImagePath(image.getAttribute('data-src') || image.getAttribute('src'), url, site),
+    caption: image.closest('figure')?.querySelector('figcaption')?.textContent || image.alt,
+  })).filter(image => image.src);
+  const uploads = draft.blocks.filter(block => block.kind === 'image' && block.file);
   const post = {
+    ...(previous || {}),
     title, url, date: draft.date, tags, category: draft.category, content,
-    web_draft_id: draft.id, web_draft_hash: fingerprint,
-    ...(note && !draft.title ? { untitled: true } : {}),
-    ...(hasInlineFormatting(noteText) ? { note_rich_text: noteText } : {}),
-    ...(images.length ? { image: `${url}${images[0].path}` } : {}),
-    ...(note && images.length ? { note_images: images.map(image => ({ src: url + image.path, caption: image.caption })) } : {}),
+    ...(edit ? { web_edit_id: draft.id, web_edit_hash: fingerprint } : { web_draft_id: draft.id, web_draft_hash: fingerprint }),
+    untitled: note && !draft.title ? true : undefined,
+    note_rich_text: hasInlineFormatting(noteText) ? noteText : undefined,
+    image: images[0]?.src,
+    note_images: note && images.length ? images : undefined,
   };
-  const archiveDoc = parse(archive);
-  const dates = new Map([...archiveDoc.querySelectorAll('.archive-entry')].map(entry => [
-    entry.querySelector('.post-title-link').getAttribute('href'), entry.querySelector('time').dateTime,
-  ]));
-  const ordered = [...catalog, post].map(entry => ({ ...entry, date: entry.date || dates.get(entry.url) }));
+  const updated = previous ? catalog.map(entry => entry === previous ? post : entry) : [...catalog, post];
+  const ordered = updated.map(entry => ({ ...entry, date: entry.date || dates.get(pathname(entry.url)) }));
   if (ordered.some(entry => !/^\d{4}-\d{2}-\d{2}$/.test(entry.date))) throw new Error('文章索引缺少发布日期，请先修复归档。');
   ordered.sort((first, second) => second.date.localeCompare(first.date));
   timeline(archiveDoc, ordered);
 
   const directoryDoc = parse(tagsPage);
   const tagList = directoryDoc.querySelector('.tag-directory ul');
+  const touched = new Set([...(previous?.tags || []), ...tags]);
+  const usedTags = new Set(updated.flatMap(entry => entry.tags || []));
+  for (const link of tagList.querySelectorAll('a')) {
+    const tag = link.textContent.trim();
+    if (touched.has(tag) && !usedTags.has(tag)) link.closest('li').remove();
+  }
   const existingTags = new Set([...tagList.querySelectorAll('a')].map(a => a.textContent.trim()));
   for (const tag of tags) {
     if (!existingTags.has(tag)) tagList.insertAdjacentHTML('beforeend', `<li><a href="${tagUrl(tag)}">${escapeHtml(tag)}</a></li>`);
   }
   const archiveHtml = serialize(archiveDoc);
+  const articleHtml = previous && !original.body.matches('.published-body') ? updateLegacyPage(original, post, body) : articlePage(room, post, body);
   const changed = [
-    [directory + '/index.html', articlePage(room, post, articleBody(draft.blocks, image => image.path))],
-    ['search.json', JSON.stringify([...catalog, post]) + '\n'],
+    [directory + '/index.html', articleHtml],
+    ['search.json', JSON.stringify(updated) + '\n'],
     ['archives/index.html', archiveHtml],
     ['tags/index.html', serialize(directoryDoc)],
   ];
-  const tagChanges = await Promise.all(tags.map(async tag => {
+  const tagChanges = await Promise.all([...touched].map(async tag => {
     const path = `tags/${tag}/index.html`;
     const tagged = ordered.filter(entry => (entry.tags || []).includes(tag));
-    return [path, tagPage(await file(path, true), archiveHtml, tag, tagged, post)];
+    return [path, tagPage(await file(path, true), archiveHtml, tag, tagged)];
   }));
   const files = [...changed, ...tagChanges].map(([path, content]) => ({ path, content, mode: '100644', type: 'blob' }));
-  if (images.length) progress(`正在上传 ${images.length} 张图片…`);
-  for (const image of images) {
+  if (uploads.length) progress(`正在上传 ${uploads.length} 张图片…`);
+  for (const image of uploads) {
     const blob = await github('/git/blobs', { method: 'POST', body: { content: await base64(image.file), encoding: 'base64' } });
     files.push({ path: `${directory}/${image.path}`, sha: blob.sha, mode: '100644', type: 'blob' });
   }
   progress('正在提交正文、归档和标签…');
   const tree = await github('/git/trees', { method: 'POST', body: { base_tree: base.tree.sha, tree: files } });
-  const commit = await github('/git/commits', { method: 'POST', body: { message: `Publish ${post.title}`, tree: tree.sha, parents: [head] } });
+  const commit = await github('/git/commits', { method: 'POST', body: { message: `${edit ? 'Update' : 'Publish'} ${post.title}`, tree: tree.sha, parents: [head] } });
   await github(`/git/refs/heads/${branch}`, { method: 'PATCH', body: { sha: commit.sha, force: false } });
   return site + url;
 }

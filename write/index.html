@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src https://api.github.com; form-action 'none'; base-uri 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src 'self' https://api.github.com; form-action 'none'; base-uri 'none'">
   <meta name="robots" content="noindex">
   <title>写作 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
   <link rel="stylesheet" href="/vendor/quill-2.0.3/quill.core.css">
   <link rel="stylesheet" href="/css/article-text.css?v=1">
-  <link rel="stylesheet" href="/css/write.css?v=3">
+  <link rel="stylesheet" href="/css/write.css?v=4">
   <script defer src="/vendor/quill-2.0.3/quill.js"></script>
-  <script type="module" src="/js/write.js?v=3"></script>
+  <script type="module" src="/js/write.js?v=4"></script>
 </head>
 <body>
   <header class="room-header"><div class="room-shell header-content">
@@ -26,10 +26,17 @@
       <div class="write-modes" role="group" aria-label="写作类型">
         <button type="button" data-mode="note" aria-pressed="false" disabled>写随笔</button>
         <button type="button" data-mode="article" aria-pressed="true" disabled>写文章</button>
+        <button type="button" data-mode="edit" aria-pressed="false" disabled>编辑已发布</button>
       </div>
       <p id="draft-status" role="status" aria-live="polite">草稿保存在当前浏览器</p>
     </div>
     <noscript><p>请启用 JavaScript 后使用网页写作。</p></noscript>
+    <section class="write-load" id="edit-picker" aria-label="选择已发布的文章" hidden>
+      <label class="write-label">已发布的文章<select id="edit-article"><option value="">选择要修改的文章</option></select></label>
+      <button type="button" id="edit-load">载入</button>
+      <a id="edit-view" target="_blank" rel="noopener" hidden>查看线上原文 ↗</a>
+      <button type="button" id="edit-refresh" hidden>重新载入线上版本</button>
+    </section>
     <form id="write-form" data-mode="article">
       <fieldset id="write-fields" disabled>
         <div id="write-properties">
@@ -38,6 +45,7 @@
             <label class="write-label" id="category-label">分类<select id="post-category" required>
               <option value="technical">技术笔记</option>
               <option value="privacy">技术笔记 / 隐私计算</option>
+              <option value="life" id="edit-life-category" hidden disabled>生活随笔</option>
             </select></label>
             <label class="write-label">日期<input id="post-date" type="date" required></label>
             <label class="write-label">标签（选填）<input id="post-tags" maxlength="250" placeholder="读书、生活（用逗号隔开）"></label>
@@ -58,7 +66,7 @@
         <section class="write-actions" aria-label="预览和发布">
           <button type="button" id="show-preview">预览</button>
           <details class="write-auth" id="publish-options">
-            <summary>准备发布</summary>
+            <summary id="publish-summary">准备发布</summary>
             <div class="publish-fields">
               <label class="write-label">GitHub 发布令牌<input type="password" id="github-token" autocomplete="off" spellcheck="false" placeholder="发布时填写"></label>
               <button class="write-primary" id="publish-button" type="submit">发布文章</button>
@@ -101,6 +109,11 @@
     <img alt="待发布的图片"><div><p class="image-name"></p>
     <label class="write-label">图片说明（选填）<input maxlength="120" placeholder="描述这张图片"></label>
     <button type="button" class="remove-block">移除图片</button></div>
+  </div></template>
+  <template id="original-block"><div class="write-block write-original" data-kind="original">
+    <label class="write-label"><span>原文文字（保留排版）</span><textarea rows="3"></textarea></label>
+    <p class="original-preview" hidden></p>
+    <button type="button" class="remove-block">移除此段</button>
   </div></template>
 </body>
 </html>

@@ -36,7 +36,7 @@ export function articleCategory(post) {
 
 export function articleText(post) {
   const text = typeof post.content === 'string' ? post.content.trim() : '';
-  return !post.web_draft_id && text.startsWith(post.title) ? text.slice(post.title.length).trim() : text;
+  return !post.web_draft_id && !post.web_edit_id && text.startsWith(post.title) ? text.slice(post.title.length).trim() : text;
 }
 
 export async function loadCatalog() {
