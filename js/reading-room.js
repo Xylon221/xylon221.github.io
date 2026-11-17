@@ -1,35 +1,9 @@
-async function fetchPage(path) {
-  const response = await fetch(path, { cache: 'no-cache' });
-  if (!response.ok) throw new Error(`Could not load ${path}: ${response.status}`);
-  return response;
-}
+import { articleCategory, articleText, fetchPage, loadCatalog } from './article-catalog.js?v=1';
 
 function showStatus(id, message) {
   const status = document.getElementById(id);
   status.textContent = message;
   status.hidden = false;
-}
-
-async function loadArchiveDates() {
-  const dates = new Map();
-  const visited = new Set();
-  let page = '/archives/';
-
-  while (page && !visited.has(page)) {
-    visited.add(page);
-    const response = await fetchPage(page);
-    const html = new DOMParser().parseFromString(await response.text(), 'text/html');
-
-    for (const link of html.querySelectorAll('a.post-title-link[href]')) {
-      const date = link.closest('article')?.querySelector('time[datetime]')?.dateTime.slice(0, 10);
-      if (date) dates.set(new URL(link.getAttribute('href'), location.origin).pathname, date);
-    }
-
-    const next = html.querySelector('.pagination a[rel="next"]')?.getAttribute('href');
-    page = next?.startsWith('/archives/page/') ? next : null;
-  }
-
-  return dates;
 }
 
 function renderArticle(post, template) {
@@ -48,8 +22,7 @@ function renderArticle(post, template) {
   card.querySelector('.article-meta').textContent = post.date;
 
   const summary = card.querySelector('.article-summary');
-  const content = typeof post.content === 'string' ? post.content.replace(/\s+/g, ' ').trim() : '';
-  const excerpt = content.startsWith(post.title) ? content.slice(post.title.length).trim() : content;
+  const excerpt = articleText(post).replace(/\s+/g, ' ');
   summary.textContent = excerpt.length > 100 ? `${excerpt.slice(0, 100)}…` : excerpt;
   summary.hidden = !excerpt;
 
@@ -66,19 +39,7 @@ function renderArticle(post, template) {
 }
 
 async function loadArticles() {
-  const [index, dates] = await Promise.all([
-    fetchPage('/search.json?v=20261110-grid').then(response => response.json()),
-    loadArchiveDates().catch(() => new Map()),
-  ]);
-  const articles = index.flatMap(post => {
-    if (!post || typeof post.title !== 'string' || typeof post.url !== 'string') return [];
-    const url = new URL(post.url, location.origin);
-    if (url.origin !== location.origin || !['http:', 'https:'].includes(url.protocol)) return [];
-    const month = url.pathname.match(/^\/(\d{4})\/(\d{2})\//);
-    const date = post.date || dates.get(url.pathname) || (month ? `${month[1]}-${month[2]}` : '');
-    return [{ ...post, url: url.pathname, date }];
-  });
-  articles.sort((first, second) => second.date.localeCompare(first.date));
+  const articles = await loadCatalog();
 
   if (!articles.length) showStatus('article-status', '暂时还没有文章。');
   const list = document.getElementById('article-list');
@@ -88,11 +49,10 @@ async function loadArticles() {
   const technical = [];
   const life = [];
   for (const post of articles) {
-    const labels = Array.isArray(post.tags) ? post.tags : [];
-    const category = post.category;
-    if (category === 'privacy' || (!category && labels.some(label => /CKKS|同态加密|隐私保护|差分隐私|安全多方计算/i.test(label)))) {
+    const category = articleCategory(post);
+    if (category === 'privacy') {
       privacy.push(post);
-    } else if (category === 'life' || (!category && labels.some(label => /随想|随笔|生活|读书/.test(label)))) {
+    } else if (category === 'life') {
       life.push(post);
     } else {
       technical.push(post);
@@ -104,14 +64,14 @@ async function loadArticles() {
       { id: 'privacy', title: '隐私计算', posts: privacy },
       { title: privacy.length ? '其他技术笔记' : '', posts: technical },
     ] },
-    { id: 'life', title: '生活随笔', summary: '读书、日常和写下来的片段', groups: [{ posts: life }] },
+    { id: 'life', href: '/notes/', title: '生活随笔', summary: '读书、日常和写下来的片段', groups: [{ posts: life }] },
   ];
 
   for (const [index, topic] of topics.entries()) {
     const count = topic.groups.reduce((total, group) => total + group.posts.length, 0);
     if (!count) continue;
     const shortcut = document.createElement('a');
-    shortcut.href = `#${topic.id}`;
+    shortcut.href = topic.href || `#${topic.id}`;
     const label = document.createElement('span');
     label.className = 'eyebrow';
     label.textContent = `0${index + 1} · ${count} 篇`;

@@ -6,11 +6,11 @@
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src https://api.github.com; form-action 'none'; base-uri 'none'">
   <meta name="robots" content="noindex">
-  <title>写文章 · 只想睡大觉</title>
+  <title>写作 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
-  <link rel="stylesheet" href="/css/write.css?v=1">
-  <script type="module" src="/js/write.js?v=1"></script>
+  <link rel="stylesheet" href="/css/write.css?v=2">
+  <script type="module" src="/js/write.js?v=2"></script>
 </head>
 <body>
   <header class="room-header"><div class="room-shell header-content">
@@ -18,21 +18,30 @@
     <nav aria-label="页面导航"><a href="/reading-room/">返回书房</a></nav>
   </div></header>
   <main class="room-shell write-shell">
-    <div class="write-heading"><p class="eyebrow">写作</p><h1>写文章</h1><p>写下想记录的内容，预览后发布到书房。</p></div>
-    <form id="write-form">
-      <fieldset id="write-fields">
-        <label class="write-label">标题<input id="post-title" required maxlength="120" placeholder="给这篇文章起个名字"></label>
-        <div class="write-meta">
-          <label class="write-label">分类<select id="post-category" required>
-            <option value="technical">技术笔记</option>
-            <option value="privacy">技术笔记 / 隐私计算</option>
-            <option value="life">生活随笔</option>
-          </select></label>
-          <label class="write-label">日期<input id="post-date" type="date" required></label>
-          <label class="write-label">标签<input id="post-tags" maxlength="250" placeholder="读书、生活（用逗号隔开）"></label>
+    <h1 class="write-heading">写作</h1>
+    <div class="write-toolbar">
+      <div class="write-modes" role="group" aria-label="写作类型">
+        <button type="button" data-mode="note" aria-pressed="false" disabled>写随笔</button>
+        <button type="button" data-mode="article" aria-pressed="true" disabled>写文章</button>
+      </div>
+      <p id="draft-status" role="status" aria-live="polite">草稿保存在当前浏览器</p>
+    </div>
+    <noscript><p>请启用 JavaScript 后使用网页写作。</p></noscript>
+    <form id="write-form" data-mode="article">
+      <fieldset id="write-fields" disabled>
+        <div id="write-properties">
+          <label class="write-label"><span id="title-label">标题</span><input id="post-title" required maxlength="120" placeholder="给这篇文章起个名字"></label>
+          <div class="write-meta">
+            <label class="write-label" id="category-label">分类<select id="post-category" required>
+              <option value="technical">技术笔记</option>
+              <option value="privacy">技术笔记 / 隐私计算</option>
+            </select></label>
+            <label class="write-label">日期<input id="post-date" type="date" required></label>
+            <label class="write-label">标签（选填）<input id="post-tags" maxlength="250" placeholder="读书、生活（用逗号隔开）"></label>
+          </div>
         </div>
 
-        <section class="write-content" aria-labelledby="content-title">
+        <section class="write-content" id="write-content" aria-labelledby="content-title">
           <div class="write-bar"><h2 id="content-title">正文</h2><div>
             <button type="button" id="add-text">＋ 文字</button>
             <button type="button" id="add-image">＋ 图片</button>
@@ -42,20 +51,25 @@
           <p id="image-error" class="write-error" role="alert"></p>
         </section>
 
+        <details class="write-options" id="note-options" hidden><summary>标题、日期和标签</summary></details>
         <section class="write-actions" aria-label="预览和发布">
-          <button type="button" id="show-preview">预览文章</button>
-          <div class="write-auth">
-            <label class="write-label" for="github-token">GitHub 发布令牌</label>
-            <input type="password" id="github-token" autocomplete="off" spellcheck="false" placeholder="发布时填写">
-            <details><summary>如何获取令牌</summary><p>在 GitHub 创建细粒度令牌，选择仓库 <strong>xylon221.github.io</strong>，将 <strong>Contents</strong> 设为 <strong>Read and write</strong>。把生成的令牌粘贴到上方。令牌只用于本次发布请求。</p><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">去 GitHub 创建令牌 ↗</a></details>
-          </div>
-          <button class="write-primary" type="submit">发布文章</button>
+          <button type="button" id="show-preview">预览</button>
+          <details class="write-auth" id="publish-options">
+            <summary>准备发布</summary>
+            <div class="publish-fields">
+              <label class="write-label">GitHub 发布令牌<input type="password" id="github-token" autocomplete="off" spellcheck="false" placeholder="发布时填写"></label>
+              <button class="write-primary" id="publish-button" type="submit">发布文章</button>
+            </div>
+            <p id="publish-target">发布后的文章可以在书房和归档查看。</p>
+            <details><summary>如何获取令牌</summary><p>在 GitHub 创建细粒度令牌，选择仓库 <strong>xylon221.github.io</strong>，将 <strong>Contents</strong> 设为 <strong>Read and write</strong>。令牌只用于本次发布请求。</p><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">去 GitHub 创建令牌 ↗</a></details>
+          </details>
         </section>
       </fieldset>
     </form>
     <div id="write-status" role="status" aria-live="polite"></div>
-    <article id="write-preview" class="write-preview" aria-label="文章预览" hidden>
-      <p class="eyebrow">文章预览</p><h2></h2><p class="preview-meta"></p><div class="write-prose"></div>
+    <article id="write-preview" class="write-preview" aria-label="发布预览" tabindex="-1" hidden>
+      <p class="eyebrow">发布预览</p><h2></h2><p class="preview-meta"></p><div class="write-prose"></div>
+      <button type="button" id="resume-writing">继续编辑</button>
     </article>
   </main>
 

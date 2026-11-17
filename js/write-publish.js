@@ -28,6 +28,9 @@ function articlePage(room, post, body) {
   const style = doc.querySelector('link[href^="/css/reading-room.css"]');
   const title = escapeHtml(post.title);
   const tags = post.tags.map(tag => `<a href="${tagUrl(tag)}">#${escapeHtml(tag)}</a>`).join(' ');
+  const date = `<time datetime="${post.date}">${post.date}</time>`;
+  const heading = post.untitled ? `<h1>${date}</h1>` : `<h1>${title}</h1>${date}`;
+  const back = post.category === 'life' ? '<a href="/notes/">返回生活随笔</a>' : '<a href="/reading-room/">返回书房</a>';
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -44,11 +47,11 @@ function articlePage(room, post, body) {
   ${header.outerHTML}
   <main class="room-shell published-article">
     <article>
-      <header class="published-heading"><h1>${title}</h1><time datetime="${post.date}">${post.date}</time></header>
+      <header class="published-heading">${heading}</header>
       <div class="published-body">${body}</div>
-      <footer class="published-tags">${tags}</footer>
+      ${tags ? `<footer class="published-tags">${tags}</footer>` : ''}
     </article>
-    <div class="room-footer"><a href="/reading-room/">返回书房</a><a href="/archives/">浏览归档</a></div>
+    <div class="room-footer">${back}<a href="/archives/">浏览归档</a></div>
   </main>
 </body>
 </html>`;
@@ -57,7 +60,7 @@ function articlePage(room, post, body) {
 function archiveEntry(post) {
   const { title, url, date } = post;
   const content = (post.content || '').replace(/\s+/g, ' ').trim();
-  const excerpt = content.startsWith(title) ? content.slice(title.length).trim() : content;
+  const excerpt = !post.web_draft_id && content.startsWith(title) ? content.slice(title.length).trim() : content;
   const tags = (post.tags || []).map(tag => `<a href="${tagUrl(tag)}">${escapeHtml(tag)}</a>`).join(' ');
   const image = post.image ? `<img class="archive-thumb" src="${escapeHtml(post.image)}" alt="" loading="lazy" decoding="async">` : '';
   return `<article class="archive-entry">${image}<h4><a class="post-title-link" href="${escapeHtml(url)}">${escapeHtml(title)}</a></h4>
@@ -124,6 +127,28 @@ function base64(file) {
   });
 }
 
+async function digest(data) {
+  const bytes = new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function draftFingerprint(draft) {
+  const blocks = [];
+  for (const block of draft.blocks) {
+    if (block.kind === 'text') blocks.push(block.text);
+    else blocks.push([block.path, block.caption, await digest(await block.file.arrayBuffer())]);
+  }
+  const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks]);
+  return digest(new TextEncoder().encode(data));
+}
+
+export class PublishedDraftChanged extends Error {
+  constructor(url) {
+    super('上一版已发布。当前草稿已保留，再次发布会生成一篇新内容。');
+    this.url = url;
+  }
+}
+
 export async function publishArticle(draft, token, progress, request = fetch) {
   async function github(path, { method = 'GET', body, raw = false, optional = false } = {}) {
     const response = await request(repository + path, {
@@ -154,20 +179,30 @@ export async function publishArticle(draft, token, progress, request = fetch) {
     file('archives/index.html'), file('tags/index.html'),
   ]);
   const catalog = JSON.parse(catalogText);
+  const fingerprint = await draftFingerprint(draft);
   const retry = catalog.find(post => post.web_draft_id === draft.id);
-  if (retry) return site + retry.url;
+  if (retry) {
+    const previousUrl = site + retry.url;
+    if (retry.web_draft_hash && retry.web_draft_hash !== fingerprint) throw new PublishedDraftChanged(previousUrl);
+    return previousUrl;
+  }
 
   const knownTags = new Map(catalog.flatMap(post => (post.tags || []).map(tag => [tag.toLowerCase(), tag])));
   const tags = [...new Set(draft.tags.map(tag => knownTags.get(tag.toLowerCase()) || tag))];
-  const slug = Array.from(draft.title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')).slice(0, 24).join('') || 'post';
+  const note = draft.category === 'life';
+  const content = draft.blocks.filter(block => block.kind === 'text').map(block => block.text).join('\n\n');
+  const previewTitle = Array.from(content.replace(/\s+/g, ' '));
+  const title = draft.title || (previewTitle.length ? previewTitle.slice(0, 30).join('') + (previewTitle.length > 30 ? '…' : '') : '照片随笔');
+  const slug = Array.from(draft.title.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')).slice(0, 24).join('') || (note ? 'note' : 'post');
   const directory = `${draft.date.slice(0, 4)}/${draft.date.slice(5, 7)}/${slug}-${draft.id}`;
   const url = `/${encodePath(directory)}/`;
   const images = draft.blocks.filter(block => block.kind === 'image');
   const post = {
-    title: draft.title, url, date: draft.date, tags, category: draft.category,
-    content: draft.blocks.filter(block => block.kind === 'text').map(block => block.text).join('\n\n'),
-    web_draft_id: draft.id,
+    title, url, date: draft.date, tags, category: draft.category, content,
+    web_draft_id: draft.id, web_draft_hash: fingerprint,
+    ...(note && !draft.title ? { untitled: true } : {}),
     ...(images.length ? { image: `${url}${images[0].path}` } : {}),
+    ...(note && images.length ? { note_images: images.map(image => ({ src: url + image.path, caption: image.caption })) } : {}),
   };
   const archiveDoc = parse(archive);
   const dates = new Map([...archiveDoc.querySelectorAll('.archive-entry')].map(entry => [
@@ -202,9 +237,9 @@ export async function publishArticle(draft, token, progress, request = fetch) {
     const blob = await github('/git/blobs', { method: 'POST', body: { content: await base64(image.file), encoding: 'base64' } });
     files.push({ path: `${directory}/${image.path}`, sha: blob.sha, mode: '100644', type: 'blob' });
   }
-  progress('正在提交文章、归档和标签…');
+  progress('正在提交正文、归档和标签…');
   const tree = await github('/git/trees', { method: 'POST', body: { base_tree: base.tree.sha, tree: files } });
-  const commit = await github('/git/commits', { method: 'POST', body: { message: `Publish ${draft.title}`, tree: tree.sha, parents: [head] } });
+  const commit = await github('/git/commits', { method: 'POST', body: { message: `Publish ${post.title}`, tree: tree.sha, parents: [head] } });
   await github(`/git/refs/heads/${branch}`, { method: 'PATCH', body: { sha: commit.sha, force: false } });
   return site + url;
 }

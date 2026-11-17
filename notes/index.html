@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="只想睡大觉的生活随笔，记录读书心得、日常和一时的想法。">
+  <title>生活随笔 · 只想睡大觉</title>
+  <link rel="icon" href="/images/favicon-32x32-next.png">
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
+  <link rel="stylesheet" href="/css/notes.css?v=1">
+  <script type="module" src="/js/notes.js?v=1"></script>
+</head>
+<body class="room-page">
+  <header class="room-header">
+    <div class="room-shell header-content">
+      <a class="brand" href="/">只想睡大觉</a>
+      <nav aria-label="书房导航">
+        <a href="/reading-room/">书房</a>
+        <a href="/notes/" aria-current="page">生活随笔</a>
+        <a href="/archives/">归档</a>
+        <a href="/tags/">标签</a>
+      </nav>
+    </div>
+  </header>
+  <main class="room-shell notes-shell">
+    <header class="notes-heading">
+      <h1>生活随笔</h1>
+      <a href="/write/?mode=note">写随笔 <span aria-hidden="true">↗</span></a>
+    </header>
+    <p id="notes-status" class="status" role="status" hidden></p>
+    <div id="notes-list"></div>
+    <noscript><p>启用 JavaScript 后可查看随笔，也可以浏览<a href="/archives/">归档</a>。</p></noscript>
+  </main>
+  <template id="note-template">
+    <article class="note-entry">
+      <a class="note-date"><time></time></a>
+      <div class="note-content">
+        <h2><a class="note-title"></a></h2>
+        <p class="note-text" hidden></p>
+        <div class="note-images" hidden></div>
+        <div class="note-links">
+          <div class="note-tags" aria-label="标签"></div>
+          <a class="note-permalink"></a>
+        </div>
+      </div>
+    </article>
+  </template>
+</body>
+</html>
