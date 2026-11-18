@@ -1,0 +1,26 @@
+[Unit]
+Description=Reading room private sync
+After=network.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+StateDirectory=reading-room-sync
+StateDirectoryMode=0700
+LoadCredential=owner.key:/etc/reading-room-sync/owner.key
+Environment=DESK_KEY_FILE=%d/owner.key
+Environment=DESK_DATABASE=/var/lib/reading-room-sync/desk.sqlite3
+Environment=DESK_SITE_ORIGIN=https://xylon221.github.io
+Environment=DESK_PORT=8786
+ExecStart=/usr/bin/python3 -I /opt/reading-room-sync/server.py
+Restart=on-failure
+RestartSec=2
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX AF_INET
+
+[Install]
+WantedBy=multi-user.target

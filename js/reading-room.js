@@ -36,6 +36,11 @@ async function loadUpdates() {
   updates.sort((first, second) => second.date.localeCompare(first.date));
 
   if (!updates.length) showStatus('update-status', '暂时还没有动态。');
+  const latest = document.getElementById('profile-latest');
+  if (latest && updates.length) {
+    latest.textContent = updates[0].title;
+    latest.hidden = false;
+  }
   const list = document.getElementById('update-list');
   const template = document.getElementById('update-template');
   for (const update of updates) {
