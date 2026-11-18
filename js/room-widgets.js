@@ -1,91 +1,26 @@
 import { deskEndpoint } from './desk-config.js?v=2';
+import { mountPlayer } from './room-player.js?v=1';
 
 const get = id => document.getElementById(id);
-const todayCard = get('today');
-const narrow = matchMedia('(max-width: 52rem)');
-const openToday = () => { todayCard.open = true; };
-if (narrow.matches && location.hash !== '#today') todayCard.open = false;
-document.querySelector('.today-link').addEventListener('click', openToday);
-window.addEventListener('hashchange', () => {
-  if (location.hash === '#today') openToday();
-});
+const main = document.querySelector('.home-grid');
+const roomPanes = { '#articles': 'editorial', '#about': 'personal', '#today': 'today' };
+const paneLinks = document.querySelectorAll('[data-room-pane]');
 
-const menu = document.querySelector('.home-more');
-menu.addEventListener('click', event => {
-  if (event.target.closest('a')) menu.open = false;
-});
-document.addEventListener('pointerdown', event => {
-  if (menu.open && !menu.contains(event.target)) menu.open = false;
-});
-menu.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && menu.open) {
-    menu.open = false;
-    menu.querySelector('summary').focus();
+function showPane(hash) {
+  const pane = roomPanes[hash] || 'editorial';
+  main.dataset.pane = pane;
+  for (const link of paneLinks) {
+    if (link.dataset.roomPane === pane) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
   }
-});
-
-function mountPlayer() {
-  const tracks = [
-    { title: '雾林', source: '/audio/mist.mp3' },
-    { title: '湖边', source: '/audio/lake.mp3' },
-    { title: '微光', source: '/audio/dusk.mp3' },
-  ];
-  const audio = get('room-audio');
-  const play = get('player-play');
-  const seek = get('player-seek');
-  const status = get('player-status');
-  let index = 0;
-
-  function time(seconds) {
-    const whole = Math.floor(seconds || 0);
-    return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, '0')}`;
-  }
-
-  function updateProgress() {
-    const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
-    seek.disabled = !duration;
-    seek.max = duration || 1;
-    seek.value = audio.currentTime;
-    get('player-position').textContent = time(audio.currentTime);
-    get('player-duration').textContent = time(duration || 24);
-  }
-
-  async function start() {
-    status.hidden = true;
-    try {
-      await audio.play();
-    } catch (error) {
-      if (error.name === 'AbortError') return;
-      status.textContent = '现在无法播放这首曲子。';
-      status.hidden = false;
-    }
-  }
-
-  function change(offset, resume) {
-    index = (index + offset + tracks.length) % tracks.length;
-    const track = tracks[index];
-    get('player-track').textContent = track.title;
-    status.hidden = true;
-    audio.src = track.source;
-    updateProgress();
-    if (resume) void start();
-  }
-
-  function updateButton() {
-    const paused = audio.paused;
-    play.setAttribute('aria-label', paused ? '播放' : '暂停');
-    play.firstElementChild.textContent = paused ? '▶' : 'Ⅱ';
-  }
-
-  play.addEventListener('click', () => audio.paused ? void start() : audio.pause());
-  get('player-prev').addEventListener('click', () => change(-1, !audio.paused));
-  get('player-next').addEventListener('click', () => change(1, !audio.paused));
-  seek.addEventListener('input', () => { audio.currentTime = Number(seek.value); });
-  for (const event of ['timeupdate', 'loadedmetadata', 'durationchange']) audio.addEventListener(event, updateProgress);
-  for (const event of ['play', 'pause', 'emptied']) audio.addEventListener(event, updateButton);
-  audio.addEventListener('ended', () => change(1, true));
+  if (pane === 'today') get('today').open = true;
 }
 
+for (const link of [...paneLinks, document.querySelector('.skip-link')]) {
+  link.addEventListener('click', () => showPane(link.hash));
+}
+window.addEventListener('hashchange', () => showPane(location.hash));
+showPane(location.hash);
 mountPlayer();
 
 const dateKey = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -433,16 +368,23 @@ function mountDesk(endpoint) {
   login.hidden = false;
   login.addEventListener('submit', async event => {
     event.preventDefault();
+    const key = keyInput.value.trim();
+    if (!/^[A-Za-z0-9_-]{43}$/.test(key)) {
+      showMessage('请粘贴完整的 43 位站主密钥。');
+      keyInput.select();
+      return;
+    }
     const button = login.querySelector('button');
     button.disabled = true;
     showMessage();
     try {
-      const { token: value } = await request('/session', { method: 'POST', data: { key: keyInput.value.trim() }, session: '' });
+      const { token: value } = await request('/session', { method: 'POST', data: { key }, session: '' });
       keyInput.value = '';
       remember(value);
       beginSession(value);
     } catch (error) {
       showMessage(error.message);
+      if (error.status === 401) keyInput.select();
     } finally {
       button.disabled = false;
     }

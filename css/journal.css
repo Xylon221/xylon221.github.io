@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Blog Kai";
+  src: url("/fonts/blog-kai.woff") format("woff");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
   --journal-paper: #fff;
@@ -13,6 +21,7 @@
     linear-gradient(90deg, #f0f0f0 1px, transparent 1px) 0 0 / 6px 6px,
     var(--journal-paper);
   --journal-shell: min(92%, 82rem);
-  --journal-body: "Times New Roman", "楷体", KaiTi, STKaiti, "华文中宋", STZhongsong, serif;
-  --journal-title: "Times New Roman", "华文中宋", STZhongsong, "宋体", SimSun, serif;
+  --journal-kai: KaiTi, "楷体", STKaiti, "Kaiti SC", "KaiTi_GB2312", "Blog Kai", serif;
+  --journal-body: var(--journal-kai);
+  --journal-title: var(--journal-kai);
 }

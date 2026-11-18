@@ -16,7 +16,7 @@ function mountNavigation() {
   const nav = rail.querySelector('nav');
   for (const [title, path] of links) {
     const link = document.createElement('a');
-    link.href = path;
+    link.href = path === '/about/' && document.querySelector('.room-home #about') ? '#about' : path;
     link.textContent = title;
     if (location.pathname.startsWith(path)) link.setAttribute('aria-current', 'page');
     nav.append(link);
@@ -28,6 +28,9 @@ function mountNavigation() {
     toggle.textContent = open ? '收起' : '菜单';
   }
   toggle.addEventListener('click', () => openMenu(rail.dataset.open !== 'true'));
+  nav.addEventListener('click', event => {
+    if (event.target.closest('a[href^="#"]')) openMenu(false);
+  });
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape' || rail.dataset.open !== 'true') return;
     openMenu(false);
