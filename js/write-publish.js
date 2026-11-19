@@ -44,14 +44,14 @@ function articlePage(room, post, body) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff">
+  <meta name="theme-color" content="#f6f2e8">
   <title>${title} | ${escapeHtml(header.querySelector('.brand').textContent.trim())}</title>
   <link rel="canonical" href="${site}${post.url}">
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
-  <link rel="stylesheet" href="/css/site-shell.css?v=1">
-  <script type="module" src="/js/site-shell.js?v=1"></script>
+  <link rel="stylesheet" href="/css/site-shell.css?v=4">
+  <script type="module" src="/js/site-shell.js?v=4"></script>
 </head>
 <body>
   ${header.outerHTML}

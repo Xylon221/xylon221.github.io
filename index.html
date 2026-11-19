@@ -3,34 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="只想睡大觉。一个安静写字的地方，记录技术笔记、读书心得与生活片段。">
-  <meta name="theme-color" content="#fff">
-  <title>只想睡大觉</title>
+  <meta name="description" content="且听风吟。一个安静写字的地方，记录技术笔记、阅读心得、生活片段，以及偶尔的胡思乱想。">
+  <meta name="theme-color" content="#f6f2e8">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="且听风吟">
+  <meta property="og:description" content="一个安静写字的地方，记录技术笔记、阅读心得与生活片段。">
+  <meta property="og:image" content="https://xylon221.github.io/images/journal-lake.webp">
+  <link rel="canonical" href="https://xylon221.github.io/">
+  <title>且听风吟</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261118-kai">
-  <link rel="stylesheet" href="/css/site-shell.css?v=1">
-  <script type="module" src="/js/site-shell.js?v=3"></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-paper">
+  <link rel="stylesheet" href="/css/site-shell.css?v=4">
+  <script type="module" src="/js/site-shell.js?v=4"></script>
+  <script type="module" src="/js/paper-index.js?v=1"></script>
 </head>
-<body class="cover-page">
-  <main>
-    <a class="cover" href="/reading-room/" aria-label="只想睡大觉，进入书房">
-      <div class="cover-top"><span class="cover-imprint">个人博客</span><span>学习篇 / 生活篇</span></div>
-      <div class="cover-center">
-        <div class="cover-copy">
-          <p class="eyebrow">一个安静写字的地方</p>
-          <h1><span>只想</span><span>睡大觉</span></h1>
-          <p class="cover-description">记录技术笔记、读书心得与生活片段。</p>
-          <span class="cover-enter">进入书房 <span aria-hidden="true">↗</span></span>
-        </div>
-        <figure class="cover-picture">
-          <div class="cover-image">
-            <img src="/images/journal-lake.webp" srcset="/images/journal-lake-small.webp 840w, /images/journal-lake.webp 1800w" sizes="(max-width: 45rem) 92vw, 56vw" alt="雾中的露易丝湖和岸边的松林" width="1800" height="2250" fetchpriority="high">
-          </div>
-          <figcaption><span>露易丝湖</span><span>摄影 · Kalen Emsley</span></figcaption>
-        </figure>
+<body class="paper-home">
+  <a class="skip-link" href="#content">跳到内容</a>
+  <header class="book-masthead" data-book-header>
+    <div class="paper-shell book-masthead-inner">
+      <a class="book-wordmark" href="/">且听风吟</a>
+      <nav class="book-nav" aria-label="全站导航">
+        <a href="/" aria-current="page">首页</a><a href="/posts/">文章</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/about/">关于</a>
+      </nav>
+    </div>
+  </header>
+  <main class="paper-shell" id="content">
+    <section class="paper-opening" aria-labelledby="home-title">
+      <div class="paper-opening-copy">
+        <p class="paper-japanese" lang="ja">静けさの中で、言葉を見つける</p>
+        <h1 id="home-title">且听风吟</h1>
+        <p class="paper-intro">一个安静写字的地方。</p>
+        <p class="paper-description">记录技术笔记、阅读心得和生活片段，<br>以及偶尔的胡思乱想。</p>
+        <p class="paper-quote" lang="en">To see a world in a grain of sand.</p>
+        <a class="paper-text-link" href="#selected">浏览精选</a>
       </div>
-      <div class="cover-bottom"><span>技术 · 阅读 · 生活</span><span>循此苦旅，以达星辰</span></div>
-    </a>
+      <figure class="paper-cover">
+        <picture>
+          <source media="(max-width: 48rem)" srcset="/images/journal-lake-small.webp">
+          <img src="/images/journal-lake.webp" alt="云雾绕过露易丝湖畔的山峰，近岸露出水下的石块" width="1800" height="2250" fetchpriority="high">
+        </picture>
+        <figcaption><span>露易丝湖</span><span>摄影 · Kalen Emsley</span></figcaption>
+      </figure>
+    </section>
+
+    <section class="paper-section" id="selected" aria-labelledby="selected-title">
+      <header class="paper-section-heading"><h2 id="selected-title">精选文章</h2></header>
+      <div class="paper-selection">
+        <article class="paper-feature">
+          <p class="paper-meta"><span>隐私计算</span><time datetime="2026-06-12">2026.06.12</time></p>
+          <h3><a href="/2026/06/privacy-preserving-data-science-overview/">隐私保护数据科学：技术概览</a></h3>
+          <p>从 CKKS 出发，看看同态加密、差分隐私、安全多方计算等方法如何应对不同的数据隐私问题。</p>
+        </article>
+        <div class="paper-feature-side">
+          <article>
+            <p class="paper-meta"><span>生活</span><time datetime="2026-04-29">2026.04.29</time></p>
+            <h3><a href="/2026/04/keep-learning/">保持学习的习惯</a></h3>
+            <p>与其周末突击一整天，不如每天固定一小时。</p>
+          </article>
+          <article>
+            <p class="paper-meta"><span>随想</span><time datetime="2026-04-28">2026.04.28</time></p>
+            <h3><a href="/2026/04/hello-world/">你好，世界</a></h3>
+            <p>写博客的一点初衷，关于记录、分享和思考。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="paper-latest">
+      <section class="paper-section" aria-labelledby="latest-title">
+        <header class="paper-section-heading"><h2 id="latest-title">最近更新</h2><a class="paper-text-link" href="/posts/">全部文章</a></header>
+        <div class="paper-entries" id="paper-latest">
+          <article class="catalog-row">
+            <a href="/2026/11/note-dc5555aa-f8d/"><div><p class="catalog-meta"><time datetime="2026-11-17">2026.11.17</time> · 日常札记</p><h3>深圳APEC会议</h3></div></a>
+          </article>
+          <article class="catalog-row">
+            <a href="/2026/11/note-86c9f49e-cfc/"><div><p class="catalog-meta"><time datetime="2026-11-17">2026.11.17</time> · 日常札记</p><h3>如何提高自己的项目管理能力？</h3></div></a>
+          </article>
+        </div>
+      </section>
+      <aside class="paper-section paper-topics" aria-labelledby="topics-title">
+        <header class="paper-section-heading"><h2 id="topics-title">栏目索引</h2></header>
+        <a href="/learning/"><strong>学习篇</strong><span>科研学习与计算机技术</span></a>
+        <a href="/life/"><strong>生活篇</strong><span>行旅、光影与日常札记</span></a>
+        <a href="/tags/"><strong>标签</strong><span>按主题阅读</span></a>
+      </aside>
+    </div>
   </main>
+  <footer class="paper-shell book-colophon" data-book-footer>
+    <div><p lang="la">Ad astra per aspera</p><p>循此苦旅，以达星辰。</p></div>
+    <nav aria-label="书房链接"><a href="/reading-room/">书房</a><a href="/daily-todo/">Daily Todo</a><a href="/notes/">生活随笔</a><a href="/write/">写作</a><a href="https://github.com/Xylon221">GitHub</a></nav>
+  </footer>
 </body>
 </html>

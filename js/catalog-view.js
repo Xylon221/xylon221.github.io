@@ -11,11 +11,15 @@ export function articleRows(posts) {
   return posts.map(post => {
     const row = document.createElement('article');
     row.className = 'catalog-row';
-    row.innerHTML = '<a><div><p class="catalog-meta"></p><h3></h3><p class="catalog-summary"></p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a>';
+    row.innerHTML = '<a><div><p class="catalog-meta"><time></time><span></span></p><h3></h3><p class="catalog-summary"></p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a>';
     row.querySelector('a').href = post.url;
     row.querySelector('h3').textContent = post.title;
-    row.querySelector('.catalog-meta').textContent = `${post.date} · ${articleTopic(post).title}`;
-    const excerpt = Array.from(articleText(post).replace(/\s+/g, ' '));
+    const date = row.querySelector('time');
+    date.dateTime = post.date;
+    date.textContent = post.date;
+    row.querySelector('.catalog-meta span').textContent = `${post.date ? ' · ' : ''}${articleTopic(post).title}`;
+    const text = articleText(post).replace(/\s+/g, ' ');
+    const excerpt = Array.from(text === post.title.trim() ? '' : text);
     const summary = row.querySelector('.catalog-summary');
     summary.textContent = excerpt.slice(0, 115).join('') + (excerpt.length > 115 ? '…' : '');
     if (!excerpt.length) summary.remove();
