@@ -50,8 +50,8 @@ function articlePage(room, post, body) {
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
-  <link rel="stylesheet" href="/css/site-shell.css?v=1">
-  <script type="module" src="/js/site-shell.js?v=1"></script>
+  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-motto">
+  <script type="module" src="/js/site-shell.js?v=20261119-motto"></script>
 </head>
 <body>
   ${header.outerHTML}

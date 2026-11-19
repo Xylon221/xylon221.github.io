@@ -21,7 +21,7 @@ body.site-framed { padding-inline-end: var(--site-rail-width); }
 .site-rail-brand { display: flex; justify-content: flex-end; gap: 1.1rem; padding: .95rem .9rem; background: var(--site-ink); color: #fff !important; }
 .site-rail-name, .site-rail-motto { writing-mode: vertical-rl; }
 .site-rail-name { font-weight: 700; font-size: clamp(1.65rem, 2.6vw, 2.25rem); line-height: 1.05; letter-spacing: .14em; }
-.site-rail-motto { color: #ece0cd; font-size: .8rem; line-height: 1.6; letter-spacing: .12em; }
+.site-rail-motto { color: #ece0cd; font-size: .8rem; line-height: 1.6; letter-spacing: .12em; white-space: nowrap; }
 .site-rail-nav { display: grid; gap: .15rem; }
 .site-rail-nav a { display: flex; align-items: center; justify-content: space-between; gap: .6rem; min-height: 2.45rem; padding: .45rem .35rem .45rem .7rem; border-inline-start: 2px solid transparent; font-weight: 600; font-size: .96rem; line-height: 1.35; }
 .site-rail-nav a::after { content: '↗'; opacity: 0; color: var(--site-accent); font-size: .74rem; }
@@ -42,3 +42,5 @@ body.site-framed { padding-inline-end: var(--site-rail-width); }
   .site-rail-brand { display: none; }
   .site-rail-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem .7rem; }
 }
+
+.cover-motto { color: var(--journal-ink); font-size: .86rem; letter-spacing: .05em; line-height: 1.65; text-align: end; }

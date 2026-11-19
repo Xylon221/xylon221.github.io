@@ -9,7 +9,7 @@ function mountNavigation() {
   rail.innerHTML = `
     <div class="site-rail-toggle"><a href="/" aria-label="只想睡大觉，返回首页">只想睡大觉</a><button type="button" aria-expanded="false" aria-controls="site-rail-inner">菜单</button></div>
     <div class="site-rail-inner" id="site-rail-inner">
-      <a class="site-rail-brand" href="/" aria-label="只想睡大觉，返回首页"><span class="site-rail-name">只想睡大觉</span><span class="site-rail-motto">循此苦旅，以达星辰</span></a>
+      <a class="site-rail-brand" href="/" aria-label="只想睡大觉，返回首页"><span class="site-rail-name">只想睡大觉</span><span class="site-rail-motto">天高地迥，觉宇宙之无穷；<br>兴尽悲来，识盈虚之有数。</span></a>
       <nav class="site-rail-nav" aria-label="全站导航"></nav>
       <div class="site-rail-footer"><span>© 只想睡大觉</span><a href="https://github.com/Xylon221">GitHub ↗</a></div>
     </div>`;
