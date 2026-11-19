@@ -1,7 +1,7 @@
 .music-dock {
-  --music-ink: var(--journal-ink, #2b3028);
-  --music-rule: var(--journal-line, #d6cdbd);
-  --music-paper: var(--journal-panel, #faf7ef);
+  --music-ink: var(--journal-ink, #243549);
+  --music-rule: var(--journal-line, #c8d3df);
+  --music-paper: var(--journal-panel, #f8fafc);
   position: fixed;
   z-index: 41;
   right: max(.8rem, env(safe-area-inset-right));
@@ -13,13 +13,13 @@
 .music-dock *, .music-dock *::before { box-sizing: border-box; }
 .music-dock :is(button, input) { font: inherit; color: inherit; }
 .music-dock button { cursor: pointer; }
-.music-dock :is(button, input, a):focus-visible { outline: 2px solid #465747; outline-offset: 2px; }
-.music-compact { display: flex; align-items: center; min-height: 3rem; padding: .2rem; border: 1px solid var(--music-rule); border-radius: 1.6rem; background: var(--music-paper); box-shadow: 0 .35rem 1rem #332c1820; }
-#music-toggle { position: relative; display: grid; place-items: center; flex: 0 0 2.5rem; width: 2.5rem; height: 2.5rem; overflow: hidden; padding: 0; border: 0; border-radius: 50%; background: #465747; color: #fff; }
+.music-dock :is(button, input, a):focus-visible { outline: 2px solid #345677; outline-offset: 2px; }
+.music-compact { display: flex; align-items: center; min-height: 3rem; padding: .2rem; border: 1px solid var(--music-rule); border-radius: 1.6rem; background: var(--music-paper); box-shadow: 0 .35rem 1rem #233e5720; }
+#music-toggle { position: relative; display: grid; place-items: center; flex: 0 0 2.5rem; width: 2.5rem; height: 2.5rem; overflow: hidden; padding: 0; border: 0; border-radius: 50%; background: #345677; color: #fff; }
 #music-toggle img { width: 100%; height: 100%; object-fit: cover; object-position: 54% 43%; opacity: .62; }
 #music-toggle span { position: absolute; inset: 0; display: grid; place-items: center; font: .85rem/1 system-ui, sans-serif; text-shadow: 0 1px 4px #0a1929; }
 #music-open { display: flex; align-items: center; gap: .55rem; min-height: 2.55rem; padding: .16rem .75rem .16rem .55rem; border: 0; background: transparent; }
-.music-open-icon { color: #53644f; font-size: 1.05rem; }
+.music-open-icon { color: #4b6580; font-size: 1.05rem; }
 .music-sheet {
   position: absolute;
   bottom: calc(100% + .55rem);
@@ -30,23 +30,23 @@
   overflow: auto;
   overscroll-behavior: contain;
   border: 1px solid var(--music-rule);
-  border-top: 2px solid #74816d;
+  border-top: 2px solid #7490ac;
   background: var(--music-paper);
-  box-shadow: 0 .5rem 1.7rem #332c181a;
+  box-shadow: 0 .5rem 1.7rem #233e571a;
 }
 .music-heading, .music-controls, .music-input { display: flex; align-items: center; justify-content: space-between; gap: .35rem; }
 .music-heading { margin-bottom: .5rem; }
 .music-heading h2 { margin: 0; font: 700 1.25rem/1.4 var(--journal-title, KaiTi, "楷体", serif); }
 .music-sheet :is(button, input) { min-width: 0; padding: .25rem .35rem; }
 .music-sheet button { border: 0; background: transparent; }
-.music-sheet button:hover, .music-sheet [aria-current="true"] { background: #ede7d9; }
+.music-sheet button:hover, .music-sheet [aria-current="true"] { background: #e6edf4; }
 #music-close { min-width: 2rem; font-size: 1.25rem; }
 .music-sources { display: flex; gap: .65rem; margin-bottom: .55rem; border-bottom: 1px solid var(--music-rule); }
 .music-sources button { padding: .35rem .2rem; border-bottom: 2px solid transparent; }
 .music-sources button[aria-pressed="true"] { border-color: var(--music-ink); }
-.music-dock input[type="range"] { padding: 0; accent-color: #465747; }
+.music-dock input[type="range"] { padding: 0; accent-color: #345677; }
 #music-seek { width: 100%; }
-.music-controls { color: #575e52; font-size: .85rem; }
+.music-controls { color: #526377; font-size: .85rem; }
 .music-controls button { width: 1.7rem; font-size: 1.18rem; }
 .music-controls label { display: flex; gap: .25rem; align-items: center; white-space: nowrap; }
 #music-volume { width: 3.65rem; }
@@ -55,7 +55,7 @@
 .music-list button[aria-current="true"] { font-weight: 700; }
 .music-input { align-items: stretch; }
 .music-input input { flex: 1; border: 1px solid var(--music-rule); background: #fff; }
-.music-input button { padding-inline: .55rem; background: #465747; color: #fff; }
+.music-input button { padding-inline: .55rem; background: #345677; color: #fff; }
 .music-input button:hover { background: #20354c; }
 .music-message { margin-top: .4rem; color: #8a3738; font-size: .88rem; }
 #music-frame iframe { display: block; width: 100%; height: 289px; margin-top: .4rem; border: 0; }

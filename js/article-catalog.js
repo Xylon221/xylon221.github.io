@@ -6,8 +6,8 @@ export async function fetchPage(path) {
   return response;
 }
 
-async function loadArchiveDates() {
-  const dates = new Map();
+async function loadArchiveRecords() {
+  const records = new Map();
   const visited = new Set();
   let page = '/archives/';
 
@@ -17,15 +17,16 @@ async function loadArchiveDates() {
     const html = new DOMParser().parseFromString(await response.text(), 'text/html');
 
     for (const link of html.querySelectorAll('a.post-title-link[href]')) {
-      const date = link.closest('article')?.querySelector('time[datetime]')?.dateTime.slice(0, 10);
-      if (date) dates.set(new URL(link.getAttribute('href'), location.origin).pathname, date);
+      const date = link.closest('article')?.querySelector('time[datetime]')?.dateTime;
+      const url = new URL(link.getAttribute('href'), location.origin).pathname;
+      if (date && !records.has(url)) records.set(url, { date, position: records.size });
     }
 
     const next = html.querySelector('.pagination a[rel="next"]')?.getAttribute('href');
     page = next?.startsWith('/archives/page/') ? next : null;
   }
 
-  return dates;
+  return records;
 }
 
 export function articleCategory(post) {
@@ -38,9 +39,9 @@ export function articleText(post) {
 }
 
 export async function loadCatalog() {
-  const [index, dates] = await Promise.all([
+  const [index, records] = await Promise.all([
     fetchPage('/search.json').then(response => response.json()),
-    loadArchiveDates().catch(() => new Map()),
+    loadArchiveRecords().catch(() => new Map()),
   ]);
   const articles = index.flatMap(post => {
     if (!post || typeof post.title !== 'string' || typeof post.url !== 'string') return [];
@@ -49,8 +50,11 @@ export async function loadCatalog() {
     catch { return []; }
     if (url.origin !== location.origin || !['http:', 'https:'].includes(url.protocol)) return [];
     const month = url.pathname.match(/^\/(\d{4})\/(\d{2})\//);
-    const date = post.date || dates.get(url.pathname) || (month ? `${month[1]}-${month[2]}` : '');
-    return [{ ...post, url: url.pathname, date }];
+    const record = records.get(url.pathname);
+    const date = post.date || record?.date || (month ? `${month[1]}-${month[2]}` : '');
+    const timestamp = Date.parse(date.length > 10 ? date : record?.date || date) || 0;
+    return [{ post: { ...post, url: url.pathname, date }, timestamp, position: record?.position ?? Number.MAX_SAFE_INTEGER }];
   });
-  return articles.reverse().sort((first, second) => second.date.localeCompare(first.date));
+  return articles.reverse().sort((first, second) => second.timestamp - first.timestamp || first.position - second.position)
+    .map(({ post }) => post);
 }

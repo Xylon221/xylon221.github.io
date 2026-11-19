@@ -19,7 +19,7 @@
   min-height: 9.6rem;
   padding: 1.05rem clamp(1rem, 3.2vw, 2.35rem) 1.1rem;
   border-top: 3px solid var(--daily-ink);
-  background: linear-gradient(100deg, #f6f2e8 12%, #f6f2e8eb 45%, #e8dfca91), url("/images/journal-lake-small.webp") 65% 44% / cover;
+  background: linear-gradient(100deg, #f1f5f8 12%, #f1f5f8eb 45%, #dbe8f392), url("/images/journal-lake-small.webp") 65% 44% / cover;
 }
 .daily-header h1 { margin: .3rem 0 .35rem; font: 700 clamp(2.6rem, 6.7vw, 4.6rem)/1.1 var(--journal-title); letter-spacing: .02em; }
 .daily-header time, .daily-back { color: var(--daily-muted); font-size: .92rem; }
@@ -53,7 +53,7 @@
 .daily-month-actions { gap: clamp(.23rem, 1.15vw, .7rem); }
 .daily-month-actions button { min-height: 2.35rem; white-space: nowrap; }
 .daily-month-actions button:not(.daily-primary) { min-width: 2rem; }
-.daily-month-actions button:not(.daily-primary):hover { background: #e9e4d6; }
+.daily-month-actions button:not(.daily-primary):hover { background: #e2ebf4; }
 .daily-month-actions button[aria-label] { font-size: 1.4rem; }
 .daily-page .daily-primary { padding: .4rem .75rem; border: 1px solid var(--daily-accent); background: var(--daily-accent); color: #fff; white-space: nowrap; }
 .daily-page .daily-primary:hover { background: var(--daily-ink); }
@@ -76,9 +76,9 @@
   padding: .34rem .48rem;
   text-align: left;
 }
-.daily-grid > :is(:nth-child(7n), :nth-child(7n - 1)) { background: #f0eade; }
-.daily-grid > span { background: #efe8daad; }
-.daily-grid > button:is(:hover, [aria-pressed="true"]) { background: #e9e4d6; }
+.daily-grid > :is(:nth-child(7n), :nth-child(7n - 1)) { background: #ebf1f6; }
+.daily-grid > span { background: #e7eef5ad; }
+.daily-grid > button:is(:hover, [aria-pressed="true"]) { background: #e2ebf4; }
 .daily-grid > button:focus-visible { z-index: 1; outline-offset: -2px; }
 .calendar-number { align-self: end; display: grid; place-items: center; min-width: 1.72rem; height: 1.72rem; font-size: 1rem; }
 [aria-current="date"] .calendar-number { background: var(--daily-ink); color: #fff; }
@@ -89,7 +89,7 @@
 .daily-records[data-view="gallery"] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); gap: .85rem; border: 0; }
 .daily-records > p { padding: 1.3rem .35rem; color: var(--daily-muted); }
 .daily-record { display: grid; grid-template-columns: 7rem minmax(0, 1fr) auto; gap: .8rem; width: 100%; padding: .8rem; text-align: left; border: 0; border-bottom: 1px solid var(--daily-rule); background: var(--daily-paper); }
-.daily-record:hover { background: #ece5d6; }
+.daily-record:hover { background: #e6edf4; }
 .daily-record time, .daily-record small { color: var(--daily-muted); font-size: .88rem; }
 .daily-record strong { overflow-wrap: anywhere; }
 [data-view="gallery"] .daily-record { grid-template-columns: 1fr; min-height: 9rem; align-content: start; border: 1px solid var(--daily-rule); border-top: 2px solid var(--daily-accent); }
@@ -111,7 +111,7 @@
   background: var(--daily-paper);
   color: var(--daily-ink);
 }
-.daily-sheet::backdrop { background: #2b302852; }
+.daily-sheet::backdrop { background: #24354952; }
 .sheet-heading { position: sticky; z-index: 1; top: 0; display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: 1.05rem 0 .85rem; background: var(--daily-paper); border-bottom: 1px solid var(--daily-rule); }
 .sheet-heading h2 { font: 700 clamp(1.55rem, 4vw, 2.2rem)/1.1 var(--journal-title); }
 .sheet-heading button { min-width: 2.5rem; font-size: 1.5rem; }

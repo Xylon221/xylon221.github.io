@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="且听风吟。一个安静写字的地方，记录技术笔记、阅读心得、生活片段，以及偶尔的胡思乱想。">
-  <meta name="theme-color" content="#f6f2e8">
+  <meta name="theme-color" content="#f1f5f8">
   <meta property="og:type" content="website">
   <meta property="og:title" content="且听风吟">
   <meta property="og:description" content="一个安静写字的地方，记录技术笔记、阅读心得与生活片段。">
@@ -12,10 +12,10 @@
   <link rel="canonical" href="https://xylon221.github.io/">
   <title>且听风吟</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-paper">
-  <link rel="stylesheet" href="/css/site-shell.css?v=4">
-  <script type="module" src="/js/site-shell.js?v=4"></script>
-  <script type="module" src="/js/paper-index.js?v=1"></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-cool">
+  <link rel="stylesheet" href="/css/site-shell.css?v=5">
+  <script type="module" src="/js/site-shell.js?v=5"></script>
+  <script type="module" src="/js/paper-index.js?v=2"></script>
 </head>
 <body class="paper-home">
   <a class="skip-link" href="#content">跳到内容</a>
@@ -23,8 +23,11 @@
     <div class="paper-shell book-masthead-inner">
       <a class="book-wordmark" href="/">且听风吟</a>
       <nav class="book-nav" aria-label="全站导航">
-        <a href="/" aria-current="page">首页</a><a href="/posts/">文章</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/about/">关于</a>
+        <a href="/" aria-current="page">首页</a><a href="/posts/">文章</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/about/">关于</a><a href="/daily-todo/">Daily Todo</a>
       </nav>
+      <form class="book-search" role="search" action="/posts/" aria-label="全站搜索">
+        <input type="search" name="q" aria-label="搜索全站文章" placeholder="搜索文章" required><button type="submit">搜索</button>
+      </form>
     </div>
   </header>
   <main class="paper-shell" id="content">
@@ -35,7 +38,6 @@
         <p class="paper-intro">一个安静写字的地方。</p>
         <p class="paper-description">记录技术笔记、阅读心得和生活片段，<br>以及偶尔的胡思乱想。</p>
         <p class="paper-quote" lang="en">To see a world in a grain of sand.</p>
-        <a class="paper-text-link" href="#selected">浏览精选</a>
       </div>
       <figure class="paper-cover">
         <picture>
@@ -46,48 +48,30 @@
       </figure>
     </section>
 
-    <section class="paper-section" id="selected" aria-labelledby="selected-title">
-      <header class="paper-section-heading"><h2 id="selected-title">精选文章</h2></header>
-      <div class="paper-selection">
-        <article class="paper-feature">
-          <p class="paper-meta"><span>隐私计算</span><time datetime="2026-06-12">2026.06.12</time></p>
-          <h3><a href="/2026/06/privacy-preserving-data-science-overview/">隐私保护数据科学：技术概览</a></h3>
-          <p>从 CKKS 出发，看看同态加密、差分隐私、安全多方计算等方法如何应对不同的数据隐私问题。</p>
-        </article>
-        <div class="paper-feature-side">
-          <article>
-            <p class="paper-meta"><span>生活</span><time datetime="2026-04-29">2026.04.29</time></p>
-            <h3><a href="/2026/04/keep-learning/">保持学习的习惯</a></h3>
-            <p>与其周末突击一整天，不如每天固定一小时。</p>
-          </article>
-          <article>
-            <p class="paper-meta"><span>随想</span><time datetime="2026-04-28">2026.04.28</time></p>
-            <h3><a href="/2026/04/hello-world/">你好，世界</a></h3>
-            <p>写博客的一点初衷，关于记录、分享和思考。</p>
-          </article>
-        </div>
+    <section class="paper-section" aria-labelledby="latest-title">
+      <header class="paper-section-heading"><h2 id="latest-title">最近记录</h2><a class="paper-text-link" href="/archives/">按日期看归档</a></header>
+      <div class="paper-entries" id="paper-latest"><p class="paper-index-status">也可在<a href="/posts/">文章索引</a>里查找记录。</p></div>
+    </section>
+
+    <section class="paper-section" aria-labelledby="topics-title">
+      <header class="paper-section-heading"><h2 id="topics-title">知识领域</h2></header>
+      <div class="paper-domains">
+        <a href="/posts/?field=technology"><strong>技术</strong><span>学习笔记与技术实践</span></a>
+        <a href="/posts/?field=reading"><strong>阅读</strong><span>读书笔记与摘录</span></a>
+        <a href="/posts/?field=reflection"><strong>思考</strong><span>关于问题与方法的随想</span></a>
+        <a href="/posts/?field=life"><strong>生活</strong><span>日常、行旅与摄影</span></a>
       </div>
     </section>
 
-    <div class="paper-latest">
-      <section class="paper-section" aria-labelledby="latest-title">
-        <header class="paper-section-heading"><h2 id="latest-title">最近更新</h2><a class="paper-text-link" href="/posts/">全部文章</a></header>
-        <div class="paper-entries" id="paper-latest">
-          <article class="catalog-row">
-            <a href="/2026/11/note-dc5555aa-f8d/"><div><p class="catalog-meta"><time datetime="2026-11-17">2026.11.17</time> · 日常札记</p><h3>深圳APEC会议</h3></div></a>
-          </article>
-          <article class="catalog-row">
-            <a href="/2026/11/note-86c9f49e-cfc/"><div><p class="catalog-meta"><time datetime="2026-11-17">2026.11.17</time> · 日常札记</p><h3>如何提高自己的项目管理能力？</h3></div></a>
-          </article>
-        </div>
-      </section>
-      <aside class="paper-section paper-topics" aria-labelledby="topics-title">
-        <header class="paper-section-heading"><h2 id="topics-title">栏目索引</h2></header>
-        <a href="/learning/"><strong>学习篇</strong><span>科研学习与计算机技术</span></a>
-        <a href="/life/"><strong>生活篇</strong><span>行旅、光影与日常札记</span></a>
-        <a href="/tags/"><strong>标签</strong><span>按主题阅读</span></a>
-      </aside>
-    </div>
+    <section class="paper-section paper-thoughts" id="home-thoughts" aria-labelledby="thoughts-title" hidden>
+      <header class="paper-section-heading"><h2 id="thoughts-title">最近思考</h2><a class="paper-text-link" href="/posts/?field=reflection">所有思考</a></header>
+      <ul id="paper-thoughts"></ul>
+    </section>
+
+    <section class="paper-section paper-home-about" aria-labelledby="home-about-title">
+      <header class="paper-section-heading"><h2 id="home-about-title">关于</h2><a class="paper-text-link" href="/about/">关于这个书房</a></header>
+      <p>喜欢安静写字。白天写代码，晚上读书，偶尔拍拍照，也喜欢夜晚和海的安静。</p>
+    </section>
   </main>
   <footer class="paper-shell book-colophon" data-book-footer>
     <div><p lang="la">Ad astra per aspera</p><p>循此苦旅，以达星辰。</p></div>

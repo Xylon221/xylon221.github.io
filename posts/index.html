@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="在且听风吟中查找技术笔记、生活札记和阅读随想。">
-  <meta name="theme-color" content="#f6f2e8">
+  <meta name="theme-color" content="#f1f5f8">
   <link rel="canonical" href="https://xylon221.github.io/posts/">
   <title>文章 · 且听风吟</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-paper">
-  <link rel="stylesheet" href="/css/site-shell.css?v=4">
-  <script type="module" src="/js/site-shell.js?v=4"></script>
-  <script type="module" src="/js/paper-index.js?v=1"></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-cool">
+  <link rel="stylesheet" href="/css/site-shell.css?v=5">
+  <script type="module" src="/js/site-shell.js?v=5"></script>
+  <script type="module" src="/js/paper-index.js?v=2"></script>
 </head>
 <body class="paper-index-page">
   <main id="content" class="paper-shell paper-index">
@@ -25,21 +25,26 @@
           <label for="paper-query">搜索文章</label>
           <div><input id="paper-query" type="search" name="q" placeholder="标题、标签或正文"><button type="submit">搜索</button></div>
         </form>
-        <nav class="paper-filters" aria-label="按栏目筛选">
-          <button type="button" data-paper-filter="" aria-pressed="true">全部</button>
-          <button type="button" data-paper-filter="learning" aria-pressed="false">学习篇</button>
-          <button type="button" data-paper-filter="life" aria-pressed="false">生活篇</button>
-        </nav>
+        <div class="paper-search-filters" hidden>
+          <nav class="paper-filters" aria-label="按知识领域筛选">
+            <button type="button" data-paper-filter="" aria-pressed="true">全部</button>
+            <button type="button" data-paper-filter="technology" aria-pressed="false">技术</button>
+            <button type="button" data-paper-filter="reading" aria-pressed="false">阅读</button>
+            <button type="button" data-paper-filter="reflection" aria-pressed="false">思考</button>
+            <button type="button" data-paper-filter="life" aria-pressed="false">生活</button>
+          </nav>
+          <label class="paper-year">年份 <select id="paper-year"><option value="">全部</option></select></label>
+        </div>
         <p class="paper-index-status" id="paper-count" role="status"></p>
         <div id="paper-results" class="paper-entries">
           <p class="paper-index-status">也可以在<a href="/archives/">归档</a>中按日期查看文章。</p>
         </div>
+        <button type="button" class="paper-more" id="paper-more" hidden>加载更多</button>
       </section>
       <aside class="paper-index-side">
         <h2>浏览索引</h2>
         <a href="/archives/">按日期看归档</a>
         <a href="/tags/">按主题看标签</a>
-        <a href="/categories/CKKS%E5%AD%A6%E4%B9%A0/">CKKS 学习分类</a>
         <a href="/notes/">生活随笔</a>
       </aside>
     </div>

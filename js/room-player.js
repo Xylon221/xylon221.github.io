@@ -39,7 +39,7 @@ export function mountPlayer() {
   if (document.getElementById('music-dock')) return;
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
-  stylesheet.href = '/css/music-dock.css?v=2';
+  stylesheet.href = '/css/music-dock.css?v=3';
   document.head.append(stylesheet);
 
   const dock = document.createElement('aside');

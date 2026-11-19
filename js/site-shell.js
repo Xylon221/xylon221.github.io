@@ -1,7 +1,7 @@
 const navigation = [
   ['首页', '/', path => path === '/'],
   ['文章', '/posts/', path => /^\/(?:posts|learning|life|notes|categories|\d{4})\//.test(path)],
-  ['标签', '/tags/'], ['归档', '/archives/'], ['关于', '/about/'],
+  ['标签', '/tags/'], ['归档', '/archives/'], ['关于', '/about/'], ['Daily Todo', '/daily-todo/'],
 ];
 const utilities = [['书房', '/reading-room/'], ['Daily Todo', '/daily-todo/'], ['生活随笔', '/notes/'],
   ['写作', '/write/'], ['GitHub', 'https://github.com/Xylon221']];
@@ -30,7 +30,18 @@ function mountNavigation() {
     if (match(location.pathname)) item.setAttribute('aria-current', 'page');
     nav.append(item);
   }
-  inner.append(title, nav);
+  const search = document.createElement('form');
+  search.className = 'book-search';
+  search.action = '/posts/';
+  search.setAttribute('role', 'search');
+  search.setAttribute('aria-label', '全站搜索');
+  search.innerHTML = '<input type="search" name="q" aria-label="搜索全站文章" placeholder="搜索文章" required><button type="submit">搜索</button>';
+  search.addEventListener('submit', event => {
+    event.preventDefault();
+    const query = search.elements.namedItem('q').value.trim();
+    if (query) location.assign(`/posts/?${new URLSearchParams({ q: query })}`);
+  });
+  inner.append(title, nav, search);
   header.append(inner);
   document.body.prepend(header);
 }
@@ -68,6 +79,6 @@ const body = document.querySelector('.published-body, .post-body[itemprop="artic
 if (body && /^\/\d{4}\/\d{2}\/[^/]+\/$/.test(location.pathname)) {
   document.body.classList.add('paper-reading');
   import('./paper-reading.js?v=1').then(({ mountReading }) => mountReading(body));
-  import('./comments.js?v=3').then(({ mountComments }) => mountComments(body.closest('article') || body));
+  import('./comments.js?v=4').then(({ mountComments }) => mountComments(body.closest('article') || body));
 }
-import('./room-player.js?v=3').then(({ mountPlayer }) => mountPlayer());
+import('./room-player.js?v=4').then(({ mountPlayer }) => mountPlayer());

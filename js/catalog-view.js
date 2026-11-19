@@ -1,7 +1,7 @@
-import { articleText } from './article-catalog.js?v=3';
+import { articleText } from './article-catalog.js?v=4';
 import { articleTopic } from './taxonomy.js?v=1';
 
-export function articleRows(posts) {
+export function articleRows(posts, labelFor = post => `${post.date ? ' · ' : ''}${articleTopic(post).title}`) {
   if (!posts.length) {
     const empty = document.createElement('p');
     empty.className = 'chapter-empty';
@@ -17,7 +17,7 @@ export function articleRows(posts) {
     const date = row.querySelector('time');
     date.dateTime = post.date;
     date.textContent = post.date;
-    row.querySelector('.catalog-meta span').textContent = `${post.date ? ' · ' : ''}${articleTopic(post).title}`;
+    row.querySelector('.catalog-meta span').textContent = labelFor(post);
     const text = articleText(post).replace(/\s+/g, ' ');
     const excerpt = Array.from(text === post.title.trim() ? '' : text);
     const summary = row.querySelector('.catalog-summary');
