@@ -1,5 +1,5 @@
 import { fetchPage, loadCatalog } from './article-catalog.js?v=20261119-shelves';
-import { articleRows } from './catalog-view.js?v=20261119-shelves';
+import { articleRows } from './catalog-view.js?v=20261119-titles';
 import { belongsToChapter, chapters } from './taxonomy.js?v=20261119-shelves';
 
 function showStatus(id, message) {
@@ -25,7 +25,7 @@ async function loadArticles() {
     link.textContent = '查看全部 ↗';
     heading.append(title, link);
     const posts = articles.filter(post => belongsToChapter(post, chapter)).slice(0, 3);
-    section.append(heading, ...articleRows(posts));
+    section.append(heading, ...articleRows(posts, { titleOnly: true }));
     list.append(section);
   }
 }

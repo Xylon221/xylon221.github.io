@@ -110,10 +110,9 @@ html:has(.room-home) { overflow: hidden; }
 .home-editorial .chapter-section-head a { color: var(--room-accent); font-size: .8rem; text-decoration: none; }
 .home-editorial .chapter-section-head a:hover { text-decoration: underline; }
 .home-editorial .catalog-row { background: #f4f8fbd9; border-color: var(--room-line); }
-.home-editorial .catalog-row > a { padding: .55rem .45rem; gap: .35rem; transition: background-color .2s ease; }
+.home-editorial .catalog-row > a { padding: .62rem .55rem; transition: background-color .2s ease; }
 .home-editorial .catalog-row > a:hover { background: #e1ebf5; }
-.home-editorial .catalog-row h3 { font-size: clamp(1.04rem, 1.43vw, 1.2rem); }
-.home-editorial .catalog-row .catalog-summary { font-size: .87rem; color: var(--room-muted); }
+.home-editorial .catalog-row h3 { margin: 0; font-size: clamp(1.04rem, 1.43vw, 1.2rem); }
 .home-editorial .update-card { border-top: 0; border-bottom: 1px solid var(--room-line); padding: .55rem .45rem; background: #f4f8fbd9; }
 .home-card { padding: clamp(.7rem, 1.45vw, 1.15rem); border: 1px solid var(--room-line); background: #f6f9fce8; }
 .home-profile { border-top: 2px solid #6a8299; }
