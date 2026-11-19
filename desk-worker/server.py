@@ -1,5 +1,7 @@
 """Private reading-room API. Run on loopback behind an HTTPS reverse proxy."""
 
+import base64
+import binascii
 import hashlib
 import hmac
 import json
@@ -14,13 +16,20 @@ from contextlib import closing
 from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 KEY_FORMAT = re.compile(r"[A-Za-z0-9_-]{43}")
 ENTRY_ROUTE = re.compile(r"/v1/entries/([a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12})")
 MONTH_FORMAT = re.compile(r"[1-9]\d{3}-(0[1-9]|1[0-2])")
 SESSION_MS = 30 * 24 * 60 * 60 * 1000
 BODY_LIMIT = 24 * 1024
+COMMENT_ROUTE = re.compile(r"/v1/comments/([a-f0-9-]{36})(/like)?")
+UUID = re.compile(r"[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}")
+ARTICLE_PATH = re.compile(r"/\d{4}/(?:0[1-9]|1[0-2])/[^/\s?#]+/")
+EMAIL = re.compile(r"[^\s@]{1,100}@[^\s@.]+(?:\.[^\s@.]+)+")
+JPEG_PREFIX = "data:image/jpeg;base64,"
+JOURNAL_FIELDS = {"title": 80, "weather": 25, "mood": 25, "events": 1600,
+                  "reflection": 2400, "goal_status": 12, "goal": 500, "exercise": 160}
 
 
 class RequestError(Exception):
@@ -29,8 +38,9 @@ class RequestError(Exception):
         self.status = status
 
 
-class LoginLimit:
-    def __init__(self):
+class RequestLimit:
+    def __init__(self, limit):
+        self.limit = limit
         self.lock = threading.Lock()
         self.attempts = OrderedDict()
 
@@ -42,7 +52,7 @@ class LoginLimit:
             if client in self.attempts:
                 expires, count = self.attempts[client]
                 self.attempts[client] = (expires, count + 1)
-                return count < 10
+                return count < self.limit
             if len(self.attempts) >= 4096:
                 self.attempts.popitem(last=False)
             self.attempts[client] = (now + 60, 1)
@@ -73,12 +83,52 @@ def valid_body(value, limit):
         return False
 
 
+def uuid_value(value):
+    return isinstance(value, str) and UUID.fullmatch(value)
+
+
+def article_path(value):
+    article = unquote(value) if isinstance(value, str) and len(value) <= 600 else ""
+    if not ARTICLE_PATH.fullmatch(article):
+        raise RequestError(400, "文章路径有误。")
+    return article
+
+
+def comment_website(value):
+    if not value:
+        return ""
+    if not valid_body(value, 300) or any(char.isspace() for char in value):
+        raise RequestError(400, "网址格式有误。")
+    try:
+        site = urlsplit(value)
+        if site.scheme in ("https", "http") and site.hostname and site.username is None and site.password is None:
+            return value
+    except ValueError:
+        pass
+    raise RequestError(400, "请输入以 https:// 或 http:// 开头的网址。")
+
+
+def comment_image(value):
+    if not value:
+        return ""
+    if isinstance(value, str) and len(value) <= 16500 and value.startswith(JPEG_PREFIX):
+        try:
+            data = base64.b64decode(value[len(JPEG_PREFIX):], validate=True)
+            if data.startswith(b"\xff\xd8\xff") and data.endswith(b"\xff\xd9"):
+                return value
+        except (ValueError, binascii.Error):
+            pass
+    raise RequestError(400, "图片过大或格式有误。")
+
+
 class DeskServer(ThreadingHTTPServer):
     def __init__(self, address, database, site_origin, key):
         self.database = database
         self.site_origin = site_origin
         self.key = key
-        self.login_limit = LoginLimit()
+        self.login_limit = RequestLimit(10)
+        self.comment_limit = RequestLimit(6)
+        self.like_limit = RequestLimit(45)
         with closing(self.connect()) as connection:
             connection.execute("PRAGMA journal_mode = WAL")
             connection.executescript(Path(__file__).with_name("schema.sql").read_text(encoding="utf-8"))
@@ -87,6 +137,7 @@ class DeskServer(ThreadingHTTPServer):
     def connect(self):
         connection = sqlite3.connect(self.database, timeout=10)
         connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA foreign_keys = ON")
         return connection
 
 
@@ -172,7 +223,61 @@ class DeskRequest(BaseHTTPRequestHandler):
             "SELECT DISTINCT day FROM desk_entries WHERE day >= ? AND day < ? AND deleted = 0 ORDER BY day",
             (month + "-01", month + "-32")
         ).fetchall()
-        return {"entries": [dict(entry) for entry in entries], "marked": [row["day"] for row in marks]}
+        payload = {"entries": [dict(entry) for entry in entries], "marked": [row["day"] for row in marks]}
+        if parameters.get("overview") == ["1"]:
+            journal = connection.execute("SELECT * FROM desk_journal WHERE day = ?", (day,)).fetchone()
+            payload["journal"] = dict(journal) if journal else None
+            payload["days"] = self.month_overview(connection, month)
+        return payload
+
+    def month_overview(self, connection, month):
+        dates = {}
+        bounds = (month + "-01", month + "-32")
+        for row in connection.execute(
+                "SELECT day, title, weather, mood, substr(reflection,1,260) AS reflection, goal_status"
+                " FROM desk_journal WHERE day >= ? AND day < ? AND (title <> '' OR weather <> '' OR mood <> ''"
+                " OR events <> '' OR reflection <> '' OR goal_status <> '' OR goal <> '' OR exercise <> '')", bounds):
+            dates[row["day"]] = dict(row)
+        for row in connection.execute(
+                """SELECT day, sum(kind='task') AS tasks, sum(kind='task' AND done=1) AS done,
+                          sum(kind='note') AS notes
+                   FROM desk_entries WHERE day >= ? AND day < ? AND deleted=0 GROUP BY day""", bounds):
+            dates.setdefault(row["day"], {}).update(dict(row))
+        for row in connection.execute(
+                """SELECT day, body, done FROM (
+                   SELECT day, substr(body,1,100) AS body, done,
+                   row_number() OVER (PARTITION BY day ORDER BY done,created_at,id) AS rank FROM desk_entries
+                   WHERE day >= ? AND day < ? AND kind='task' AND deleted=0)
+                   WHERE rank <= 2 ORDER BY day,rank""", bounds):
+            dates[row["day"]].setdefault("preview", []).append({"body": row["body"], "done": row["done"]})
+        return dates
+
+    def save_journal(self, connection):
+        data = self.read_json()
+        day, version = data.get("day"), data.get("version")
+        if not valid_day(day) or type(version) is not int or not 0 <= version < 2**53:
+            raise RequestError(400, "日期或版本有误。")
+        values = []
+        for name, length in JOURNAL_FIELDS.items():
+            value = data.get(name, "")
+            if value != "" and not valid_body(value, length):
+                raise RequestError(400, "日常记录内容有误或过长。")
+            values.append(value.strip())
+        if data.get("goal_status", "").strip() not in ("", "未开始", "进行中", "已完成"):
+            raise RequestError(400, "目标状态有误。")
+        columns = ",".join(JOURNAL_FIELDS)
+        if version == 0:
+            placeholders = ",".join("?" for _ in range(len(values) + 1))
+            result = connection.execute(
+                f"INSERT INTO desk_journal (day,{columns}) VALUES ({placeholders}) ON CONFLICT(day) DO NOTHING",
+                [day, *values])
+        else:
+            assignments = ",".join(f"{name}=?" for name in JOURNAL_FIELDS)
+            result = connection.execute(
+                f"UPDATE desk_journal SET {assignments},version=version+1 WHERE day=? AND version=?",
+                [*values, day, version])
+        if not result.rowcount:
+            raise RequestError(409, "这一天刚在其他设备上改过。已保留你的草稿，可载入云端版本。")
 
     def create_entry(self, connection):
         data = self.read_json()
@@ -211,16 +316,125 @@ class DeskRequest(BaseHTTPRequestHandler):
         elif valid_body(data.get("body"), 4000):
             cursor = connection.execute(
                 "UPDATE desk_entries SET body = ?, version = version + 1"
-                " WHERE id = ? AND version = ? AND kind = 'note' AND deleted = 0",
-                (data["body"].strip(), entry_id, version)
+                " WHERE id = ? AND version = ? AND (kind = 'note' OR length(?) <= 160) AND deleted = 0",
+                (data["body"].strip(), entry_id, version, data["body"].strip())
             )
         else:
             raise RequestError(400, "修改内容有误。")
         if not cursor.rowcount:
             raise RequestError(409, "这条记录已在其他设备上变动。请检查最新内容后重试。")
 
+    def read_comments(self, connection, query):
+        parameters = parse_qs(query)
+        article = article_path(parameters.get("article", [""])[0])
+        visitor = parameters.get("visitor", [""])[0]
+        cursor = parameters.get("before", [""])[0]
+        before = int(cursor) if re.fullmatch(r"[0-9]{1,18}", cursor) else 2**63 - 1
+        fingerprint = self.session_hash("reaction:" + visitor) if uuid_value(visitor) else ""
+        roots = connection.execute(
+            """SELECT id,rowid FROM blog_comments WHERE article=? AND root_id IS NULL AND rowid<?
+               AND (deleted=0 OR EXISTS (SELECT 1 FROM blog_comments AS reply
+                  WHERE reply.root_id=blog_comments.id AND reply.deleted=0))
+               ORDER BY rowid DESC LIMIT 13""", (article, before)).fetchall()
+        threads = roots[:12]
+        comments = []
+        if threads:
+            ids = [root["id"] for root in threads]
+            keys = ",".join("?" for _ in ids)
+            rows = connection.execute(
+                f"""SELECT comment.id, comment.parent_id, comment.root_id, comment.nickname, comment.website,
+                           comment.message, comment.image, comment.created_at, comment.deleted,
+                           parent.nickname AS reply_to,
+                           instr('0123456789abcdef', substr(comment.email_hash,1,1)) % 5 AS avatar_tone,
+                           (SELECT count(*) FROM blog_comment_likes WHERE comment_id=comment.id) AS likes,
+                           EXISTS (SELECT 1 FROM blog_comment_likes WHERE comment_id=comment.id AND visitor=?) AS liked
+                      FROM blog_comments AS comment LEFT JOIN blog_comments AS parent ON parent.id=comment.parent_id
+                     WHERE comment.id IN ({keys}) OR (comment.root_id IN ({keys}) AND comment.deleted=0)
+                     ORDER BY comment.rowid""", [fingerprint, *ids, *ids]).fetchall()
+            groups = {root: [] for root in ids}
+            for row in rows:
+                groups[row["root_id"] or row["id"]].append(dict(row))
+            comments = [comment for root in ids for comment in groups[root]]
+        count = connection.execute(
+            "SELECT count(*) FROM blog_comments WHERE article=? AND deleted=0", (article,)).fetchone()[0]
+        return {"comments": comments, "count": count, "next": threads[-1]["rowid"] if len(roots) > 12 else None}
+
+    def post_comment(self, connection):
+        client = self.headers.get("X-Real-IP", self.client_address[0])
+        if not self.server.comment_limit.allow(client):
+            raise RequestError(429, "发表评论太频繁，请稍后再试。")
+        data = self.read_json()
+        if data.get("trap"):
+            raise RequestError(400, "评论未提交。")
+        comment_id, message = data.get("id"), data.get("message")
+        article = article_path(data.get("article"))
+        parent = data.get("parent") or None
+        if not uuid_value(comment_id) or (parent and not uuid_value(parent)):
+            raise RequestError(400, "评论或回复目标有误。")
+        image = comment_image(data.get("image"))
+        if not valid_body(message, 500) and not (message == "" and image):
+            raise RequestError(400, "请输入 500 字以内的留言，或附上一张图片。")
+        anonymous = data.get("anonymous") is True
+        if anonymous:
+            nickname, email_hash, website = "匿名访客", "", ""
+        else:
+            nickname, email = data.get("nickname"), data.get("email")
+            if not valid_body(nickname, 30) or not valid_body(email, 254) or not EMAIL.fullmatch(email.strip()):
+                raise RequestError(400, "请填写昵称和有效邮箱。")
+            nickname = nickname.strip()
+            email_hash = self.session_hash("comment-email:" + email.strip().lower())
+            website = comment_website(data.get("website"))
+        root = None
+        if parent:
+            origin = connection.execute(
+                "SELECT root_id FROM blog_comments WHERE id=? AND article=? AND deleted=0", (parent, article)).fetchone()
+            if origin is None:
+                raise RequestError(404, "这条评论已不可回复。")
+            root = origin["root_id"] or parent
+        connection.execute(
+            """INSERT INTO blog_comments
+               (id,article,parent_id,root_id,nickname,email_hash,website,message,image,created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO NOTHING""",
+            (comment_id, article, parent, root, nickname, email_hash, website, message.strip(), image, now_ms()))
+
+    def like_comment(self, connection, comment_id):
+        client = self.headers.get("X-Real-IP", self.client_address[0])
+        if not self.server.like_limit.allow(client):
+            raise RequestError(429, "操作太频繁，请稍后再试。")
+        data = self.read_json()
+        visitor, liked = data.get("visitor"), data.get("liked")
+        if not uuid_value(visitor) or type(liked) is not bool:
+            raise RequestError(400, "点赞请求有误。")
+        fingerprint = self.session_hash("reaction:" + visitor)
+        connection.execute("BEGIN IMMEDIATE")
+        if not connection.execute("SELECT 1 FROM blog_comments WHERE id=? AND deleted=0", (comment_id,)).fetchone():
+            raise RequestError(404, "这条评论已不可用。")
+        if liked:
+            connection.execute("INSERT OR IGNORE INTO blog_comment_likes VALUES (?,?)", (comment_id, fingerprint))
+        else:
+            connection.execute("DELETE FROM blog_comment_likes WHERE comment_id=? AND visitor=?", (comment_id, fingerprint))
+        count = connection.execute(
+            "SELECT count(*) FROM blog_comment_likes WHERE comment_id=?", (comment_id,)).fetchone()[0]
+        return {"likes": count, "liked": liked}
+
     def route(self, connection, url):
         path, method = url.path, self.command
+        if path == "/v1/comments":
+            if method == "GET":
+                return self.read_comments(connection, url.query), 200
+            if method == "POST":
+                self.post_comment(connection)
+                return {"ok": True}, 201
+        if match := COMMENT_ROUTE.fullmatch(path):
+            if method == "PATCH" and match[2]:
+                return self.like_comment(connection, match[1]), 200
+            if method == "DELETE" and not match[2]:
+                self.authorize(connection)
+                connection.execute(
+                    "UPDATE blog_comments SET deleted=1,nickname='',email_hash='',website='',message='',image='' WHERE id=?",
+                    (match[1],))
+                connection.execute("DELETE FROM blog_comment_likes WHERE comment_id=?", (match[1],))
+                return {"ok": True}, 200
         if path == "/v1/session" and method == "POST":
             return self.sign_in(connection), 200
         digest = self.authorize(connection)
@@ -228,6 +442,8 @@ class DeskRequest(BaseHTTPRequestHandler):
             connection.execute("DELETE FROM desk_sessions WHERE hash = ?", (digest,))
         elif path == "/v1/day" and method == "GET":
             return self.read_day(connection, url.query), 200
+        elif path == "/v1/journal" and method == "PATCH":
+            self.save_journal(connection)
         elif path == "/v1/entries" and method == "POST":
             self.create_entry(connection)
             return {"ok": True}, 201

@@ -1,5 +1,5 @@
 const links = [
-  ['书房', '/reading-room/'], ['学习篇', '/learning/'], ['生活篇', '/life/'], ['生活随笔', '/notes/'],
+  ['书房', '/reading-room/'], ['Daily Todo', '/daily-todo/'], ['学习篇', '/learning/'], ['生活篇', '/life/'], ['生活随笔', '/notes/'],
   ['归档', '/archives/'], ['标签', '/tags/'], ['关于', '/about/'], ['写作', '/write/'],
 ];
 
@@ -45,7 +45,9 @@ function mountNavigation() {
 
 mountNavigation();
 
+import('./room-player.js?v=2').then(({ mountPlayer }) => mountPlayer());
+
 const body = document.querySelector('.published-body, .post-body[itemprop="articleBody"]');
 if (body && /^\/\d{4}\/\d{2}\/[^/]+\/$/.test(location.pathname)) {
-  import('./comments.js?v=1').then(({ mountComments }) => mountComments(body.closest('article') || body));
+  import('./comments.js?v=2').then(({ mountComments }) => mountComments(body.closest('article') || body));
 }

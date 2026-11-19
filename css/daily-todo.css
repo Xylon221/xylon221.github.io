@@ -1,0 +1,163 @@
+.daily-page {
+  --daily-ink: #20354c;
+  --daily-muted: #4d6479;
+  --daily-rule: #b9c9d6;
+  --daily-accent: #305475;
+  --daily-paper: #f7fafc;
+  --site-accent: var(--daily-accent);
+  background-color: #edf3f7;
+  color: var(--daily-ink);
+}
+.daily-page .site-rail { background: #f5f8fb; }
+.daily-page .site-rail-nav a:is(:hover, [aria-current]) { background: #e7eff6; }
+.daily-page [hidden] { display: none !important; }
+.daily-page:has(.daily-sheet[open]) { overflow: hidden; }
+.daily-page :is(button, input, textarea, select) { font: inherit; color: inherit; }
+.daily-page :is(button, a, input, textarea, select):focus-visible { outline: 2px solid var(--daily-accent); outline-offset: 2px; }
+.daily-page button { cursor: pointer; }
+.daily-page button:disabled { cursor: default; opacity: .6; }
+.daily-shell { width: min(94%, 81rem); margin: auto; padding: 1.7rem 0 5.5rem; }
+.daily-header {
+  min-height: 9.6rem;
+  padding: 1.05rem clamp(1rem, 3.2vw, 2.35rem) 1.1rem;
+  border-top: 3px solid var(--daily-ink);
+  background: linear-gradient(100deg, #f4f8fc 12%, #f4f8fce8 45%, #e5edf57a), url("/images/journal-lake-small.webp") 65% 44% / cover;
+}
+.daily-header h1 { margin: .3rem 0 .35rem; font: 700 clamp(2.6rem, 6.7vw, 4.6rem)/1.1 var(--journal-title); letter-spacing: .02em; }
+.daily-header time, .daily-back { color: var(--daily-muted); font-size: .92rem; }
+.daily-back { text-underline-offset: .24em; }
+.daily-toolbar, .daily-month-header, .daily-month-actions, #desk-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .6rem;
+}
+.daily-toolbar { margin-top: 1.05rem; border-bottom: 1px solid var(--daily-rule); }
+.daily-views { display: flex; gap: clamp(.55rem, 2.4vw, 1.55rem); }
+.daily-views button, #desk-account button, .daily-month-actions button:not(.daily-primary), .sheet-heading button, .sheet-actions button:not(.daily-primary), .desk-text, #task-cancel {
+  padding: .4rem .25rem;
+  border: 0;
+  background: transparent;
+  color: var(--daily-accent);
+}
+.daily-views button { padding: .55rem .12rem .65rem; border-bottom: 2px solid transparent; white-space: nowrap; }
+.daily-views button:is(:hover, [aria-pressed="true"]) { color: var(--daily-ink); border-bottom-color: var(--daily-accent); }
+#desk-account { color: var(--daily-muted); font-size: .88rem; white-space: nowrap; }
+#desk-account button:hover, .desk-text:hover, .sheet-actions button:not(.daily-primary):hover { text-decoration: underline; }
+.daily-login { padding: .75rem 0; border-bottom: 1px solid var(--daily-rule); font-size: .95rem; }
+#desk-login { display: flex; align-items: center; gap: .5rem; }
+#desk-key { width: min(54%, 18rem); }
+#desk-intro { margin-top: .3rem; color: var(--daily-muted); }
+.daily-message { margin-block: .4rem; color: #85413c; overflow-wrap: anywhere; }
+.daily-month { margin-top: 1rem; }
+.daily-month-header { min-height: 3.5rem; padding: .15rem 0 .75rem; }
+.daily-month h2 { font: 700 clamp(1.45rem, 3.6vw, 2.2rem)/1.15 var(--journal-title); }
+.daily-month-actions { gap: clamp(.23rem, 1.15vw, .7rem); }
+.daily-month-actions button { min-height: 2.35rem; white-space: nowrap; }
+.daily-month-actions button:not(.daily-primary) { min-width: 2rem; }
+.daily-month-actions button:not(.daily-primary):hover { background: #dce8f1; }
+.daily-month-actions button[aria-label] { font-size: 1.4rem; }
+.daily-page .daily-primary { padding: .4rem .75rem; border: 1px solid var(--daily-accent); background: var(--daily-accent); color: #fff; white-space: nowrap; }
+.daily-page .daily-primary:hover { background: var(--daily-ink); }
+.daily-week, .daily-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.daily-week { padding: .45rem 0; color: var(--daily-muted); text-align: center; font-size: .88rem; }
+.daily-grid { border-inline-start: 1px solid var(--daily-rule); border-block-start: 1px solid var(--daily-rule); }
+.daily-grid > * {
+  min-width: 0;
+  min-height: clamp(5rem, 10.8vh, 7.1rem);
+  border: 0;
+  border-inline-end: 1px solid var(--daily-rule);
+  border-block-end: 1px solid var(--daily-rule);
+  background: var(--daily-paper);
+}
+.daily-grid > button {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: .2rem;
+  padding: .34rem .48rem;
+  text-align: left;
+}
+.daily-grid > :is(:nth-child(7n), :nth-child(7n - 1)) { background: #ecf3f8; }
+.daily-grid > span { background: #e8eff4ab; }
+.daily-grid > button:is(:hover, [aria-pressed="true"]) { background: #e0ebf4; }
+.daily-grid > button:focus-visible { z-index: 1; outline-offset: -2px; }
+.calendar-number { align-self: end; display: grid; place-items: center; min-width: 1.72rem; height: 1.72rem; font-size: 1rem; }
+[aria-current="date"] .calendar-number { background: var(--daily-ink); color: #fff; }
+.calendar-preview { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--daily-accent); font-size: .88rem; }
+.calendar-preview[data-done] { text-decoration: line-through; color: var(--daily-muted); }
+.calendar-preview:first-of-type { font-weight: 700; }
+.daily-records { border-top: 1px solid var(--daily-rule); }
+.daily-records[data-view="gallery"] { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr)); gap: .85rem; border: 0; }
+.daily-records > p { padding: 1.3rem .35rem; color: var(--daily-muted); }
+.daily-record { display: grid; grid-template-columns: 7rem minmax(0, 1fr) auto; gap: .8rem; width: 100%; padding: .8rem; text-align: left; border: 0; border-bottom: 1px solid var(--daily-rule); background: var(--daily-paper); }
+.daily-record:hover { background: #e7eff6; }
+.daily-record time, .daily-record small { color: var(--daily-muted); font-size: .88rem; }
+.daily-record strong { overflow-wrap: anywhere; }
+[data-view="gallery"] .daily-record { grid-template-columns: 1fr; min-height: 9rem; align-content: start; border: 1px solid var(--daily-rule); border-top: 2px solid var(--daily-accent); }
+.reflection-excerpt { white-space: pre-wrap; overflow-wrap: anywhere; }
+.daily-sheet {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(100%, 34rem);
+  max-width: none;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0 clamp(1rem, 4vw, 2rem) 1.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-inline-start: 1px solid var(--daily-rule);
+  background: var(--daily-paper);
+  color: var(--daily-ink);
+}
+.daily-sheet::backdrop { background: #20354c52; }
+.sheet-heading { position: sticky; z-index: 1; top: 0; display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: 1.05rem 0 .85rem; background: var(--daily-paper); border-bottom: 1px solid var(--daily-rule); }
+.sheet-heading h2 { font: 700 clamp(1.55rem, 4vw, 2.2rem)/1.1 var(--journal-title); }
+.sheet-heading button { min-width: 2.5rem; font-size: 1.5rem; }
+.sheet-section { padding: .8rem 0 1rem; border-bottom: 1px solid var(--daily-rule); }
+.sheet-section h3 { font-size: 1.2rem; margin: .15rem 0 .55rem; }
+.sheet-section h3 span { margin-left: .35rem; font-size: .85rem; color: var(--daily-muted); }
+.daily-line, .sheet-actions { display: flex; gap: .35rem; }
+.daily-line input { min-width: 0; flex: 1; }
+.sheet-actions { justify-content: end; margin-top: .65rem; }
+.daily-page :is(input, textarea, select) {
+  min-width: 0; max-width: 100%; padding: .42rem .52rem; border: 1px solid var(--daily-rule); background: #fff;
+}
+.sheet-section :is(textarea, label > input, select) { display: block; width: 100%; }
+.sheet-section textarea { resize: vertical; }
+#journal-form label { display: block; margin-top: .55rem; font-size: .95rem; }
+#journal-form label > * { margin-top: .15rem; }
+.journal-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.desk-list { margin: 0 0 .5rem; padding: 0; list-style: none; }
+.desk-task-row, .note-meta { display: flex; justify-content: space-between; align-items: baseline; gap: .45rem; }
+.desk-task-row label { display: flex; align-items: baseline; gap: .55rem; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.desk-task-row input { accent-color: var(--daily-accent); }
+.desk-task-row input:checked + span { color: var(--daily-muted); text-decoration: line-through; }
+.desk-task-row .desk-text, .note-meta .desk-text { font-size: .9rem; }
+.note-meta time { margin-right: auto; color: var(--daily-muted); font-size: .88rem; }
+.desk-notes li { padding: .3rem 0 .65rem; border-bottom: 1px solid var(--daily-rule); }
+.desk-notes p { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: no-preference) {
+  .daily-sheet[open] { animation: daily-open .18s ease-out; }
+  @keyframes daily-open { from { opacity: .55; transform: translateX(1rem); } }
+}
+@media (max-width: 41rem) {
+  .daily-shell { width: 94%; padding-top: .9rem; }
+  .daily-header { min-height: 7.5rem; }
+  .daily-toolbar { gap: .3rem; }
+  .daily-views { gap: .55rem; }
+  .daily-views button, #desk-account { font-size: .88rem; }
+  .daily-month-actions { gap: .15rem; }
+  .daily-month-actions button:not(.daily-primary) { min-width: 1.55rem; }
+  .daily-month-actions .daily-primary { padding-inline: .35rem; }
+  .daily-grid > * { min-height: 3rem; }
+  .daily-grid > button { align-items: center; justify-content: center; padding: .15rem; }
+  .calendar-number { align-self: center; }
+  .calendar-preview { display: none; }
+  .daily-grid button[data-record]::after { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--daily-accent); }
+  .daily-record { grid-template-columns: 1fr auto; column-gap: .4rem; row-gap: .2rem; }
+  .daily-record time { grid-column: 1 / -1; }
+}

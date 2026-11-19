@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="书房的私人日历与日常记录。">
+  <meta name="theme-color" content="#edf2f6">
+  <title>Daily Todo · 只想睡大觉</title>
+  <link rel="icon" href="/images/favicon-32x32-next.png">
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261118-kai">
+  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <link rel="stylesheet" href="/css/daily-todo.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=3"></script>
+  <script type="module" src="/js/daily-todo.js?v=1"></script>
+</head>
+<body class="daily-page">
+  <a class="skip-link" href="#calendar">跳到月历</a>
+  <main class="daily-shell">
+    <header class="daily-header">
+      <a class="daily-back" href="/reading-room/">书房</a>
+      <h1>Daily Todo</h1>
+      <time id="today-label"></time>
+    </header>
+    <div class="daily-toolbar">
+      <nav class="daily-views" aria-label="记录视图">
+        <button type="button" data-view="calendar" aria-pressed="true">月历</button>
+        <button type="button" data-view="log" aria-pressed="false">日常记录</button>
+        <button type="button" data-view="gallery" aria-pressed="false">反思画廊</button>
+      </nav>
+      <div id="desk-account" hidden><span id="desk-sync" role="status"></span><button id="desk-logout" type="button">退出</button></div>
+    </div>
+    <section id="desk-preview" class="daily-login" aria-label="站主登录">
+      <form id="desk-login">
+        <label for="desk-key">站主密钥</label>
+        <input id="desk-key" type="password" maxlength="80" autocomplete="current-password" spellcheck="false" required>
+        <button class="daily-primary" type="submit">登录</button>
+      </form>
+      <p id="desk-intro">登录后查看云端待办和记录。</p>
+      <p id="desk-message" class="daily-message" role="status" hidden></p>
+    </section>
+    <section id="calendar" class="daily-month" aria-labelledby="month-label" tabindex="-1">
+      <header class="daily-month-header">
+        <h2 id="month-label"></h2>
+        <div class="daily-month-actions">
+          <button id="previous-month" type="button" aria-label="上个月">‹</button>
+          <button id="go-today" type="button">今天</button>
+          <button id="next-month" type="button" aria-label="下个月">›</button>
+          <button id="new-day" class="daily-primary" type="button">记一天</button>
+        </div>
+      </header>
+      <div id="calendar-view">
+        <div class="daily-week" aria-hidden="true"><span>周一</span><span>周二</span><span>周三</span><span>周四</span><span>周五</span><span>周六</span><span>周日</span></div>
+        <div id="calendar-days" class="daily-grid"></div>
+      </div>
+      <div id="daily-records" class="daily-records" hidden></div>
+    </section>
+  </main>
+  <dialog id="day-sheet" class="daily-sheet" aria-labelledby="desk-day-title">
+    <header class="sheet-heading"><h2 id="desk-day-title"></h2><button id="close-day" type="button" aria-label="关闭日记">×</button></header>
+    <p id="sheet-message" class="daily-message" role="status" hidden></p>
+    <div id="desk-workspace" hidden>
+      <section class="sheet-section" aria-labelledby="tasks-title">
+        <h3 id="tasks-title">待办 <span id="task-count"></span></h3>
+        <ul id="desk-tasks" class="desk-list"></ul>
+        <form id="task-form" class="daily-line">
+          <input id="task-input" aria-label="待办内容" placeholder="记一件要做的事" maxlength="160" required>
+          <button id="task-save" class="daily-primary" type="submit">添加</button>
+          <button id="task-cancel" type="button" hidden>取消</button>
+        </form>
+      </section>
+      <form id="journal-form" class="sheet-section">
+        <h3>日常记录</h3>
+        <label>标题<input name="title" maxlength="80" placeholder="给这一天起个名字"></label>
+        <div class="journal-pair">
+          <label>天气<input name="weather" maxlength="25" placeholder="如：晴、微雨"></label>
+          <label>心情<input name="mood" maxlength="25" placeholder="如：平静、专注"></label>
+        </div>
+        <label>事件记录<textarea name="events" rows="2" maxlength="1600"></textarea></label>
+        <label>反思总结<textarea name="reflection" rows="3" maxlength="2400"></textarea></label>
+        <div class="journal-pair">
+          <label>目标完成情况<select name="goal_status"><option value="">未设定</option><option>未开始</option><option>进行中</option><option>已完成</option></select></label>
+          <label>运动打卡<input name="exercise" maxlength="160" placeholder="如：散步 30 分钟"></label>
+        </div>
+        <label>目标追踪<textarea name="goal" rows="2" maxlength="500"></textarea></label>
+        <div class="sheet-actions"><button id="use-cloud" type="button" hidden>载入云端版本</button><button class="daily-primary" type="submit">保存日常记录</button></div>
+      </form>
+      <section class="sheet-section" aria-labelledby="notes-title">
+        <h3 id="notes-title">随手记</h3>
+        <ul id="desk-notes" class="desk-list desk-notes"></ul>
+        <form id="note-form">
+          <textarea id="note-input" aria-label="随手记内容" placeholder="记下一个想法" rows="2" maxlength="4000" required></textarea>
+          <div class="sheet-actions"><button id="note-cancel" type="button" hidden>取消编辑</button><button id="note-save" class="daily-primary" type="submit">保存</button></div>
+        </form>
+      </section>
+    </div>
+  </dialog>
+</body>
+</html>

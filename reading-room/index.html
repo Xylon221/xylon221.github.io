@@ -10,10 +10,10 @@
   <link rel="stylesheet" href="/css/reading-room.css?v=20261118-kai">
   <link rel="stylesheet" href="/css/chapters.css?v=1">
   <link rel="stylesheet" href="/css/site-shell.css?v=1">
-  <link rel="stylesheet" href="/css/room-home.css?v=2">
-  <script type="module" src="/js/site-shell.js?v=2"></script>
+  <link rel="stylesheet" href="/css/room-home.css?v=3">
+  <script type="module" src="/js/site-shell.js?v=3"></script>
   <script type="module" src="/js/reading-room.js?v=20261118-home"></script>
-  <script type="module" src="/js/room-widgets.js?v=3"></script>
+  <script type="module" src="/js/room-widgets.js?v=4"></script>
 </head>
 <body class="room-page room-home">
   <a class="skip-link" href="#articles">跳到文章列表</a>
@@ -23,7 +23,7 @@
       <nav class="home-sections" aria-label="书房分区">
         <a href="#articles" data-room-pane="editorial" aria-current="location">文章</a>
         <a href="#about" data-room-pane="personal">关于</a>
-        <a href="#today" data-room-pane="today">今日</a>
+        <a href="/daily-todo/">Daily Todo</a>
       </nav>
     </header>
 
@@ -70,80 +70,17 @@
       </section>
     </aside>
 
-    <aside class="home-today" tabindex="0" aria-label="今日">
-      <details id="today" class="home-card today-card" open>
-        <summary><span>今日</span><time id="today-label"></time><span class="today-chevron" aria-hidden="true">⌄</span></summary>
-        <div class="today-inner">
-          <div id="desk-preview">
-            <p id="desk-intro">待办与随笔 · 仅站主可见</p>
-            <form id="desk-login" hidden>
-              <label for="desk-key">站主密钥</label>
-              <div class="desk-input-row"><input id="desk-key" type="password" maxlength="80" autocomplete="current-password" autocapitalize="none" spellcheck="false" aria-describedby="desk-key-help" required><button class="desk-primary" type="submit">登录</button></div>
-              <p id="desk-key-help">粘贴服务器生成的 43 位密钥。</p>
-            </form>
-          </div>
-          <div id="desk-workspace" hidden>
-            <div class="desk-toolbar"><span id="desk-sync" role="status"></span><button id="desk-logout" class="desk-text" type="button">退出</button></div>
-            <section class="desk-calendar" aria-labelledby="month-label">
-              <div class="desk-month"><h2 id="month-label"></h2><div class="month-actions"><button id="previous-month" type="button" aria-label="上个月">‹</button><button id="go-today" type="button">今天</button><button id="next-month" type="button" aria-label="下个月">›</button></div></div>
-              <div class="calendar-grid" aria-label="周一至周日"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
-              <div class="calendar-grid" id="calendar-days" aria-labelledby="month-label"></div>
-            </section>
-            <article class="desk-day" id="desk-day">
-              <h2 id="desk-day-title"></h2>
-              <div class="desk-section">
-                <h3>待办 <span id="task-count"></span></h3>
-                <ul id="desk-tasks" class="desk-list"></ul>
-                <form id="task-form" class="desk-input-row"><input id="task-input" aria-label="新待办" placeholder="添加待办" maxlength="160" required><button type="submit" aria-label="添加待办">＋</button></form>
-              </div>
-              <div class="desk-section">
-                <h3>随笔</h3>
-                <form id="note-form">
-                  <textarea id="note-input" aria-label="随笔" placeholder="随手记一句…" rows="3" maxlength="4000" required></textarea>
-                  <div class="note-actions"><button id="note-cancel" class="desk-text" type="button" hidden>取消编辑</button><button id="note-save" class="desk-primary" type="submit">保存</button></div>
-                </form>
-                <ul id="desk-notes" class="desk-list desk-notes"></ul>
-              </div>
-            </article>
-          </div>
-          <p id="desk-message" class="widget-message" role="status" hidden></p>
-          <noscript><p>启用 JavaScript 后可使用今日记录。</p></noscript>
-        </div>
-      </details>
+    <aside class="home-today" id="today" tabindex="0" aria-labelledby="daily-link-title">
+      <section class="home-card home-daily-intro">
+        <h2 id="daily-link-title">Daily Todo</h2>
+        <p>按日整理待办、随手记和反思。</p>
+        <a href="/daily-todo/">打开日历</a>
+      </section>
     </aside>
   </main>
 
     <footer class="home-footer"><a href="/">返回封面 ↑</a><span>露易丝湖 · 摄影 Kalen Emsley</span></footer>
   </div>
 
-  <details id="room-player" class="home-player">
-    <summary><span aria-hidden="true">♫</span><span id="player-title">书房音乐</span><span id="player-current">雾林</span><span class="player-caret" aria-hidden="true">⌃</span></summary>
-    <div class="player-sheet" aria-labelledby="player-title">
-      <div class="player-sources" aria-label="音乐来源">
-        <button id="player-local" type="button" aria-pressed="true" aria-controls="local-player">书房曲目</button>
-        <button id="player-cloud" type="button" aria-pressed="false" aria-controls="cloud-player">网易云歌单</button>
-      </div>
-      <div id="local-player">
-        <audio id="room-audio" preload="none" src="/audio/mist.mp3"></audio>
-        <input id="player-seek" type="range" min="0" max="1" step=".1" value="0" aria-label="播放进度" disabled>
-        <div class="player-time"><span id="player-position">0:00</span><span id="player-duration">0:24</span></div>
-        <div class="player-controls">
-          <button id="player-prev" type="button" aria-label="上一曲">‹</button>
-          <button id="player-play" type="button" aria-label="播放"><span aria-hidden="true">▶</span></button>
-          <button id="player-next" type="button" aria-label="下一曲">›</button>
-        </div>
-        <p id="player-status" class="widget-message" role="status" hidden></p>
-      </div>
-      <div id="cloud-player" hidden>
-        <form id="playlist-form">
-          <label for="playlist-link">公开歌单链接或 ID</label>
-          <div class="desk-input-row"><input id="playlist-link" type="text" inputmode="url" autocomplete="off" maxlength="1000" required><button type="submit">载入</button></div>
-          <p id="playlist-status" class="widget-message" role="status" hidden></p>
-        </form>
-        <div id="playlist-embed" hidden></div>
-        <a id="playlist-open" target="_blank" rel="noopener noreferrer" hidden>在网易云音乐打开 ↗</a>
-      </div>
-    </div>
-  </details>
 </body>
 </html>
