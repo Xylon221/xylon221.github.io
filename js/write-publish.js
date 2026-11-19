@@ -50,7 +50,7 @@ function articlePage(room, post, body) {
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
   <link rel="stylesheet" href="/css/site-shell.css?v=20261119-shelves">
-  <script type="module" src="/js/site-shell.js?v=20261119-shelves"></script>
+  <script type="module" src="/js/site-shell.js?v=20261119-nav"></script>
 </head>
 <body>
   ${header.outerHTML}

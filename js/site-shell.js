@@ -1,7 +1,6 @@
 const links = [
-  ['书房', '/reading-room/'], ['问学札记', '/learning/'], ['格物随想', '/reflection/'],
-  ['浮生小记', '/life/'], ['归档', '/archives/'], ['标签', '/tags/'], ['关于', '/about/'],
-  ['Daily Todo', '/daily-todo/'], ['写作', '/write/'],
+  ['书房', '/reading-room/'], ['归档', '/archives/'],
+  ['标签', '/tags/'], ['关于', '/about/'],
 ];
 
 function mountNavigation() {
