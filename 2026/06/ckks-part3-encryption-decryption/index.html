@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#f1f5f8">
+<meta name="theme-color" content="#fff">
 <meta name="generator" content="Hexo 7.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
 
-<link rel="stylesheet" href="/css/main.css?v=20261119-cool">
+<link rel="stylesheet" href="/css/main.css?v=20261110-grid">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
 
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 3 部分，加密与解密">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part3-encryption-decryption/">
-<meta property="og:site_name" content="且听风吟">
+<meta property="og:site_name" content="只想睡大觉">
 <meta property="og:description" content="CKKS 讲解系列：第 3 部分，加密与解密前两篇解决了“表示问题”：如何把真实数据向量  编码成 CKKS 可以处理的整数多项式 。 本篇开始解决“安全问题”：如何把明文多项式加密成密文，使服务方可以在看不懂数据的情况下继续计算。 在贯穿例子中，用户已经把特征向量编码成 。现在要做的是生成密文 ，把它交给服务方。服务方只能看到密文，却可以在后续执行加法和乘法。 系列目录 第 1 部分：基础版编码">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xylon221.github.io/images/lwe-rlwe-comparison.svg">
@@ -46,7 +46,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-part3-encryption-decryption/","path":"2026/06/ckks-part3-encryption-decryption/","title":"CKKS 讲解系列：第 3 部分，加密与解密"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CKKS 讲解系列：第 3 部分，加密与解密 | 且听风吟</title>
+<title>CKKS 讲解系列：第 3 部分，加密与解密 | 只想睡大觉</title>
   
 
 
@@ -198,8 +198,8 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style>  <link rel="stylesheet" href="/css/site-shell.css?v=5">
-  <script type="module" src="/js/site-shell.js?v=5"></script>
+</style>  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=1"></script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">

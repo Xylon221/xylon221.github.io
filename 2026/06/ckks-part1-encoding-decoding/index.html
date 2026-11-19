@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#f1f5f8">
+<meta name="theme-color" content="#fff">
 <meta name="generator" content="Hexo 7.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
 
-<link rel="stylesheet" href="/css/main.css?v=20261119-cool">
+<link rel="stylesheet" href="/css/main.css?v=20261110-grid">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
 
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 1 部分，基础版编码与解码">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part1-encoding-decoding/">
-<meta property="og:site_name" content="且听风吟">
+<meta property="og:site_name" content="只想睡大觉">
 <meta property="og:description" content="CKKS 讲解系列：第 1 部分，基础版编码与解码 本篇是整个 CKKS 学习路线的起点。CKKS 的计算对象最终是多项式，而真实数据通常是向量，所以第一步必须先搞清楚：如何把向量和多项式互相转换。 这一篇先讲一个“基础版”编码器。它还不是真正可用于 CKKS 加密的最终编码器，因为它会得到复数系数多项式；但它能把最核心的数学结构讲清楚：规范嵌入、单位根、范德蒙德矩阵，以及为什么多项式上的加法和乘">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xylon221.github.io/images/ckks-series-roadmap.svg">
@@ -50,7 +50,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-part1-encoding-decoding/","path":"2026/06/ckks-part1-encoding-decoding/","title":"CKKS 讲解系列：第 1 部分，基础版编码与解码"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CKKS 讲解系列：第 1 部分，基础版编码与解码 | 且听风吟</title>
+<title>CKKS 讲解系列：第 1 部分，基础版编码与解码 | 只想睡大觉</title>
   
 
 
@@ -202,8 +202,8 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style>  <link rel="stylesheet" href="/css/site-shell.css?v=5">
-  <script type="module" src="/js/site-shell.js?v=5"></script>
+</style>  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=1"></script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">

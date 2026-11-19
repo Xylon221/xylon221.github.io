@@ -41,7 +41,7 @@ export function mountComments(article) {
   if (document.getElementById('comments')) return;
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
-  stylesheet.href = '/css/comments.css?v=4';
+  stylesheet.href = '/css/comments.css?v=2';
   document.head.append(stylesheet);
   const section = document.createElement('section');
   section.id = 'comments';

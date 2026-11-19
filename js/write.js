@@ -1,5 +1,5 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=7';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=5';
 import { plainText } from './article-text.js?v=1';
 import { createEditor } from './write-editor.js?v=1';
 import { fetchPage, loadCatalog } from './article-catalog.js?v=3';

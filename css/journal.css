@@ -8,20 +8,20 @@
 
 :root {
   color-scheme: light;
-  --journal-paper: #f1f5f8;
-  --journal-panel: #f8fafc;
-  --journal-ink: #243549;
-  --journal-heading: #1d2d41;
-  --journal-muted: #526377;
-  --journal-line: #c8d3df;
-  --journal-tint: #e6edf4;
-  --journal-accent: #345677;
-  --journal-accent-text: #f7fbff;
-  --journal-link-hover: #244a6e;
-  --journal-grid: url("/images/paper-grain.webp") repeat var(--journal-paper);
-  --journal-shell: min(90%, 72rem);
+  --journal-paper: #fff;
+  --journal-panel: #fff;
+  --journal-ink: #2e405b;
+  --journal-heading: #111;
+  --journal-muted: #666;
+  --journal-line: #e5e8ed;
+  --journal-tint: #f5f7fa;
+  --journal-accent: #2e405b;
+  --journal-accent-text: #fff;
+  --journal-grid: linear-gradient(#f0f0f0 1px, transparent 1px) 0 0 / 6px 6px,
+    linear-gradient(90deg, #f0f0f0 1px, transparent 1px) 0 0 / 6px 6px,
+    var(--journal-paper);
+  --journal-shell: min(92%, 82rem);
   --journal-kai: KaiTi, "楷体", STKaiti, "Kaiti SC", "KaiTi_GB2312", "Blog Kai", serif;
-  --journal-latin: Georgia, "Iowan Old Style", "Times New Roman", serif;
-  --journal-body: Georgia, "Songti SC", "Noto Serif CJK SC", SimSun, "Blog Kai", serif;
-  --journal-title: var(--journal-body);
+  --journal-body: var(--journal-kai);
+  --journal-title: var(--journal-kai);
 }

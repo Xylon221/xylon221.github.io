@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#f1f5f8">
+<meta name="theme-color" content="#fff">
 <meta name="generator" content="Hexo 7.3.0">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
@@ -11,7 +11,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#f7f6f1">
 
-<link rel="stylesheet" href="/css/main.css?v=20261119-cool">
+<link rel="stylesheet" href="/css/main.css?v=20261110-grid">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
 
@@ -25,7 +25,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="CKKS 讲解系列：第 4 部分，乘法与重线性化">
 <meta property="og:url" content="https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/">
-<meta property="og:site_name" content="且听风吟">
+<meta property="og:site_name" content="只想睡大觉">
 <meta property="og:description" content="CKKS 讲解系列：第 4 部分，乘法与重线性化Part 3 已经说明了如何把明文多项式加密成密文，以及为什么密文加法可以自然对应明文加法。 本篇继续处理贯穿例子中的核心计算：服务方要在密文上计算二次项 。这一步需要密文-密文乘法。但两个普通密文相乘后会出现 ，密文会从两个多项式膨胀成三个多项式。 本篇的目标是解释：密文乘法为什么会导致密文变大，以及重线性化如何把三分量密文压回普通二分量密文。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://xylon221.github.io/images/relinearization-compression.svg">
@@ -46,7 +46,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://xylon221.github.io/2026/06/ckks-part4-multiplication-relinearization/","path":"2026/06/ckks-part4-multiplication-relinearization/","title":"CKKS 讲解系列：第 4 部分，乘法与重线性化"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>CKKS 讲解系列：第 4 部分，乘法与重线性化 | 且听风吟</title>
+<title>CKKS 讲解系列：第 4 部分，乘法与重线性化 | 只想睡大觉</title>
   
 
 
@@ -198,8 +198,8 @@ mjx-container[display="true"] {
 mjx-container[display="true"] + br {
   display: none;
 }
-</style>  <link rel="stylesheet" href="/css/site-shell.css?v=5">
-  <script type="module" src="/js/site-shell.js?v=5"></script>
+</style>  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=1"></script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">

@@ -3,79 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="且听风吟。一个安静写字的地方，记录技术笔记、阅读心得、生活片段，以及偶尔的胡思乱想。">
-  <meta name="theme-color" content="#f1f5f8">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="且听风吟">
-  <meta property="og:description" content="一个安静写字的地方，记录技术笔记、阅读心得与生活片段。">
-  <meta property="og:image" content="https://xylon221.github.io/images/journal-lake.webp">
-  <link rel="canonical" href="https://xylon221.github.io/">
-  <title>且听风吟</title>
+  <meta name="description" content="只想睡大觉。一个安静写字的地方，记录技术笔记、读书心得与生活片段。">
+  <meta name="theme-color" content="#fff">
+  <title>只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
-  <link rel="stylesheet" href="/css/reading-room.css?v=20261119-cool">
-  <link rel="stylesheet" href="/css/site-shell.css?v=5">
-  <script type="module" src="/js/site-shell.js?v=5"></script>
-  <script type="module" src="/js/paper-index.js?v=2"></script>
+  <link rel="stylesheet" href="/css/reading-room.css?v=20261118-kai">
+  <link rel="stylesheet" href="/css/site-shell.css?v=1">
+  <script type="module" src="/js/site-shell.js?v=3"></script>
 </head>
-<body class="paper-home">
-  <a class="skip-link" href="#content">跳到内容</a>
-  <header class="book-masthead" data-book-header>
-    <div class="paper-shell book-masthead-inner">
-      <a class="book-wordmark" href="/">且听风吟</a>
-      <nav class="book-nav" aria-label="全站导航">
-        <a href="/" aria-current="page">首页</a><a href="/posts/">文章</a><a href="/tags/">标签</a><a href="/archives/">归档</a><a href="/about/">关于</a><a href="/daily-todo/">Daily Todo</a>
-      </nav>
-      <form class="book-search" role="search" action="/posts/" aria-label="全站搜索">
-        <input type="search" name="q" aria-label="搜索全站文章" placeholder="搜索文章" required><button type="submit">搜索</button>
-      </form>
-    </div>
-  </header>
-  <main class="paper-shell" id="content">
-    <section class="paper-opening" aria-labelledby="home-title">
-      <div class="paper-opening-copy">
-        <p class="paper-japanese" lang="ja">静けさの中で、言葉を見つける</p>
-        <h1 id="home-title">且听风吟</h1>
-        <p class="paper-intro">一个安静写字的地方。</p>
-        <p class="paper-description">记录技术笔记、阅读心得和生活片段，<br>以及偶尔的胡思乱想。</p>
-        <p class="paper-quote" lang="en">To see a world in a grain of sand.</p>
+<body class="cover-page">
+  <main>
+    <a class="cover" href="/reading-room/" aria-label="只想睡大觉，进入书房">
+      <div class="cover-top"><span class="cover-imprint">个人博客</span><span>学习篇 / 生活篇</span></div>
+      <div class="cover-center">
+        <div class="cover-copy">
+          <p class="eyebrow">一个安静写字的地方</p>
+          <h1><span>只想</span><span>睡大觉</span></h1>
+          <p class="cover-description">记录技术笔记、读书心得与生活片段。</p>
+          <span class="cover-enter">进入书房 <span aria-hidden="true">↗</span></span>
+        </div>
+        <figure class="cover-picture">
+          <div class="cover-image">
+            <img src="/images/journal-lake.webp" srcset="/images/journal-lake-small.webp 840w, /images/journal-lake.webp 1800w" sizes="(max-width: 45rem) 92vw, 56vw" alt="雾中的露易丝湖和岸边的松林" width="1800" height="2250" fetchpriority="high">
+          </div>
+          <figcaption><span>露易丝湖</span><span>摄影 · Kalen Emsley</span></figcaption>
+        </figure>
       </div>
-      <figure class="paper-cover">
-        <picture>
-          <source media="(max-width: 48rem)" srcset="/images/journal-lake-small.webp">
-          <img src="/images/journal-lake.webp" alt="云雾绕过露易丝湖畔的山峰，近岸露出水下的石块" width="1800" height="2250" fetchpriority="high">
-        </picture>
-        <figcaption><span>露易丝湖</span><span>摄影 · Kalen Emsley</span></figcaption>
-      </figure>
-    </section>
-
-    <section class="paper-section" aria-labelledby="latest-title">
-      <header class="paper-section-heading"><h2 id="latest-title">最近记录</h2><a class="paper-text-link" href="/archives/">按日期看归档</a></header>
-      <div class="paper-entries" id="paper-latest"><p class="paper-index-status">也可在<a href="/posts/">文章索引</a>里查找记录。</p></div>
-    </section>
-
-    <section class="paper-section" aria-labelledby="topics-title">
-      <header class="paper-section-heading"><h2 id="topics-title">知识领域</h2></header>
-      <div class="paper-domains">
-        <a href="/posts/?field=technology"><strong>技术</strong><span>学习笔记与技术实践</span></a>
-        <a href="/posts/?field=reading"><strong>阅读</strong><span>读书笔记与摘录</span></a>
-        <a href="/posts/?field=reflection"><strong>思考</strong><span>关于问题与方法的随想</span></a>
-        <a href="/posts/?field=life"><strong>生活</strong><span>日常、行旅与摄影</span></a>
-      </div>
-    </section>
-
-    <section class="paper-section paper-thoughts" id="home-thoughts" aria-labelledby="thoughts-title" hidden>
-      <header class="paper-section-heading"><h2 id="thoughts-title">最近思考</h2><a class="paper-text-link" href="/posts/?field=reflection">所有思考</a></header>
-      <ul id="paper-thoughts"></ul>
-    </section>
-
-    <section class="paper-section paper-home-about" aria-labelledby="home-about-title">
-      <header class="paper-section-heading"><h2 id="home-about-title">关于</h2><a class="paper-text-link" href="/about/">关于这个书房</a></header>
-      <p>喜欢安静写字。白天写代码，晚上读书，偶尔拍拍照，也喜欢夜晚和海的安静。</p>
-    </section>
+      <div class="cover-bottom"><span>技术 · 阅读 · 生活</span><span>循此苦旅，以达星辰</span></div>
+    </a>
   </main>
-  <footer class="paper-shell book-colophon" data-book-footer>
-    <div><p lang="la">Ad astra per aspera</p><p>循此苦旅，以达星辰。</p></div>
-    <nav aria-label="书房链接"><a href="/reading-room/">书房</a><a href="/daily-todo/">Daily Todo</a><a href="/notes/">生活随笔</a><a href="/write/">写作</a><a href="https://github.com/Xylon221">GitHub</a></nav>
-  </footer>
 </body>
 </html>
