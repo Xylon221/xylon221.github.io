@@ -1,5 +1,5 @@
-import { articleText } from './article-catalog.js?v=3';
-import { articleTopic } from './taxonomy.js?v=1';
+import { articleText } from './article-catalog.js?v=20261119-shelves';
+import { articleTopic } from './taxonomy.js?v=20261119-shelves';
 
 export function articleRows(posts) {
   if (!posts.length) {
@@ -14,7 +14,9 @@ export function articleRows(posts) {
     row.innerHTML = '<a><div><p class="catalog-meta"></p><h3></h3><p class="catalog-summary"></p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a>';
     row.querySelector('a').href = post.url;
     row.querySelector('h3').textContent = post.title;
-    row.querySelector('.catalog-meta').textContent = `${post.date} · ${articleTopic(post).title}`;
+    const topic = articleTopic(post);
+    const tags = Array.isArray(post.tags) ? post.tags.slice(0, 3).map(tag => '#' + tag) : [];
+    row.querySelector('.catalog-meta').textContent = [post.date, topic.title !== topic.chapter.title ? topic.title : '', ...tags].filter(Boolean).join(' · ');
     const excerpt = Array.from(articleText(post).replace(/\s+/g, ' '));
     const summary = row.querySelector('.catalog-summary');
     summary.textContent = excerpt.slice(0, 115).join('') + (excerpt.length > 115 ? '…' : '');

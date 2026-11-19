@@ -1,10 +1,10 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=20261119-motto';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=20261119-shelves';
 import { plainText } from './article-text.js?v=1';
 import { createEditor } from './write-editor.js?v=1';
-import { fetchPage, loadCatalog } from './article-catalog.js?v=3';
+import { fetchPage, loadCatalog } from './article-catalog.js?v=20261119-shelves';
 import { articleDirectory, sourceBlocks, sourcePage, sourceRevision } from './write-source.js?v=2';
-import { articleTopic, groups, topics } from './taxonomy.js?v=1';
+import { articleTopic, topics } from './taxonomy.js?v=20261119-shelves';
 
 const form = document.getElementById('write-form');
 const fields = document.getElementById('write-fields');
@@ -170,15 +170,12 @@ function setBusy(value) {
 }
 
 function showCategories(draft) {
-  const available = groups.filter(group => mode === 'edit' || (group.id === 'life') === (mode === 'note'));
-  category.replaceChildren(...available.map(group => {
-    const options = document.createElement('optgroup');
-    options.label = group.title;
-    options.append(...group.topics.map(topic => new Option(topic.title, topic.id)));
-    return options;
-  }));
-  const fallback = mode === 'note' ? 'daily' : 'development';
+  const fallback = mode === 'note' ? 'life-records' : 'technical-notes';
   const inferred = draft ? articleTopic(mode === 'note' ? { ...draft, category: 'life' } : draft).id : fallback;
+  const available = [...topics.values()].filter(topic => (topic.id !== 'photography' || topic.id === inferred) &&
+    (mode === 'edit' || (topic.category === 'life') === (mode === 'note')));
+  category.replaceChildren(...available.map(topic => new Option(
+    topic.parent === 'photography' ? '光影拾零 · ' + topic.title : topic.title, topic.id)));
   const possible = [...category.options].some(option => option.value === inferred);
   category.value = possible ? inferred : fallback;
 }

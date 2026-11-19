@@ -1,6 +1,7 @@
 const links = [
-  ['书房', '/reading-room/'], ['Daily Todo', '/daily-todo/'], ['学习篇', '/learning/'], ['生活篇', '/life/'], ['生活随笔', '/notes/'],
-  ['归档', '/archives/'], ['标签', '/tags/'], ['关于', '/about/'], ['写作', '/write/'],
+  ['书房', '/reading-room/'], ['问学札记', '/learning/'], ['格物随想', '/reflection/'],
+  ['浮生小记', '/life/'], ['归档', '/archives/'], ['标签', '/tags/'], ['关于', '/about/'],
+  ['Daily Todo', '/daily-todo/'], ['写作', '/write/'],
 ];
 
 function mountNavigation() {
@@ -45,7 +46,7 @@ function mountNavigation() {
 
 mountNavigation();
 
-import('./room-player.js?v=2').then(({ mountPlayer }) => mountPlayer());
+import('./room-player.js?v=20261119-shelves').then(({ mountPlayer }) => mountPlayer());
 
 const body = document.querySelector('.published-body, .post-body[itemprop="articleBody"]');
 if (body && /^\/\d{4}\/\d{2}\/[^/]+\/$/.test(location.pathname)) {

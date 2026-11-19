@@ -1,6 +1,6 @@
-import { fetchPage, loadCatalog } from './article-catalog.js?v=3';
-import { articleRows } from './catalog-view.js?v=1';
-import { belongsToChapter, chapters } from './taxonomy.js?v=1';
+import { fetchPage, loadCatalog } from './article-catalog.js?v=20261119-shelves';
+import { articleRows } from './catalog-view.js?v=20261119-shelves';
+import { belongsToChapter, chapters } from './taxonomy.js?v=20261119-shelves';
 
 function showStatus(id, message) {
   const status = document.getElementById(id);
@@ -19,7 +19,7 @@ async function loadArticles() {
     heading.className = 'chapter-section-head';
     const title = document.createElement('h2');
     title.id = `recent-${chapter.id}`;
-    title.textContent = chapter.id === 'learning' ? '近期学习' : '近期生活';
+    title.textContent = chapter.title;
     const link = document.createElement('a');
     link.href = chapter.href;
     link.textContent = '查看全部 ↗';

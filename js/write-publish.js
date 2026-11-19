@@ -1,6 +1,6 @@
 import { escapeHtml, hasInlineFormatting, legacyTextOps, textHtml } from './article-text.js?v=1';
 import { articleDirectory, digest, publicImagePath, restoreOriginal, sourcePage, sourceRevision } from './write-source.js?v=2';
-import { articleTopic } from './taxonomy.js?v=1';
+import { articleTopic, topicHref } from './taxonomy.js?v=20261119-shelves';
 
 const repository = 'https://api.github.com/repos/Xylon221/xylon221.github.io';
 const site = 'https://xylon221.github.io';
@@ -34,8 +34,7 @@ function articlePage(room, post, body) {
   const title = escapeHtml(post.title);
   const tags = post.tags.map(tag => `<a href="${tagUrl(tag)}">#${escapeHtml(tag)}</a>`).join(' ');
   const topic = articleTopic(post);
-  const chapter = topic.category === 'life' ? '/life/' : '/learning/';
-  const section = `<a class="published-topic" href="${chapter}?topic=${encodeURIComponent(topic.id)}">${escapeHtml(topic.title)}</a>`;
+  const section = `<a class="published-topic" href="${topicHref(topic)}">${escapeHtml(topic.title)}</a>`;
   const date = `<time datetime="${post.date}">${post.date}</time>`;
   const heading = post.untitled ? `<h1>${date}</h1>` : `<h1>${title}</h1>${date}`;
   const back = post.category === 'life' ? '<a href="/notes/">返回生活随笔</a>' : '<a href="/reading-room/">返回书房</a>';
@@ -50,8 +49,8 @@ function articlePage(room, post, body) {
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
-  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-motto">
-  <script type="module" src="/js/site-shell.js?v=20261119-motto"></script>
+  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-shelves">
+  <script type="module" src="/js/site-shell.js?v=20261119-shelves"></script>
 </head>
 <body>
   ${header.outerHTML}

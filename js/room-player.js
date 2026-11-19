@@ -39,7 +39,7 @@ export function mountPlayer() {
   if (document.getElementById('music-dock')) return;
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
-  stylesheet.href = '/css/music-dock.css?v=1';
+  stylesheet.href = '/css/music-dock.css?v=20261119-shelves';
   document.head.append(stylesheet);
 
   const dock = document.createElement('aside');

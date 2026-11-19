@@ -60,9 +60,6 @@
 .music-message { margin-top: .4rem; color: #8a3738; font-size: .88rem; }
 #music-frame iframe { display: block; width: 100%; height: 289px; margin-top: .4rem; border: 0; }
 #music-external { display: inline-block; margin-top: .45rem; }
-@media (min-width: 64.01rem) {
-  body:has(.music-dock:not([hidden])) .site-rail-inner { padding-bottom: 4.75rem; }
-}
 @media (prefers-reduced-motion: no-preference) {
   .music-sheet:not([hidden]) { animation: music-open .18s ease-out; }
   @keyframes music-open { from { opacity: .4; transform: translateY(.3rem); } }

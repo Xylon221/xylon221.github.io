@@ -1,4 +1,4 @@
-import { articleCategory, articleText, loadCatalog } from './article-catalog.js?v=3';
+import { articleCategory, articleText, loadCatalog } from './article-catalog.js?v=20261119-shelves';
 import { legacyTextOps, textHtml } from './article-text.js?v=1';
 
 const template = document.getElementById('note-template');

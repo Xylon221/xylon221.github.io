@@ -8,7 +8,6 @@
   background-color: #edf3f7;
   color: var(--daily-ink);
 }
-.daily-page .site-rail { background: #f5f8fb; }
 .daily-page .site-rail-nav a:is(:hover, [aria-current]) { background: #e7eff6; }
 .daily-page [hidden] { display: none !important; }
 .daily-page:has(.daily-sheet[open]) { overflow: hidden; }

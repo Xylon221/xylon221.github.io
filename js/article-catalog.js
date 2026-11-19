@@ -1,4 +1,4 @@
-import { articleTopic } from './taxonomy.js?v=1';
+import { articleTopic } from './taxonomy.js?v=20261119-shelves';
 
 export async function fetchPage(path) {
   const response = await fetch(path, { cache: 'no-cache' });

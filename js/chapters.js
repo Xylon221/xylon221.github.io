@@ -1,39 +1,52 @@
-import { loadCatalog } from './article-catalog.js?v=3';
-import { articleRows } from './catalog-view.js?v=1';
-import { articleTopic, belongsToChapter, chapters } from './taxonomy.js?v=1';
+import { loadCatalog } from './article-catalog.js?v=20261119-shelves';
+import { articleRows } from './catalog-view.js?v=20261119-shelves';
+import { belongsToChapter, chapters, lifeSections, matchesTopic, photoSections, selectedTopic, topicHref } from './taxonomy.js?v=20261119-shelves';
 
 const chapter = chapters.find(item => item.id === document.body.dataset.chapter);
-const requested = new URLSearchParams(location.search).get('topic');
-const groups = chapter.groups;
-const active = groups.flatMap(group => group.topics).find(topic => topic.id === requested);
+const active = selectedTopic(chapter, new URLSearchParams(location.search).get('topic'));
 const index = document.getElementById('chapter-index');
 const list = document.getElementById('chapter-posts');
 const status = document.getElementById('chapter-status');
 
-function topicLink(label, topic) {
+function filterLink(label, href, current) {
   const link = document.createElement('a');
   link.textContent = label;
-  link.href = topic ? `${chapter.href}?topic=${encodeURIComponent(topic.id)}` : chapter.href;
-  if (topic === active) link.setAttribute('aria-current', 'page');
+  link.href = href;
+  if (current) link.setAttribute('aria-current', 'page');
   return link;
 }
 
-const all = document.createElement('div');
-all.className = 'topic-links';
-all.append(topicLink('全部文章'));
-index.append(all);
-for (const group of groups) {
-  const title = document.createElement('h2');
-  title.textContent = group.title;
-  const links = document.createElement('div');
-  links.className = 'topic-links';
-  links.append(...group.topics.map(topic => topicLink(topic.title, topic)));
-  index.append(title, links);
+function filterRow(...links) {
+  const row = document.createElement('div');
+  row.className = 'topic-links';
+  row.append(...links);
+  return row;
 }
-document.getElementById('chapter-list-title').textContent = active?.title || '全部文章';
+
+if (chapter.id === 'life') {
+  const inPhotoSection = active?.id === 'photography' || active?.parent === 'photography';
+  index.append(filterRow(
+    filterLink('全部记录', chapter.href, !active),
+    ...lifeSections.map(topic => {
+      const link = filterLink(topic.title, topicHref(topic), active?.id === topic.id);
+      if (topic.id === 'photography' && inPhotoSection && active.id !== topic.id) link.dataset.parentSection = '';
+      return link;
+    }),
+  ));
+  if (inPhotoSection) {
+    const photos = filterRow(...photoSections.map(topic => filterLink(topic.title, topicHref(topic), active?.id === topic.id)));
+    photos.classList.add('photo-topics');
+    index.append(photos);
+  }
+  index.hidden = false;
+} else if (active) {
+  index.append(filterRow(filterLink('查看全部文章', chapter.href, false)));
+  index.hidden = false;
+}
+document.getElementById('chapter-list-title').textContent = active?.title || (chapter.id === 'life' ? '全部记录' : '全部文章');
 
 try {
-  const posts = (await loadCatalog()).filter(post => active ? articleTopic(post) === active : belongsToChapter(post, chapter));
+  const posts = (await loadCatalog()).filter(post => active ? matchesTopic(post, active) : belongsToChapter(post, chapter));
   list.append(...articleRows(posts));
   status.hidden = true;
 } catch { status.textContent = '暂时无法读取文章，可以从归档浏览。'; }
