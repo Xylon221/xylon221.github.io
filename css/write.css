@@ -59,3 +59,12 @@
   .write-meta, .write-options .write-meta { grid-template-columns: minmax(0, 1fr); }
   .write-auth[open] { grid-column: 1 / -1; }
 }
+
+.write-modes[hidden], .write-cover [hidden] { display: none !important; }
+.write-cover { display: flex; gap: .5rem .8rem; align-items: center; flex-wrap: wrap; margin-top: .8rem; padding-top: .7rem; border-top: 1px solid var(--journal-line); }
+.write-cover img { width: 5.7rem; aspect-ratio: 1.55; object-fit: cover; border: 1px solid var(--journal-line); }
+.write-cover input { display: block; width: min(100%, 16.5rem); font: inherit; }
+.write-embedded .room-header, .write-embedded .write-heading { display: none; }
+.write-embedded .write-shell { width: min(92%, 50rem); padding-top: .55rem; }
+.write-embedded .write-content, .write-embedded .write-actions { border-color: #c5d2df; }
+.write-embedded #post-title { font: 700 clamp(1.2rem, 4vw, 1.7rem)/1.45 var(--journal-kai); }

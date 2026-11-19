@@ -11,16 +11,16 @@
   <link rel="stylesheet" href="/css/reading-room.css?v=20261110-columns">
   <link rel="stylesheet" href="/vendor/quill-2.0.3/quill.core.css">
   <link rel="stylesheet" href="/css/article-text.css?v=1">
-  <link rel="stylesheet" href="/css/write.css?v=5">
-  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-shelves">
+  <link rel="stylesheet" href="/css/write.css?v=20261119-gallery">
+  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-gallery">
   <script defer src="/vendor/quill-2.0.3/quill.js"></script>
-  <script type="module" src="/js/site-shell.js?v=20261119-nav"></script>
-  <script type="module" src="/js/write.js?v=20261119-nav"></script>
+  <script type="module" src="/js/site-shell.js?v=20261119-gallery"></script>
+  <script type="module" src="/js/write.js?v=20261119-gallery"></script>
 </head>
 <body>
   <header class="room-header"><div class="room-shell header-content">
     <a class="brand" href="/">只想睡大觉</a>
-    <nav aria-label="页面导航"><a href="/reading-room/">返回书房</a></nav>
+    <nav aria-label="页面导航"><a href="/reading-room/" id="write-return">返回书房</a></nav>
   </div></header>
   <main class="room-shell write-shell">
     <h1 class="write-heading">写作</h1>
@@ -30,6 +30,7 @@
         <button type="button" data-mode="article" aria-pressed="true" disabled>写文章</button>
         <button type="button" data-mode="edit" aria-pressed="false" disabled>编辑已发布</button>
       </div>
+      <a id="write-context-return" href="/reading-room/" hidden>返回书房</a>
       <p id="draft-status" role="status" aria-live="polite">草稿保存在当前浏览器</p>
     </div>
     <noscript><p>请启用 JavaScript 后使用网页写作。</p></noscript>
@@ -50,6 +51,11 @@
           </div>
         </div>
 
+        <div class="write-cover">
+          <img id="post-cover-preview" alt="文章封面预览" hidden>
+          <label class="write-label">封面（选填）<input id="post-cover" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif"></label>
+          <button type="button" id="remove-post-cover" hidden>移除封面</button>
+        </div>
         <section class="write-content" id="write-content" aria-labelledby="content-title">
           <div class="write-bar"><h2 id="content-title">正文</h2><div>
             <button type="button" id="add-text">＋ 文字</button>

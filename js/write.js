@@ -1,5 +1,5 @@
 import { openDrafts, draftTransaction } from './write-drafts.js?v=1';
-import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=20261119-nav';
+import { articleBody, publishArticle, PublishedDraftChanged } from './write-publish.js?v=20261119-gallery';
 import { plainText } from './article-text.js?v=1';
 import { createEditor } from './write-editor.js?v=1';
 import { fetchPage, loadCatalog } from './article-catalog.js?v=20261119-shelves';
@@ -30,6 +30,29 @@ const pickerRefresh = document.getElementById('edit-refresh');
 const pickerView = document.getElementById('edit-view');
 const drafts = new Map();
 const images = new Map();
+const query = new URLSearchParams(location.search);
+const draftParam = query.get('draft') || '';
+const managed = /^[0-9a-f]{12}$/.test(draftParam) ? 'draft:' + draftParam : '';
+const entryTopic = topics.get(query.get('topic'));
+const embedded = Boolean(managed && query.get('embed') === '1' && window.parent !== window);
+const coverInput = document.getElementById('post-cover');
+const coverImage = document.getElementById('post-cover-preview');
+const coverRemove = document.getElementById('remove-post-cover');
+const returnLink = document.getElementById('write-context-return');
+const back = query.get('back') || '';
+if (/^\/reading-room\/(\?.*)?$/.test(back)) returnLink.href = back;
+returnLink.hidden = !managed || embedded;
+returnLink.addEventListener('click', async event => {
+  event.preventDefault();
+  try {
+    await flushDraft();
+    location.assign(returnLink.href);
+  } catch (error) { message(error.message, true); }
+});
+if (embedded) document.body.classList.add('write-embedded');
+if (managed) document.querySelector('.write-modes').hidden = true;
+let cover = null;
+let pendingSave;
 const editors = new Map();
 const originals = new Map();
 const formats = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif', 'image/avif': 'avif' };
@@ -118,7 +141,7 @@ function resetBlocks() {
 }
 
 const editKey = url => `edit:${url}`;
-const currentKey = () => edit ? editKey(edit.url) : mode;
+const currentKey = () => edit ? editKey(edit.url) : managed || mode;
 
 function snapshotBlocks(includePreview = false) {
   return [...blocks.children].map(block => {
@@ -132,11 +155,20 @@ function snapshotBlocks(includePreview = false) {
   });
 }
 
+function setCover(next) {
+  if (cover?.file) URL.revokeObjectURL(coverImage.src);
+  cover = next || null;
+  coverImage.hidden = coverRemove.hidden = !cover;
+  if (cover) coverImage.src = cover.file ? URL.createObjectURL(cover.file) : cover.src;
+  else coverImage.removeAttribute('src');
+  coverInput.value = '';
+}
+
 function snapshot() {
   const topic = topics.get(category.value);
   return {
     id: draftId, mode: currentKey(), edit, title: title.value, date: date.value, category: topic?.category, topic: topic?.id, tags: tags.value,
-    blocks: snapshotBlocks(),
+    blocks: snapshotBlocks(), cover,
   };
 }
 
@@ -147,18 +179,26 @@ function queueSave() {
 }
 
 function saveDraft() {
-  if (!saveTimer) return;
+  if (!saveTimer) return pendingSave;
   clearTimeout(saveTimer);
   saveTimer = undefined;
   const revision = saveRevision;
   const draft = snapshot();
   drafts.set(draft.mode, draft);
   if (!db) return;
-  draftTransaction(db, 'readwrite', store => store.put(draft)).then(() => {
+  pendingSave = draftTransaction(db, 'readwrite', store => store.put(draft)).then(() => {
     if (currentKey() === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿已保存到当前浏览器';
-  }).catch(() => {
+  });
+  void pendingSave.catch(() => {
     if (currentKey() === draft.mode && revision === saveRevision) draftStatus.textContent = '草稿保存失败，请保留此页面';
   });
+  return pendingSave;
+}
+
+async function flushDraft() {
+  if (busy && !form.hidden) throw new Error('正在发布，请稍等。');
+  if (saveTimer && !db) throw new Error('这个浏览器暂时无法保存草稿，请保留编辑区。');
+  await saveDraft();
 }
 
 function setBusy(value) {
@@ -180,7 +220,7 @@ function showCategories(draft) {
   category.value = possible ? inferred : fallback;
 }
 
-function showMode(nextMode, draft = drafts.get(nextMode)) {
+function showMode(nextMode, draft = drafts.get(managed || nextMode)) {
   mode = nextMode;
   edit = draft?.edit;
   saveRevision++;
@@ -202,12 +242,13 @@ function showMode(nextMode, draft = drafts.get(nextMode)) {
   document.getElementById('publish-summary').textContent = editing ? '准备保存' : '准备发布';
   document.getElementById('publish-button').textContent = editing ? '保存修改' : note ? '发布随笔' : '发布文章';
   document.getElementById('publish-target').textContent = editing ? '保存后更新原文章及相关列表。' : note ? '随笔发布后会出现在「生活随笔」和归档。' : '文章发布后会出现在书房和归档。';
-  draftId = draft?.id ?? crypto.randomUUID().slice(0, 12);
+  draftId = draft?.id ?? (managed ? draftParam : crypto.randomUUID().slice(0, 12));
   title.value = draft?.title ?? '';
   date.value = draft?.date ?? today();
   tags.value = draft?.tags ?? '';
   tokenInput.value = '';
-  noteOptions.open = note && Boolean(title.value || tags.value || date.value !== today());
+  noteOptions.open = note && Boolean(managed || title.value || tags.value || date.value !== today());
+  setCover(draft?.cover);
   publishOptions.open = false;
   resetBlocks();
   for (const block of draft?.blocks ?? []) {
@@ -258,6 +299,7 @@ async function loadArticle(url, fresh = false) {
       edit: { url, revision: await sourceRevision(source, post) },
       title: post.untitled ? '' : post.title, date: post.date, tags: (post.tags || []).join('，'),
       category: post.category, topic: articleTopic(post).id, blocks: sourceBlocks(source, url),
+      cover: post.cover ? { src: new URL(post.cover, new URL(url, location.origin)).href } : null,
     };
     if (fresh) await forgetDraft(key);
   }
@@ -303,7 +345,7 @@ for (const button of modeButtons) {
 }
 
 form.addEventListener('input', event => {
-  if (event.target === tokenInput || event.target === files || event.target.closest('.write-rich')) return;
+  if ([tokenInput, files, coverInput].includes(event.target) || event.target.closest('.write-rich')) return;
   preview.hidden = true;
   queueSave();
 });
@@ -335,6 +377,23 @@ files.addEventListener('change', () => {
   if (added) queueSave();
 });
 
+coverInput.addEventListener('change', () => {
+  const file = coverInput.files[0];
+  if (!file) return;
+  if (!formats[file.type] || !file.size || file.size > 8 * 1024 * 1024) {
+    message('封面请使用不超过 8 MB 的 JPG、PNG、WebP、GIF 或 AVIF 图片。', true);
+    coverInput.value = '';
+    return;
+  }
+  setCover({ file, extension: formats[file.type] });
+  message('');
+  queueSave();
+});
+coverRemove.addEventListener('click', () => {
+  setCover(null);
+  queueSave();
+});
+
 function readDraft() {
   const heading = title.value.trim();
   const topic = topics.get(category.value);
@@ -363,7 +422,7 @@ function readDraft() {
     }
   }
   if (!content.length) throw new Error('请写一段文字或添加一张图片。');
-  return { id: draftId, edit, title: heading, date: day, category: topic.category, topic: topic.id, tags: labels, blocks: content };
+  return { id: draftId, edit, title: heading, date: day, category: topic.category, topic: topic.id, tags: labels, blocks: content, cover };
 }
 
 document.getElementById('show-preview').addEventListener('click', () => {
@@ -404,6 +463,7 @@ form.addEventListener('submit', async event => {
   tokenInput.value = '';
   setBusy(true);
   saveDraft();
+  let finished = false;
   try {
     const url = await publishArticle(draft, token, message);
     let cleared = true;
@@ -412,7 +472,17 @@ form.addEventListener('submit', async event => {
     catch { cleared = false; drafts.delete(key); }
     const editing = Boolean(edit);
     const item = mode === 'note' ? '随笔' : '文章';
-    showMode(mode);
+    if (!managed) showMode(mode);
+    if (managed) {
+      try {
+        const key = 'reading-room:draft:' + entryTopic?.id;
+        if (localStorage.getItem(key) === draftParam) localStorage.removeItem(key);
+      } catch { /* Reading-room reminders are optional. */ }
+      try { sessionStorage.setItem('reading-room:last-published', new URL(url).pathname); } catch {}
+      if (embedded) window.parent.postMessage({ type: 'study-writer-published' }, location.origin);
+      finished = true;
+      form.hidden = true;
+    }
     if (editing) updateAddress();
     if (!cleared) draftStatus.textContent = '已发布，浏览器中的旧草稿清除失败';
     message(editing ? '修改已提交。GitHub Pages 部署完成后，同一个链接会显示新版。' : '已提交到 GitHub。等 Pages 部署完成即可打开。');
@@ -428,18 +498,33 @@ form.addEventListener('submit', async event => {
       message(error instanceof TypeError ? '无法连接 GitHub。草稿仍可编辑，请稍后重新发布。' : error.message, true);
     }
   } finally {
-    setBusy(false);
+    setBusy(finished);
   }
 });
 
 try {
   db = await openDrafts();
-  for (const draft of await draftTransaction(db, 'readonly', store => store.getAll())) drafts.set(draft.mode, draft);
+  if (managed) {
+    const draft = await draftTransaction(db, 'readonly', store => store.get(managed));
+    if (draft) drafts.set(managed, draft);
+  } else {
+    for (const draft of await draftTransaction(db, 'readonly', store => store.getAll())) drafts.set(draft.mode, draft);
+  }
 } catch {
   db?.close();
   db = undefined;
 }
-const query = new URLSearchParams(location.search);
 const requestedEdit = query.get('edit');
-if (requestedEdit || query.get('mode') === 'edit') await openEditor(requestedEdit || '', { catalog: true });
+if (managed) {
+  const initial = drafts.get(managed) ?? (entryTopic ? { topic: entryTopic.id, category: entryTopic.category } : undefined);
+  showMode(initial?.category === 'life' ? 'note' : 'article', initial);
+  setBusy(false);
+  if (embedded) {
+    window.studyWriter = { flush: flushDraft, focusTitle: () => title.focus() };
+    window.addEventListener('keydown', event => {
+      if (event.key === 'Escape') window.parent.postMessage({ type: 'study-writer-close' }, location.origin);
+    });
+    window.parent.postMessage({ type: 'study-writer-ready' }, location.origin);
+  } else title.focus();
+} else if (requestedEdit || query.get('mode') === 'edit') await openEditor(requestedEdit || '', { catalog: true });
 else { showMode(query.get('mode') === 'note' ? 'note' : 'article'); setBusy(false); }

@@ -1,9 +1,8 @@
 import { deskEndpoint } from './desk-config.js?v=2';
+import { dateKey, toDate, getStoredToken, remember, deskRequest } from './desk-client.js?v=1';
 
 const get = id => document.getElementById(id);
 
-const dateKey = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-const toDate = key => new Date(key + 'T12:00:00');
 const shortDate = new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
 const longDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 const monthDate = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long' });
@@ -15,13 +14,6 @@ function updateTodayLabel() {
   return dateKey(now);
 }
 updateTodayLabel();
-
-class DeskError extends Error {
-  constructor(status, message) {
-    super(message);
-    this.status = status;
-  }
-}
 
 function mountDesk(endpoint) {
   const login = get('desk-login');
@@ -35,7 +27,6 @@ function mountDesk(endpoint) {
   const journalForm = get('journal-form');
   const journalKeys = ['title', 'weather', 'mood', 'events', 'reflection', 'goal_status', 'goal', 'exercise'];
   const records = get('daily-records');
-  const tokenKey = 'reading-room:desk-session:v1';
   const drafts = new Map();
   const attempts = new Map();
   let selected = updateTodayLabel();
@@ -58,40 +49,8 @@ function mountDesk(endpoint) {
     message.hidden = !text;
   }
 
-  function getStoredToken() {
-    try {
-      return localStorage.getItem(tokenKey) || '';
-    } catch {
-      return '';
-    }
-  }
-
-  function remember(value) {
-    try {
-      if (value) localStorage.setItem(tokenKey, value);
-      else localStorage.removeItem(tokenKey);
-    } catch {
-      // A browser that blocks storage can still use the active login.
-    }
-  }
-
-  async function request(path, { method = 'GET', data, signal, session = token } = {}) {
-    const headers = {};
-    if (session) headers.Authorization = 'Bearer ' + session;
-    if (data) headers['Content-Type'] = 'application/json';
-    let response;
-    try {
-      response = await fetch(endpoint + '/v1' + path, {
-        method, headers, signal: signal || AbortSignal.timeout(15000),
-        body: data ? JSON.stringify(data) : undefined, credentials: 'omit', cache: 'no-store', redirect: 'error',
-      });
-    } catch (error) {
-      if (error.name === 'AbortError') throw error;
-      throw new DeskError(0, '暂时连不上云端，请检查网络后重试。');
-    }
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new DeskError(response.status, payload.message || '云同步暂时不可用。');
-    return payload;
+  function request(path, options = {}) {
+    return deskRequest(endpoint, path, { session: token, ...options });
   }
 
   function setEditing(record) {

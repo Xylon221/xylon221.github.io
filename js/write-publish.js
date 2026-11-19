@@ -49,8 +49,8 @@ function articlePage(room, post, body) {
   <link rel="icon" href="/images/favicon-32x32-next.png">
   ${style.outerHTML}
   <link rel="stylesheet" href="/css/published-article.css?v=2">
-  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-shelves">
-  <script type="module" src="/js/site-shell.js?v=20261119-nav"></script>
+  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-gallery">
+  <script type="module" src="/js/site-shell.js?v=20261119-gallery"></script>
 </head>
 <body>
   ${header.outerHTML}
@@ -108,7 +108,8 @@ function archiveEntry(post) {
   const content = (post.content || '').replace(/\s+/g, ' ').trim();
   const excerpt = !post.web_draft_id && !post.web_edit_id && content.startsWith(title) ? content.slice(title.length).trim() : content;
   const tags = (post.tags || []).map(tag => `<a href="${tagUrl(tag)}">${escapeHtml(tag)}</a>`).join(' ');
-  const image = post.image ? `<img class="archive-thumb" src="${escapeHtml(post.image)}" alt="" loading="lazy" decoding="async">` : '';
+  const cover = post.cover || post.image;
+  const image = cover ? `<img class="archive-thumb" src="${escapeHtml(cover)}" alt="" loading="lazy" decoding="async">` : '';
   return `<article class="archive-entry">${image}<h4><a class="post-title-link" href="${escapeHtml(url)}">${escapeHtml(title)}</a></h4>
     <p class="archive-meta"><time datetime="${date}">${date}</time>${tags}</p>
     <p class="archive-excerpt">${escapeHtml(excerpt.slice(0, 145))}${excerpt.length > 145 ? '…' : ''}</p></article>`;
@@ -189,7 +190,9 @@ async function draftFingerprint(draft) {
     else if (block.kind === 'original') blocks.push([block.index, block.text]);
     else blocks.push([block.src || block.path, block.caption, block.file ? await digest(await block.file.arrayBuffer()) : null]);
   }
-  const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks, ...(draft.topic ? [draft.topic] : [])]);
+  const cover = draft.cover?.file ? await digest(await draft.cover.file.arrayBuffer()) : draft.cover?.src;
+  const data = JSON.stringify([draft.title, draft.date, draft.category, draft.tags, blocks,
+    ...(draft.topic ? [draft.topic] : []), ...(cover ? [cover] : [])]);
   return digest(new TextEncoder().encode(data));
 }
 
@@ -275,6 +278,9 @@ export async function publishArticle(draft, token, progress, request = fetch) {
     caption: image.closest('figure')?.querySelector('figcaption')?.textContent || image.alt,
   })).filter(image => image.src);
   const uploads = draft.blocks.filter(block => block.kind === 'image' && block.file);
+  const coverPath = draft.cover?.file ? `assets/cover-${draft.id}.${draft.cover.extension}` : null;
+  if (coverPath) uploads.push({ file: draft.cover.file, path: coverPath });
+  const cover = coverPath || draft.cover?.src;
   const post = {
     ...(previous || {}),
     title, url, date: draft.date, tags, category: draft.category, topic: draft.topic, content,
@@ -282,6 +288,7 @@ export async function publishArticle(draft, token, progress, request = fetch) {
     untitled: note && !draft.title ? true : undefined,
     note_rich_text: hasInlineFormatting(noteText) ? noteText : undefined,
     image: images[0]?.src,
+    cover: cover ? publicImagePath(cover, url, site) : undefined,
     note_images: note && images.length ? images : undefined,
   };
   const updated = previous ? catalog.map(entry => entry === previous ? post : entry) : [...catalog, post];

@@ -14,6 +14,8 @@ function mountNavigation() {
       <div class="site-rail-footer"><span>© 只想睡大觉</span><a href="https://github.com/Xylon221">GitHub ↗</a></div>
     </div>`;
   const nav = rail.querySelector('nav');
+  const portrait = document.getElementById('owner-photo');
+  if (portrait) nav.before(portrait.content.cloneNode(true));
   for (const [title, path] of links) {
     const link = document.createElement('a');
     link.href = path === '/about/' && document.querySelector('.room-home #about') ? '#about' : path;
@@ -43,11 +45,15 @@ function mountNavigation() {
   document.body.classList.add('site-framed');
 }
 
-mountNavigation();
-
-import('./room-player.js?v=20261119-shelves').then(({ mountPlayer }) => mountPlayer());
+const embeddedWriter = location.pathname === '/write/' && window.parent !== window
+  && new URLSearchParams(location.search).get('embed') === '1';
+if (!embeddedWriter) {
+  mountNavigation();
+  import('./room-player.js?v=20261119-shelves').then(({ mountPlayer }) => mountPlayer());
+}
 
 const body = document.querySelector('.published-body, .post-body[itemprop="articleBody"]');
 if (body && /^\/\d{4}\/\d{2}\/[^/]+\/$/.test(location.pathname)) {
+  import('./article-contents.js?v=1').then(({ mountArticleContents }) => mountArticleContents(body));
   import('./comments.js?v=2').then(({ mountComments }) => mountComments(body.closest('article') || body));
 }

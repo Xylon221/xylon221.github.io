@@ -3,86 +3,98 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="只想睡大觉的书房，收录技术笔记、读书心得与生活片段。">
-  <meta name="theme-color" content="#edf2f6">
+  <meta name="description" content="只想睡大觉的书房，收录技术笔记、生活思考与日常片段。">
+  <meta name="theme-color" content="#f4f7fa">
   <title>书房 · 只想睡大觉</title>
   <link rel="icon" href="/images/favicon-32x32-next.png">
   <link rel="stylesheet" href="/css/reading-room.css?v=20261118-kai">
-  <link rel="stylesheet" href="/css/chapters.css?v=20261119-shelves">
-  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-shelves">
-  <link rel="stylesheet" href="/css/room-home.css?v=20261119-titles">
-  <script type="module" src="/js/site-shell.js?v=20261119-nav"></script>
-  <script type="module" src="/js/reading-room.js?v=20261119-titles"></script>
-  <script type="module" src="/js/room-widgets.js?v=4"></script>
+  <link rel="stylesheet" href="/css/site-shell.css?v=20261119-gallery">
+  <link rel="stylesheet" href="/css/room-home.css?v=20261119-gallery">
+  <script type="module" src="/js/site-shell.js?v=20261119-gallery"></script>
+  <script type="module" src="/js/reading-room.js?v=20261119-gallery"></script>
+  <script type="module" src="/js/room-desk.js?v=1"></script>
 </head>
 <body class="room-page room-home">
-  <a class="skip-link" href="#articles">跳到文章列表</a>
-  <div class="home-frame">
-    <header class="home-bar">
-      <a class="brand" href="/">个人博客</a>
-      <nav class="home-sections" aria-label="书房分区">
-        <a href="#articles" data-room-pane="editorial" aria-current="location">文章</a>
-        <a href="#about" data-room-pane="personal">关于</a>
-        <a href="/daily-todo/">Daily Todo</a>
-        <a href="/write/">写作</a>
-      </nav>
-    </header>
-
-  <main class="home-grid" data-pane="editorial">
-    <div class="home-editorial chapter-shell" tabindex="0" aria-label="书房文章与动态">
-      <header class="home-hero">
-        <div class="home-hero-copy"><h1>书房</h1><p>记录学习所得，也留住日常可回看的片段。</p></div>
-      </header>
-
-      <nav class="chapter-overview" id="articles" aria-label="文章板块" tabindex="-1">
-        <a class="chapter-cover" href="/learning/"><strong>问学札记</strong><span class="chapter-arrow" aria-hidden="true">↗</span><span>科研学习 · 计算机技术</span></a>
-        <a class="chapter-cover" href="/reflection/"><strong>格物随想</strong><span class="chapter-arrow" aria-hidden="true">↗</span><span>所见所思 · 格物析理</span></a>
-        <a class="chapter-cover" href="/life/"><strong>浮生小记</strong><span class="chapter-arrow" aria-hidden="true">↗</span><span>灶间、光影与日常</span></a>
-      </nav>
-      <p id="article-status" class="chapter-status" role="status" hidden></p>
-      <div id="article-list" class="chapter-groups"></div>
-      <noscript><p>可以在<a href="/archives/">文章归档</a>浏览所有文章。</p></noscript>
-
-      <section class="chapter-updates" aria-labelledby="updates-title">
-        <div class="chapter-section-head"><h2 id="updates-title">书房动态</h2></div>
-        <p id="update-status" class="status" role="status" hidden></p>
-        <div id="update-list" class="update-list"></div>
-        <noscript><p>启用 JavaScript 后可查看动态。</p></noscript>
-        <template id="update-template">
-          <article class="update-card">
-            <time></time>
-            <h3></h3>
-            <p></p>
-          </article>
-        </template>
-      </section>
+  <header class="room-header">
+    <div class="room-shell header-content">
+      <a class="brand" href="/">只想睡大觉</a>
+      <nav aria-label="全站导航"><a href="/reading-room/">书房</a><a href="/archives/">归档</a><a href="/tags/">标签</a><a href="/about/">关于</a></nav>
     </div>
-
-    <aside class="home-personal" id="about" tabindex="0" aria-label="关于站主">
-      <section class="home-card home-profile" aria-labelledby="profile-name">
-        <span class="home-avatar" aria-hidden="true">X</span>
-        <h2 id="profile-name">只想睡大觉</h2>
-        <p>写技术笔记，也记读过的书和生活里的事。</p>
-        <div class="profile-now">
-          <h3>近况</h3>
-          <p id="profile-latest" hidden></p>
-          <a href="/archives/">翻阅文章 <span aria-hidden="true">↗</span></a>
+  </header>
+  <a class="skip-link" href="#articles">跳到文章画廊</a>
+  <template id="owner-photo">
+    <figure class="rail-portrait"><img src="/images/owner-snow.webp" alt="站主在雪地中手持登山杖" width="1000" height="1346" decoding="async"></figure>
+  </template>
+  <main class="home-frame">
+    <section class="study-gallery" id="articles" aria-labelledby="study-title" tabindex="0">
+      <header class="study-heading">
+        <h1 id="study-title">书房</h1>
+        <p>记所学、所思、所见。</p>
+      </header>
+      <nav class="study-tabs" aria-label="文章栏目">
+        <a href="/learning/" data-gallery-chapter="learning">问学札记</a>
+        <a href="/reflection/" data-gallery-chapter="reflection">格物随想</a>
+        <a href="/life/" data-gallery-chapter="life">浮生小记</a>
+      </nav>
+      <nav class="study-filters" id="gallery-filters" aria-label="浮生小记分类" hidden></nav>
+      <div class="study-list-header">
+        <h2 id="gallery-heading">问学札记</h2>
+        <div class="study-actions">
+          <button type="button" id="resume-gallery-draft" hidden>继续草稿</button>
+          <button type="button" id="new-gallery-draft">＋ 新建</button>
         </div>
-        <a class="profile-github" href="https://github.com/Xylon221">GitHub <span aria-hidden="true">↗</span></a>
-      </section>
-    </aside>
+      </div>
+      <p id="gallery-status" role="status">正在读取文章…</p>
+      <div id="gallery-posts" class="study-cards"></div>
+      <noscript><p>可在<a href="/archives/">归档</a>中浏览所有文章。</p></noscript>
+    </section>
 
-    <aside class="home-today" id="today" tabindex="0" aria-labelledby="daily-link-title">
-      <section class="home-card home-daily-intro">
-        <h2 id="daily-link-title">Daily Todo</h2>
-        <p>按日整理待办、随手记和反思。</p>
-        <a href="/daily-todo/">打开日历</a>
+    <aside class="study-desk" aria-label="月历和随手记" tabindex="0">
+      <section aria-labelledby="desk-month">
+        <div class="study-panel-heading">
+          <h2 id="desk-month">月历</h2>
+          <div class="study-month-actions">
+            <button type="button" id="desk-prev-month" aria-label="上个月">‹</button>
+            <button type="button" id="desk-today">今天</button>
+            <button type="button" id="desk-next-month" aria-label="下个月">›</button>
+          </div>
+        </div>
+        <div class="study-week" aria-hidden="true"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+        <div class="study-calendar" id="desk-mini-calendar" aria-label="选择日期"></div>
+      </section>
+      <section class="study-notes" aria-labelledby="desk-note-heading">
+        <div class="study-panel-heading">
+          <h2 id="desk-note-heading">随手记</h2>
+          <time id="desk-note-date"></time>
+        </div>
+        <p id="desk-mini-status" role="status"></p>
+        <form id="desk-mini-login">
+          <label for="desk-mini-key">站主密钥</label>
+          <div class="study-login-row">
+            <input id="desk-mini-key" type="password" autocomplete="current-password" spellcheck="false" minlength="43" maxlength="43" required>
+            <button type="submit">登录</button>
+          </div>
+        </form>
+        <div id="desk-mini-private" hidden>
+          <ul id="desk-mini-notes" class="study-note-list"></ul>
+          <form id="desk-mini-note-form">
+            <textarea id="desk-mini-note" aria-label="随手记内容" placeholder="记一件小事…" rows="3" maxlength="4000" required></textarea>
+            <button type="submit">保存</button>
+          </form>
+        </div>
+        <a class="study-daily-link" href="/daily-todo/">打开 Daily Todo</a>
       </section>
     </aside>
   </main>
 
-    <footer class="home-footer"><a href="/">返回封面 ↑</a><span>露易丝湖 · 摄影 Kalen Emsley</span></footer>
-  </div>
-
+  <dialog class="study-editor" id="gallery-editor" aria-labelledby="gallery-editor-title">
+    <header>
+      <h2 id="gallery-editor-title">写作</h2>
+      <button type="button" id="expand-gallery-editor" aria-label="展开为全页写作" title="展开为全页写作">⤢</button>
+      <button type="button" id="close-gallery-editor" aria-label="关闭编辑区" title="关闭编辑区">×</button>
+    </header>
+    <p id="gallery-editor-status" role="status" hidden></p>
+    <iframe id="gallery-editor-frame" title="文章编辑器"></iframe>
+  </dialog>
 </body>
 </html>
